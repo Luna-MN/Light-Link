@@ -4,19 +4,23 @@ using System;
 public partial class Star : Node2D
 {
 	// starMesh;
-	public MeshInstance2D starMesh;
-
+	public MeshInstance2D Mesh;
+	// Properties of the star
+	public StarProperties Properties;
 	// Constructor
-	public Star()
+	public Star(Vector2 pos, StarProperties properties)
 	{
+		// Set the position of the star
+		Position = pos;
+		Properties = properties;
 		// Initialize the star mesh
-		starMesh = new MeshInstance2D();
-		starMesh.Mesh = new SphereMesh();
-		starMesh.Material = new ShaderMaterial();
-		starMesh.Modulate = new Color(1, 1, 0); // Yellow color
-		starMesh.Scale = new Vector2(50f, 50f);
+		Mesh = new MeshInstance2D();
+		Mesh.Mesh = new SphereMesh();
+		Mesh.Material = new ShaderMaterial();
+		Mesh.Modulate = Properties.ColorIndex; // Yellow color
+		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 		// Add the star mesh to the star node
-		AddChild(starMesh);
+		AddChild(Mesh);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
