@@ -28,6 +28,7 @@ public partial class Planet : Body
 		if (Properties.HasWater)
 		{
 		}
+		Mesh.ApplyPlanetProperties(Properties);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -71,6 +72,7 @@ public partial class Planet : Body
 
 		// Create color from HSV values
 		Color planetColor = Color.FromHsv(hue, saturation, value);
+		Properties.ColorIndex = planetColor;
 		// Make trail color slightly darker than the planet
 		Color trailColor = planetColor.Darkened(0.2f);
 		trail.SetTrailColor(trailColor);
