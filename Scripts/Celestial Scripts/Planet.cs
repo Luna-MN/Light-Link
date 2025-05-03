@@ -1,13 +1,14 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Planet : Body
 {
-	public PlanetProperties Properties;
 	private TrailEffect trail;
+	public PlanetProperties Properties;
 	public Planet(PlanetProperties properties)
 	{
-		this.Properties = properties;
+		Properties = properties;
 		// Set the position of the planet
 		Position = new Vector2(Properties.OrbitRadius, 0);
 		// Set the size of the planet
@@ -20,12 +21,18 @@ public partial class Planet : Body
 
 		AddChild(trail);
 		trail.SetTrailWidth(Properties.Radius * 0.5f);
+		if (Properties.HasAtmosphere)
+		{
+			CreateAtmosphere();
+		}
+		if (Properties.HasWater)
+		{
+		}
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 	}
-
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
@@ -69,6 +76,19 @@ public partial class Planet : Body
 		trail.SetTrailColor(trailColor);
 		// Apply the color to the planet mesh
 		Mesh.Modulate = planetColor;
+	}
+	public void CreateAtmosphere()
+	{
+		// Create an atmosphere mesh
+		MeshInstance2D atmosphereMesh = new MeshInstance2D();
+		atmosphereMesh.Mesh = new SphereMesh();
+		atmosphereMesh.Material = new ShaderMaterial();
+		atmosphereMesh.Scale = new Vector2(Properties.Radius * 1.1f, Properties.Radius * 1.1f);
+		Color atmosphereColor = Mesh.Modulate; // Set the color of the atmosphere
+		atmosphereColor.A = 0.3f;
+		atmosphereColor = atmosphereColor.Lightened(0.7f);
+		atmosphereMesh.Modulate = atmosphereColor; // Planet color with transparency
+		AddChild(atmosphereMesh);
 	}
 	#endregion
 	#region Planet Orbit Functions
