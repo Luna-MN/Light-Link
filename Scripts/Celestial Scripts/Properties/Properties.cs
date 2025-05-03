@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Properties
+public abstract class Properties
 {
     public float Mass;
     public float Radius;

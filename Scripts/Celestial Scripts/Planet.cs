@@ -1,17 +1,17 @@
 using Godot;
 using System;
 
-public partial class Planet : Node2D
+public partial class Planet : Body
 {
-	public MeshInstance2D Mesh;
 	public PlanetProperties Properties;
 	public Planet(PlanetProperties properties)
 	{
 		this.Properties = properties;
 		// Set the position of the planet
 		Position = new Vector2(Properties.OrbitRadius, 0);
-		// Initialize the planet mesh
-		CreatePlanetMesh();
+		// Set the size of the planet
+		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
+
 		// Set the color of the planet
 		SetPlanetColor();
 
@@ -27,20 +27,6 @@ public partial class Planet : Node2D
 		// Rotate the planet around the star
 		Orbit(Properties.OrbitPeriod, (float)delta);
 	}
-	#region Planet Mesh Functions
-	public void CreatePlanetMesh()
-	{
-		// Initialize the planet mesh
-		Mesh = new MeshInstance2D();
-		Mesh.Mesh = new SphereMesh();
-		Mesh.Material = new ShaderMaterial();
-		Mesh.Modulate = Properties.ColorIndex; // Set the color of the planet
-		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius); // Set the size of the planet
-
-		// Add the planet mesh to the planet node
-		AddChild(Mesh);
-	}
-	#endregion
 	#region Planet Properties Functions
 	public void SetPlanetColor()
 	{
