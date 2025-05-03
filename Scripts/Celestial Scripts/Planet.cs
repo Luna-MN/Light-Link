@@ -12,7 +12,8 @@ public partial class Planet : Node2D
 		Position = new Vector2(Properties.OrbitRadius, 0);
 		// Initialize the planet mesh
 		CreatePlanetMesh();
-		// Set the speed of the planet
+		// Set the color of the planet
+		SetPlanetColor();
 
 	}
 	// Called when the node enters the scene tree for the first time.
@@ -39,13 +40,61 @@ public partial class Planet : Node2D
 		// Add the planet mesh to the planet node
 		AddChild(Mesh);
 	}
+	#endregion
+	#region Planet Properties Functions
+	public void SetPlanetColor()
+	{
+		// Base color components
+		float hue;
+		float saturation = 0.8f;
+		float value = 0.8f;
 
+		// Orbit radius affects the base hue with full color spectrum
+		// Closer planets are redder (hot), distant planets are bluer (cold)
+		float normalizedRadius = Mathf.Clamp(Properties.OrbitRadius / 1000f, 0f, 1f);
+
+		// Use full color spectrum and apply slight randomization
+		float randomOffset = (float)GD.RandRange(-0.05, 0.05);
+		hue = Mathf.Clamp(normalizedRadius + randomOffset, 0f, 1f);
+
+		// Water influences - make more distinctly blue rather than green-blue
+		if (Properties.HasWater)
+		{
+			hue = Mathf.Lerp(hue, 0.65f, 0.3f); // More definitively blue (0.65)
+			saturation = Mathf.Clamp(saturation + 0.15f, 0f, 1f);
+		}
+
+		// Atmosphere makes the planet slightly lighter and less saturated
+		if (Properties.HasAtmosphere)
+		{
+			value = Mathf.Clamp(value + 0.1f, 0f, 1f);
+			saturation = Mathf.Clamp(saturation - 0.1f, 0f, 1f);
+		}
+
+		// Create color from HSV values
+		Color planetColor = Color.FromHsv(hue, saturation, value);
+
+		// Apply the color to the planet mesh
+		Mesh.Modulate = planetColor;
+	}
 	#endregion
 	#region Planet Orbit Functions
 	public void Orbit(float speed, float time)
 	{
 		// Rotate the planet around the star
 		float angle = speed * time;
+		if (angle > 360)
+		{
+			angle = 0;
+		}
+		else if (angle < -360)
+		{
+			angle = 0;
+		}
+		else
+		{
+			angle = Mathf.DegToRad(angle);
+		}
 		Position = new Vector2(
 			Position.X * Mathf.Cos(angle) - Position.Y * Mathf.Sin(angle),
 			Position.X * Mathf.Sin(angle) + Position.Y * Mathf.Cos(angle)
