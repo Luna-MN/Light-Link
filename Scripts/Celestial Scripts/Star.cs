@@ -70,7 +70,6 @@ public partial class Star : Node2D
 				OrbitRadius = orbitRadius,
 				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 100,
 				RotationPeriod = 24,
-				AxialTilt = new RandomNumberGenerator().RandfRange(0f, 45f),
 				HasAtmosphere = hasAtmosphere,
 				HasWater = hasWater
 			};

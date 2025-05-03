@@ -1,13 +1,10 @@
 using Godot;
 using System;
 
-public partial class StarProperties
+public partial class Properties
 {
-    public float Tempreture;
-    public float Luminosity;
     public float Mass;
     public float Radius;
     public float Age;
     public Color ColorIndex;
-    public int Planets;
 }
