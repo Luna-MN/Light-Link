@@ -4,6 +4,7 @@ using System;
 public partial class Planet : Body
 {
 	public PlanetProperties Properties;
+	private TrailEffect trail;
 	public Planet(PlanetProperties properties)
 	{
 		this.Properties = properties;
@@ -13,8 +14,12 @@ public partial class Planet : Body
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 
 		// Set the color of the planet
+		trail = new TrailEffect();
+		trail.TrailLength = 300;
 		SetPlanetColor();
 
+		AddChild(trail);
+		trail.SetTrailWidth(Properties.Radius * 0.5f);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -59,7 +64,9 @@ public partial class Planet : Body
 
 		// Create color from HSV values
 		Color planetColor = Color.FromHsv(hue, saturation, value);
-
+		// Make trail color slightly darker than the planet
+		Color trailColor = planetColor.Darkened(0.2f);
+		trail.SetTrailColor(trailColor);
 		// Apply the color to the planet mesh
 		Mesh.Modulate = planetColor;
 	}
