@@ -14,10 +14,11 @@ public partial class Main : Node2D
 			Mass = 1, // in Solar Masses
 			Radius = 50, // in Solar Radii
 			Age = 4.6f, // in billion years
-			ColorIndex = new Color(1, 1, 0) // Color index for the star
+			ColorIndex = new Color(1, 1, 0), // Color index for the star
+			Planets = 7 // Number of planets orbiting the star
 		};
 		// Create a new star instance
-		Star star = new Star(new Vector2(100, 100), starProperties);
+		Star star = new Star(new Vector2(500, 500), starProperties);
 
 
 		// Add the star to the scene

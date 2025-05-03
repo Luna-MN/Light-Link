@@ -9,4 +9,5 @@ public partial class StarProperties
     public float Radius;
     public float Age;
     public Color ColorIndex;
+    public int Planets;
 }
