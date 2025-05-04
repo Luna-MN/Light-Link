@@ -8,5 +8,5 @@ public partial class PlanetProperties : Properties
     public float RotationPeriod; // in Earth hours
     public bool HasAtmosphere; // Whether the planet has an atmosphere or not
     public bool HasWater; // Whether the planet has water or not
-    public float WaterAmount = 0.5f; // 0.0 to 1.0 
+    public float WaterAmount = 0.6f; // 0.0 to 1.0 
 }

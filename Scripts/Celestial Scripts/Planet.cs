@@ -16,11 +16,11 @@ public partial class Planet : Body
 
 		// Set the color of the planet
 		trail = new TrailEffect();
-		trail.TrailLength = 300;
+		trail.TrailLength = 500;
 		SetPlanetColor();
 
 		AddChild(trail);
-		trail.SetTrailWidth(Properties.Radius * 0.5f);
+		trail.SetTrailWidth(Properties.Radius * 0.7f);
 		if (Properties.HasAtmosphere)
 		{
 			CreateAtmosphere();
@@ -75,6 +75,7 @@ public partial class Planet : Body
 		Properties.ColorIndex = planetColor;
 		// Make trail color slightly darker than the planet
 		Color trailColor = planetColor.Darkened(0.2f);
+		trailColor.A = 0.7f;
 		trail.SetTrailColor(trailColor);
 		// Apply the color to the planet mesh
 		Mesh.Modulate = planetColor;
@@ -86,7 +87,7 @@ public partial class Planet : Body
 		atmosphereMesh.Mesh = new SphereMesh();
 		atmosphereMesh.Material = new ShaderMaterial();
 		atmosphereMesh.Scale = new Vector2(Properties.Radius * 1.1f, Properties.Radius * 1.1f);
-		Color atmosphereColor = Mesh.Modulate; // Set the color of the atmosphere
+		Color atmosphereColor = Properties.ColorIndex; // Set the color of the atmosphere
 		atmosphereColor.A = 0.3f;
 		atmosphereColor = atmosphereColor.Lightened(0.7f);
 		atmosphereMesh.Modulate = atmosphereColor; // Planet color with transparency

@@ -1,15 +1,24 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInstance2D to MeshInstance3D
+public partial class LowPolyPlanetMesh : MeshInstance2D
 {
     [Export] public float Radius = 0.5f;
     [Export] public int Subdivisions = 2;
     [Export] public Color DefaultColor = new Color(1.0f, 0.5f, 0.5f); // Default color for triangles
+    [Export] public int ContinentSeedCount = 2; //properties for continent generation
+    [Export] public float ContinentNoiseScale = 1.0f;
+    [Export] public float VariationFrequency = 0.1f; // How many triangles to affect (0.0-1.0)
+    [Export] public float VariationIntensity = 0.2f; // How much lighter to make affected triangles (0.0-1.0)
 
     private List<Color> triangleColors = new List<Color>(); // Store colors for each triangle
     private bool useVertexColors = false;
+
+    //triangle adjacency tracking
+    private Dictionary<int, List<int>> triangleAdjacency = new Dictionary<int, List<int>>();
+    private List<Vector3> triangleCenters = new List<Vector3>();
 
     public void GeneratePlanetMesh()
     {
@@ -53,7 +62,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
                 color = triangleColors[triangleIndex];
             }
 
-            // Add three vertices for this triangle (duplicating them to avoid color interpolation)
+            // add three vertices for this triangle (duplicating them to avoid color interpolation)
             int baseIndex = sharpVertices.Count;
 
             // First vertex
@@ -71,7 +80,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
             sharpNormals.Add(normals[indices[i + 2]]);
             sharpColors.Add(color);
 
-            // Add indices for this triangle
+            //add indices for this triangle
             sharpIndices.Add(baseIndex);
             sharpIndices.Add(baseIndex + 1);
             sharpIndices.Add(baseIndex + 2);
@@ -98,7 +107,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
         this.Material = material;
     }
 
-    // New method to set triangle colors
+    // set triangle colors
     public void SetTriangleColors(List<Color> colors)
     {
         triangleColors = colors;
@@ -106,7 +115,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
         GeneratePlanetMesh(); // Rebuild the mesh with the new colors
     }
 
-    // New method to set a specific triangle's color
+    // set a specific triangle's color
     public void SetTriangleColor(int triangleIndex, Color color)
     {
         if (triangleColors.Count <= triangleIndex)
@@ -127,7 +136,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
         GeneratePlanetMesh();
     }
 
-    // New method to randomly color triangles (for testing)
+    // randomly color triangles (for testing)
     public void RandomizeTriangleColors()
     {
         triangleColors.Clear();
@@ -273,7 +282,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
         Vector3 p2 = vertices[i2];
         Vector3 middle = (p1 + p2) * 0.5f;
 
-        // Add the new vertex
+        //add the new vertex
         int index = vertices.Count;
         vertices.Add(middle.Normalized());
 
@@ -287,45 +296,578 @@ public partial class LowPolyPlanetMesh : MeshInstance2D // Changed from MeshInst
         GeneratePlanetMesh();
     }
 
-    // Updated to include color customization based on properties
+    // Apply properties to the planet mesh
     public void ApplyPlanetProperties(PlanetProperties properties)
     {
         // Apply basic properties
         if (properties.HasWater && properties.WaterAmount > 0)
         {
-            // Create a gradient from land to water
-            List<Color> colors = new List<Color>();
-
-            Color landColor = properties.ColorIndex;
-            Color waterColor = new Color(0.2f, 0.4f, 0.8f); // blue water
-
-            int triangleCount = GetTriangleCount();
-            Random random = new Random();
-
-            for (int i = 0; i < triangleCount; i++)
-            {
-                // Random variation to create more interesting patterns
-                float variation = (float)random.NextDouble() * 0.15f - 0.075f;
-
-                // Decide if this triangle is water or land based on water coverage and some randomness
-                if (random.NextDouble() < properties.WaterAmount + variation)
-                {
-                    colors.Add(waterColor);
-                }
-                else
-                {
-                    colors.Add(landColor);
-                }
-            }
-
-            SetTriangleColors(colors);
+            // Use the existing continent generation logic
+            GenerateContinents(properties);
         }
         else
         {
-            // Just use the default color if no water
-            triangleColors.Clear();
-            useVertexColors = false;
-            GeneratePlanetMesh();
+            // For planets without water, still color variations
+            int triangleCount = GetTriangleCount();
+            List<Color> colors = new List<Color>(new Color[triangleCount]);
+
+            // Get color from properties or use default
+            Color planetColor = properties.ColorIndex;
+            if (planetColor.R == 0 && planetColor.G == 0 && planetColor.B == 0)
+            {
+                planetColor = DefaultColor;
+            }
+
+            // Fill all triangles with the base color
+            for (int i = 0; i < triangleCount; i++)
+            {
+                colors[i] = planetColor;
+            }
+
+            // Apply random variations to create surface details
+            AddRandomColorVariation(colors, false);  // false = don't try to preserve water/land distinction
+
+            // Set the colors and generate mesh
+            SetTriangleColors(colors);
         }
+    }
+
+    // Generate continents based on the planet properties
+    public void GenerateContinents(PlanetProperties properties)
+    {
+        int triangleCount = GetTriangleCount();
+        List<Color> colors = new List<Color>(new Color[triangleCount]);
+
+        // Define colors for land and water
+        Color landColor;
+        if (properties.ColorIndex.R == 0 && properties.ColorIndex.G == 0 && properties.ColorIndex.B == 0)
+        {
+            // If no color is specified in properties, use a default tan/brown
+            landColor = new Color(0.7f, 0.5f, 0.3f); // Darker tan/brown land
+        }
+        else
+        {
+            // Use the specified color but ensure it's not too bright
+            landColor = properties.ColorIndex;
+
+            // Make sure the land color isn't too bright to begin with
+            if (landColor.R > 0.8f && landColor.G > 0.8f)
+            {
+                landColor = new Color(
+                    landColor.R * 0.7f,
+                    landColor.G * 0.7f,
+                    landColor.B * 0.7f
+                );
+            }
+        }
+
+        Color waterColor = new Color(0.2f, 0.4f, 0.8f); // Blue water
+
+        // For high water amounts, we need to start with all water and generate land
+        bool highWaterContent = properties.WaterAmount > 0.7f;
+
+        // Initialize all triangles to the dominant terrain type
+        for (int i = 0; i < triangleCount; i++)
+        {
+            colors[i] = highWaterContent ? waterColor : landColor;
+        }
+
+        // Calculate triangle centers and build adjacency map
+        CalculateTriangleCenters();
+        BuildTriangleAdjacency();
+
+        Random random = new Random();
+        int seedCount;
+        HashSet<int> minorityTriangles = new HashSet<int>();
+
+        if (highWaterContent)
+        {
+            // For high water: we generate LAND seeds instead
+            // More water means fewer land seeds
+            float landAmount = 1.0f - properties.WaterAmount;
+            seedCount = Math.Max(1, (int)(ContinentSeedCount * landAmount * 3)); // Multiply by 3 to ensure enough seeds for small land
+
+            // Place land seeds
+            for (int i = 0; i < seedCount; i++)
+            {
+                int seed = random.Next(triangleCount);
+                minorityTriangles.Add(seed);
+                colors[seed] = landColor;
+            }
+        }
+        else
+        {
+            // Original ocean seed generation for low water amounts
+            seedCount = Math.Max(1, (int)(ContinentSeedCount * properties.WaterAmount));
+
+            // Place ocean seeds
+            for (int i = 0; i < seedCount; i++)
+            {
+                int seed = random.Next(triangleCount);
+                minorityTriangles.Add(seed);
+                colors[seed] = waterColor;
+            }
+        }
+
+        // Use noise for more natural shapes
+        var noise = new FastNoiseLite();
+        noise.SetNoiseType(FastNoiseLite.NoiseType.SimplexSmooth);
+        noise.SetSeed(random.Next());
+        noise.SetFrequency(0.8f * ContinentNoiseScale);
+
+        // The minority coverage is either water amount or land amount depending on which is smaller
+        float targetMinorityCoverage = highWaterContent ? (1.0f - properties.WaterAmount) : properties.WaterAmount;
+        float currentMinorityCoverage = (float)minorityTriangles.Count / triangleCount;
+
+        // Expansion using breadth-first growth
+        Queue<int> expansionFrontier = new Queue<int>(minorityTriangles);
+        List<int> newExpansions = new List<int>();
+
+        // Expansion iterations - grow land/ocean regions
+        while (currentMinorityCoverage < targetMinorityCoverage && expansionFrontier.Count > 0)
+        {
+            newExpansions.Clear();
+
+            int frontierSize = expansionFrontier.Count;
+            for (int i = 0; i < frontierSize; i++)
+            {
+                int triangleId = expansionFrontier.Dequeue();
+
+                // Try to expand to neighbors
+                if (triangleAdjacency.TryGetValue(triangleId, out var neighbors))
+                {
+                    foreach (var neighbor in neighbors)
+                    {
+                        // Skip if already part of the minority terrain
+                        if (minorityTriangles.Contains(neighbor))
+                            continue;
+
+                        // Use noise to determine expansion probability
+                        Vector3 pos = triangleCenters[neighbor];
+                        float noiseValue = noise.GetNoise3d(pos.X, pos.Y, pos.Z);
+
+                        // Higher noise value = higher chance to expand
+                        float expansionProbability = (noiseValue + 1f) / 2.0f;
+
+                        if (random.NextDouble() < expansionProbability)
+                        {
+                            minorityTriangles.Add(neighbor);
+                            colors[neighbor] = highWaterContent ? landColor : waterColor;
+                            newExpansions.Add(neighbor);
+
+                            currentMinorityCoverage = (float)minorityTriangles.Count / triangleCount;
+                            if (currentMinorityCoverage >= targetMinorityCoverage)
+                                break;
+                        }
+                    }
+                }
+
+                if (currentMinorityCoverage >= targetMinorityCoverage)
+                    break;
+            }
+
+            //new expansions to frontier for next iteration
+            foreach (var newFrontier in newExpansions)
+                expansionFrontier.Enqueue(newFrontier);
+        }
+
+        //random color variation
+        AddRandomColorVariation(colors);
+
+        // Adjust water coverage to match target
+        AdjustWaterCoverage(colors, properties.WaterAmount);
+
+        // Apply the colors
+        SetTriangleColors(colors);
+    }
+
+    // Build adjacency map between triangles
+    private void BuildTriangleAdjacency()
+    {
+        // Skip if already built
+        if (triangleAdjacency.Count > 0)
+            return;
+
+        // We'll need to recreate the full mesh to track adjacency
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> indices = new List<int>();
+
+        // Create the icosahedron
+        GenerateIcosahedron(vertices, indices);
+
+        // Build the mesh with subdivisions, tracking adjacency
+        Dictionary<long, int> edgeToTriangles = new Dictionary<long, int>();
+
+        // Process original icosahedron
+        BuildAdjacencyForIndices(indices, edgeToTriangles);
+
+        // Perform subdivisions
+        for (int i = 0; i < Subdivisions; i++)
+        {
+            SubdivideIcosahedron(vertices, indices);
+            // Clear and rebuild adjacency for the subdivided mesh
+            triangleAdjacency.Clear();
+            edgeToTriangles.Clear();
+            BuildAdjacencyForIndices(indices, edgeToTriangles);
+        }
+    }
+
+    // Calculate centers for all triangles
+    private void CalculateTriangleCenters()
+    {
+        if (triangleCenters.Count > 0)
+            return;
+
+        // Get the mesh data
+        if (!(Mesh is ArrayMesh arrayMesh) || arrayMesh.GetSurfaceCount() == 0)
+        {
+            // If no mesh yet, generate one temporarily
+            GeneratePlanetMesh();
+            arrayMesh = (ArrayMesh)Mesh;
+        }
+
+        Godot.Collections.Array arrays = arrayMesh.SurfaceGetArrays(0);
+        Vector3[] verts = (Vector3[])arrays[(int)Mesh.ArrayType.Vertex];
+        int[] indices = (int[])arrays[(int)Mesh.ArrayType.Index];
+
+        // Calculate centers for all triangles (using the center of each three vertices)
+        triangleCenters.Clear();
+        for (int i = 0; i < indices.Length; i += 3)
+        {
+            Vector3 v1 = verts[indices[i]];
+            Vector3 v2 = verts[indices[i + 1]];
+            Vector3 v3 = verts[indices[i + 2]];
+
+            // Calculate triangle center
+            Vector3 center = (v1 + v2 + v3) / 3.0f;
+            triangleCenters.Add(center.Normalized());
+        }
+    }
+
+    // Helper to build adjacency from a list of triangle indices
+    private void BuildAdjacencyForIndices(List<int> indices, Dictionary<long, int> edgeToTriangles)
+    {
+        // Process each triangle
+        for (int i = 0; i < indices.Count; i += 3)
+        {
+            int triangleIndex = i / 3;
+
+            // Make sure we have an entry for this triangle
+            if (!triangleAdjacency.ContainsKey(triangleIndex))
+                triangleAdjacency[triangleIndex] = new List<int>();
+
+            // Process each edge
+            for (int e = 0; e < 3; e++)
+            {
+                int v1 = indices[i + e];
+                int v2 = indices[i + (e + 1) % 3];
+
+                // Create consistent edge key (smaller vertex index first)
+                long edgeKey = GetEdgeKey(v1, v2);
+
+                // If this edge was seen before, it means two triangles share it
+                if (edgeToTriangles.TryGetValue(edgeKey, out int otherTriangle))
+                {
+                    //to each other's adjacency lists
+                    triangleAdjacency[triangleIndex].Add(otherTriangle);
+                    triangleAdjacency[otherTriangle].Add(triangleIndex);
+
+                    // Remove edge since we've processed both triangles using it
+                    edgeToTriangles.Remove(edgeKey);
+                }
+                else
+                {
+                    // First occurrence of this edge
+                    edgeToTriangles[edgeKey] = triangleIndex;
+                }
+            }
+        }
+    }
+
+    // Helper to create a unique key for an edge
+    private long GetEdgeKey(int v1, int v2)
+    {
+        // Always use smaller index first to ensure consistent keys
+        if (v1 > v2)
+        {
+            int temp = v1;
+            v1 = v2;
+            v2 = temp;
+        }
+
+        return ((long)v1 << 32) | (uint)v2;
+    }
+
+    // Add random color variation to triangles
+    public void AddRandomColorVariation(List<Color> colors, bool preserveWaterLand = true)
+    {
+        if (colors == null || colors.Count == 0)
+            return;
+
+        Random random = new Random();
+        int triangleCount = colors.Count;
+
+        // Determine how many triangles to affect
+        int variationCount = (int)(triangleCount * VariationFrequency);
+
+        // Create a separate list of water and land triangles
+        List<int> landTriangles = new List<int>();
+        List<int> waterTriangles = new List<int>();
+
+        if (preserveWaterLand)
+        {
+            // Use a more reliable method to detect water vs. land
+            // Water is typically more blue than red/green
+            for (int i = 0; i < colors.Count; i++)
+            {
+                Color c = colors[i];
+                // Better water detection - blue should be significantly higher than red/green
+                if (c.B > 0.3f && c.B > c.R * 1.5f && c.B > c.G * 1.2f)
+                {
+                    waterTriangles.Add(i);
+                }
+                else
+                {
+                    landTriangles.Add(i);
+                }
+            }
+
+            // Debug output
+            GD.Print($"Land triangles: {landTriangles.Count}, Water triangles: {waterTriangles.Count}");
+        }
+
+        // Function to lighten a color - enhanced version
+        Color LightenColor(Color original, bool isLand)
+        {
+            // Apply stronger brightening to land to make it more noticeable
+            float intensityMultiplier = isLand ? 1.5f : 1.0f;
+            float factor = 1.0f + (VariationIntensity * intensityMultiplier * (float)random.NextDouble());
+
+            // Create a lighter version of the color
+            return new Color(
+                Mathf.Clamp(original.R * factor, 0f, 1f),
+                Mathf.Clamp(original.G * factor, 0f, 1f),
+                Mathf.Clamp(original.B * factor, 0f, 1f)
+            );
+        }
+
+        //variation while preserving land/water distinction
+        if (preserveWaterLand && waterTriangles.Count > 0 && landTriangles.Count > 0)
+        {
+            // Increase variation frequency for land to make it more obvious
+            float landVariationMultiplier = 1.5f;
+
+            // How many triangles to affect in each category
+            int waterVariations = Math.Min((int)(waterTriangles.Count * VariationFrequency), waterTriangles.Count);
+            int landVariations = Math.Min((int)(landTriangles.Count * VariationFrequency * landVariationMultiplier), landTriangles.Count);
+
+            // Shuffle the lists for random selection
+            waterTriangles = waterTriangles.OrderBy(x => random.Next()).ToList();
+            landTriangles = landTriangles.OrderBy(x => random.Next()).ToList();
+
+            // Apply variation to selected water triangles
+            for (int i = 0; i < waterVariations; i++)
+            {
+                int index = waterTriangles[i];
+                colors[index] = LightenColor(colors[index], false);
+            }
+
+            // Apply variation to selected land triangles
+            for (int i = 0; i < landVariations; i++)
+            {
+                int index = landTriangles[i];
+                colors[index] = LightenColor(colors[index], true);
+            }
+        }
+        else
+        {
+            // Simple random variation without preserving water/land
+            for (int i = 0; i < variationCount; i++)
+            {
+                int index = random.Next(triangleCount);
+                colors[index] = LightenColor(colors[index], false);
+            }
+        }
+    }
+
+    // Calculate water coverage based on triangle colors
+    private float CalculateWaterCoverage(List<Color> colors)
+    {
+        if (colors == null || colors.Count == 0) return 0f;
+
+        int waterTriangles = 0;
+
+        // Count triangles that appear to be water (blue channel dominant)
+        for (int i = 0; i < colors.Count; i++)
+        {
+            Color c = colors[i];
+            if (c.B > 0.3f && c.B > c.R * 1.5f && c.B > c.G * 1.2f)
+            {
+                waterTriangles++;
+            }
+        }
+
+        return (float)waterTriangles / colors.Count;
+    }
+
+    // Adjust water coverage to match target amount
+    private void AdjustWaterCoverage(List<Color> colors, float targetWaterAmount)
+    {
+        // Calculate current water coverage
+        float currentWaterCoverage = CalculateWaterCoverage(colors);
+
+        // Define acceptable range (±10%)
+        float minAcceptable = Math.Max(0.0f, targetWaterAmount - 0.1f);
+        float maxAcceptable = Math.Min(1.0f, targetWaterAmount + 0.1f);
+
+        GD.Print($"Water Coverage Adjustment - Current: {currentWaterCoverage:F2}, Target: {targetWaterAmount:F2}");
+
+        // Check if current coverage is outside acceptable range
+        if (currentWaterCoverage < minAcceptable || currentWaterCoverage > maxAcceptable)
+        {
+            Color waterColor = new Color(0.2f, 0.4f, 0.8f);
+            Color landColor = new Color(0.7f, 0.5f, 0.3f);
+            Random random = new Random();
+
+            // Use breadth-first approach to expand water/land from coastal boundaries
+            HashSet<int> processed = new HashSet<int>();
+            Queue<int> frontier = new Queue<int>();
+
+            // Identify all coastal triangles to start with
+            for (int i = 0; i < colors.Count; i++)
+            {
+                bool isWater = IsWaterTriangle(colors[i]);
+
+                if (triangleAdjacency.TryGetValue(i, out var neighbors))
+                {
+                    foreach (var neighbor in neighbors)
+                    {
+                        if (neighbor >= colors.Count) continue;
+
+                        bool neighborIsWater = IsWaterTriangle(colors[neighbor]);
+
+                        // If this triangle and its neighbor are different terrain types
+                        if (isWater != neighborIsWater)
+                        {
+                            // We need more water
+                            if (currentWaterCoverage < minAcceptable && !isWater)
+                            {
+                                frontier.Enqueue(i); //this land triangle bordering water
+                                break;
+                            }
+                            // We need more land
+                            else if (currentWaterCoverage > maxAcceptable && isWater)
+                            {
+                                frontier.Enqueue(i); //this water triangle bordering land
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // How many triangles to convert
+            int trianglesToConvert;
+            if (currentWaterCoverage < minAcceptable)
+            {
+                trianglesToConvert = (int)((minAcceptable - currentWaterCoverage) * colors.Count);
+                GD.Print($"Need to convert {trianglesToConvert} triangles from land to water");
+            }
+            else
+            {
+                trianglesToConvert = (int)((currentWaterCoverage - maxAcceptable) * colors.Count);
+                GD.Print($"Need to convert {trianglesToConvert} triangles from water to land");
+            }
+
+            // Convert triangles using BFS
+            int converted = 0;
+
+            while (frontier.Count > 0 && converted < trianglesToConvert)
+            {
+                int triangleIdx = frontier.Dequeue();
+
+                if (processed.Contains(triangleIdx))
+                    continue;
+
+                processed.Add(triangleIdx);
+
+                bool isWater = IsWaterTriangle(colors[triangleIdx]);
+
+                // Only convert triangles of the right type (land if we need more water, water if we need more land)
+                if ((currentWaterCoverage < minAcceptable && !isWater) ||
+                    (currentWaterCoverage > maxAcceptable && isWater))
+                {
+                    // Convert this triangle
+                    colors[triangleIdx] = isWater ? landColor : waterColor;
+                    converted++;
+
+                    // Debug
+                    if (converted % 20 == 0)
+                        GD.Print($"Converted {converted}/{trianglesToConvert} triangles");
+
+                    //neighbors to frontier
+                    if (triangleAdjacency.TryGetValue(triangleIdx, out var neighbors))
+                    {
+                        foreach (var neighbor in neighbors)
+                        {
+                            if (neighbor >= colors.Count || processed.Contains(neighbor))
+                                continue;
+
+                            bool neighborIsWater = IsWaterTriangle(colors[neighbor]);
+
+                            // Onlyneighbors of the same type we're converting
+                            if ((currentWaterCoverage < minAcceptable && !neighborIsWater) ||
+                                (currentWaterCoverage > maxAcceptable && neighborIsWater))
+                            {
+                                frontier.Enqueue(neighbor);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Final check
+            float newCoverage = CalculateWaterCoverage(colors);
+            GD.Print($"Final water coverage: {newCoverage:F2} (converted {converted} triangles)");
+        }
+    }
+
+    // Helper method to check if a triangle is water
+    private bool IsWaterTriangle(Color color)
+    {
+        return color.B > 0.3f && color.B > color.R * 1.5f && color.B > color.G * 1.2f;
+    }
+}
+public class FastNoiseLite
+{
+    public enum NoiseType { SimplexSmooth, Perlin, Cellular }
+
+    private Random random;
+    private int seed;
+    private float frequency = 0.01f;
+    private NoiseType noiseType = NoiseType.SimplexSmooth;
+
+    public void SetSeed(int seed)
+    {
+        this.seed = seed;
+        this.random = new Random(seed);
+    }
+
+    public void SetFrequency(float frequency)
+    {
+        this.frequency = frequency;
+    }
+
+    public void SetNoiseType(NoiseType type)
+    {
+        this.noiseType = type;
+    }
+
+    public float GetNoise3d(float x, float y, float z)
+    {
+        float scale = 1.0f / frequency;
+        return Mathf.Sin(x * scale * 1.7f + seed) *
+               Mathf.Cos(y * scale * 1.4f + seed) *
+               Mathf.Sin(z * scale * 1.9f + seed);
     }
 }
