@@ -1,11 +1,21 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class PlanetProperties : Properties
 {
     public PlanetProperties()
     {
         SetHabitability();
+        if (HasWater)
+        {
+            WaterAmount = 0.25f; // Default water amount
+            if (HasAtmosphere)
+            {
+                WaterAmount = 0.8f; // Higher water amount if atmosphere is present
+            }
+        }
+
     }
     public float OrbitRadius; // in AU (Astronomical Units)
     public float OrbitPeriod; // in Earth days
@@ -14,6 +24,7 @@ public partial class PlanetProperties : Properties
     public bool HasWater; // Whether the planet has water or not
     public float WaterAmount = 0.6f; // 0.0 to 1.0 
     public float Habitability; // 0.0 to 1.0
+    public List<Type> PlanetResources = new List<Type>(); // Resources available on the planet
     private void SetHabitability()
     {
         // Calculate habitability based on properties

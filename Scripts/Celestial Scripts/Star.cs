@@ -70,7 +70,8 @@ public partial class Star : Body
 				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 10,
 				RotationPeriod = 24,
 				HasAtmosphere = hasAtmosphere,
-				HasWater = hasWater
+				HasWater = hasWater,
+				Habitability = 0.0f
 			};
 			GD.Print(hasAtmosphere, hasWater);
 			// Create a new planet
@@ -91,7 +92,7 @@ public partial class Star : Body
 		for (int i = 0; i < random.RandiRange(100, 150); i++)
 		{
 			float mass = random.RandfRange(0.1f, 10f); // Random mass between 0.1 and 10 Earth masses
-			AstroidProperties.AstroidType type = AstroidProperties.AstroidType.Rock; // Default type
+			Properties.Type type = global::Properties.Type.Rock; // Default type
 			if (Properties.SystemResources != null && Properties.SystemResources.Count > 0)
 			{
 				type = Properties.SystemResources[random.RandiRange(0, Properties.SystemResources.Count - 1)];
@@ -101,7 +102,7 @@ public partial class Star : Body
 			{
 				Mass = mass,
 				Radius = 2.5f + (mass), // Radius scales with mass
-				Type = type
+				AstroidType = type
 			};
 			// Create a new asteroid
 			Astroid astroid = new Astroid(astroidProperties);

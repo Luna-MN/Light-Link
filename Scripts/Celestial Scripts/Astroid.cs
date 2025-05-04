@@ -23,19 +23,19 @@ public partial class Astroid : Body
 	public void SetAstroidColor()
 	{
 		Color color;
-		GD.Print("Astroid Color: " + Properties.Type);
-		switch (Properties.Type)
+
+		switch (Properties.AstroidType)
 		{
-			case AstroidProperties.AstroidType.Rock:
+			case global::Properties.Type.Rock:
 				color = Colors.Brown;
 				break;
-			case AstroidProperties.AstroidType.Ice:
+			case global::Properties.Type.Ice:
 				color = Colors.LightBlue;
 				break;
-			case AstroidProperties.AstroidType.Iron:
+			case global::Properties.Type.Iron:
 				color = Colors.Gray;
 				break;
-			case AstroidProperties.AstroidType.Carbon:
+			case global::Properties.Type.Carbon:
 				color = Colors.DarkGray;
 				break;
 			default:

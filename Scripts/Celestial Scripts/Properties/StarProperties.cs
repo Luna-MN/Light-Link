@@ -7,26 +7,26 @@ public partial class StarProperties : Properties
     public float Tempreture;
     public float Luminosity;
     public int Planets;
-    public List<AstroidProperties.AstroidType> SystemResources = new List<AstroidProperties.AstroidType>();
+    public List<Type> SystemResources = new List<Type>();
     public void SetResorces()
     {
         // Set the resources of the star system based on its properties
-        SystemResources.Add(AstroidProperties.AstroidType.Iron);
-        SystemResources.Add(AstroidProperties.AstroidType.Ice);
-        SystemResources.Add(AstroidProperties.AstroidType.Rock);
+        SystemResources.Add(Type.Iron);
+        SystemResources.Add(Type.Ice);
+        SystemResources.Add(Type.Rock);
         if (Luminosity > 1.0f)
         {
-            SystemResources.Add(AstroidProperties.AstroidType.Gold);
-            SystemResources.Add(AstroidProperties.AstroidType.Silver);
+            SystemResources.Add(Type.Gold);
+            SystemResources.Add(Type.Silver);
         }
         else if (Luminosity < 0.5f)
         {
-            SystemResources.Add(AstroidProperties.AstroidType.Copper);
+            SystemResources.Add(Type.Copper);
         }
         else
         {
-            SystemResources.Add(AstroidProperties.AstroidType.Carbon);
-            SystemResources.Add(AstroidProperties.AstroidType.Silicon);
+            SystemResources.Add(Type.Carbon);
+            SystemResources.Add(Type.Silicon);
         }
 
     }
