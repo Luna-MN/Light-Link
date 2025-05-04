@@ -14,17 +14,11 @@ public partial class Star : Body
 		Properties = properties;
 
 		Position = pos;
-		Mesh.Modulate = Properties.ColorIndex; // Yellow color
+
+		Mesh.GenerateStar(Properties.Tempreture, 0.6f);
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 		// Apply star-specific visual properties
 		ShaderMaterial material = Mesh.Material as ShaderMaterial;
-		if (material != null)
-		{
-			material.SetShaderParameter("emission_enabled", true);
-			material.SetShaderParameter("color", Properties.ColorIndex);
-			// could use starProps.Luminosity to affect glow, etc.
-			material.SetShaderParameter("emission_strength", Properties.Luminosity);
-		}
 		Properties.SetResorces();
 		GeneratePlanets();
 
