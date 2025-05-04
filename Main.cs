@@ -9,7 +9,7 @@ public partial class Main : Node2D
 		// Create a new star properties instance
 		StarProperties starProperties = new StarProperties
 		{
-			Tempreture = 5778, // in Kelvin
+			Tempreture = 5300, // in Kelvin
 			Luminosity = 1, // in Solar Luminosity
 			Mass = 1, // in Solar Masses
 			Radius = 50, // in Solar Radii
