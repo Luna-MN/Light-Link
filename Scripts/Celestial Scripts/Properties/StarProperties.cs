@@ -8,6 +8,18 @@ public partial class StarProperties : Properties
     public float Luminosity;
     public int Planets;
     public List<Type> SystemResources = new List<Type>();
+    public enum StarType
+    {
+        M,
+        K,
+        KG,
+        G,
+        F,
+        A,
+        B,
+        O
+    }
+    public StarType SType;
     public void SetResorces()
     {
         // Set the resources of the star system based on its properties

@@ -43,6 +43,43 @@ public partial class Star : Body
 	public override void _Process(double delta)
 	{
 	}
+	#region Star Properties
+	public void SetStarProperties()
+	{
+		if (Properties.Tempreture <= 3200)
+		{
+			Properties.SType = StarProperties.StarType.M;
+		}
+		else if (Properties.Tempreture <= 4000)
+		{
+			Properties.SType = StarProperties.StarType.K;
+		}
+		else if (Properties.Tempreture <= 5200)
+		{
+			Properties.SType = StarProperties.StarType.KG;
+		}
+		else if (Properties.Tempreture < 6000)
+		{
+			Properties.SType = StarProperties.StarType.G;
+		}
+		else if (Properties.Tempreture < 7200)
+		{
+			Properties.SType = StarProperties.StarType.F;
+		}
+		else if (Properties.Tempreture < 10000)
+		{
+			Properties.SType = StarProperties.StarType.A;
+		}
+		else if (Properties.Tempreture < 30000)
+		{
+			Properties.SType = StarProperties.StarType.B;
+		}
+		else
+		{
+			Properties.SType = StarProperties.StarType.O;
+		}
+	}
+	#endregion
 	#region Planet Functions
 	public void GeneratePlanets()
 	{
