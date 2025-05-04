@@ -8,7 +8,7 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
     [Export] public float Radius = 0.5f;
     [Export] public int Subdivisions = 2;
     [Export] public Color DefaultColor = new Color(1.0f, 0.5f, 0.5f); // Default color for triangles
-    [Export] public int ContinentSeedCount = 2; //properties for continent generation
+    [Export] public int ContinentSeedCount = 5; //properties for continent generation
     [Export] public float ContinentNoiseScale = 1.0f;
     [Export] public float VariationFrequency = 0.1f; // How many triangles to affect (0.0-1.0)
     [Export] public float VariationIntensity = 0.2f; // How much lighter to make affected triangles (0.0-1.0)

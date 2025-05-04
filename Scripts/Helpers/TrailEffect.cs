@@ -101,7 +101,7 @@ public partial class TrailEffect : Line2D
     public void SetTrailWidth(float width)
     {
         MaxWidth = width;
-        MinWidth = width * 0.25f; // Make minimum width proportional to maximum
+        MinWidth = width * 0.125f; // Make minimum width proportional to maximum
         UpdateWidthCurve();
     }
 

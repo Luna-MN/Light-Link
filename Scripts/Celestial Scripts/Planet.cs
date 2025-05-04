@@ -21,6 +21,7 @@ public partial class Planet : Body
 
 		AddChild(trail);
 		trail.SetTrailWidth(Properties.Radius * 0.7f);
+		Mesh.ApplyPlanetProperties(Properties);
 		if (Properties.HasAtmosphere)
 		{
 			CreateAtmosphere();
@@ -28,7 +29,6 @@ public partial class Planet : Body
 		if (Properties.HasWater)
 		{
 		}
-		Mesh.ApplyPlanetProperties(Properties);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -74,7 +74,7 @@ public partial class Planet : Body
 		Color planetColor = Color.FromHsv(hue, saturation, value);
 		Properties.ColorIndex = planetColor;
 		// Make trail color slightly darker than the planet
-		Color trailColor = planetColor.Darkened(0.2f);
+		Color trailColor = Properties.ColorIndex.Darkened(0.2f);
 		trailColor.A = 0.7f;
 		trail.SetTrailColor(trailColor);
 		// Apply the color to the planet mesh
@@ -88,7 +88,7 @@ public partial class Planet : Body
 		atmosphereMesh.Material = new ShaderMaterial();
 		atmosphereMesh.Scale = new Vector2(Properties.Radius * 1.1f, Properties.Radius * 1.1f);
 		Color atmosphereColor = Properties.ColorIndex; // Set the color of the atmosphere
-		atmosphereColor.A = 0.3f;
+		atmosphereColor.A = 0.2f;
 		atmosphereColor = atmosphereColor.Lightened(0.7f);
 		atmosphereMesh.Modulate = atmosphereColor; // Planet color with transparency
 		AddChild(atmosphereMesh);
