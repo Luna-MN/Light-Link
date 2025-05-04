@@ -5,7 +5,7 @@ public partial class Camera : Camera2D
 {
     public float PanSpeed = 1.0f;
     public float ZoomSpeed = 0.1f;
-    public float MinZoom = 0.5f;
+    public float MinZoom = 0.1f;
     public float MaxZoom = 5.0f;
     public bool SmoothZoom = true;
     private bool isDragging = false;
