@@ -6,5 +6,5 @@ public abstract class Properties
     public float Mass;
     public float Radius;
     public float Age;
-    public Color ColorIndex;
+    public Color ColorIndex = new Color(1, 1, 1); // Default color is white
 }

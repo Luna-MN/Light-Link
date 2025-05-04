@@ -23,7 +23,10 @@ public partial class Star : Body
 			// could use starProps.Luminosity to affect glow, etc.
 			material.SetShaderParameter("emission_strength", Properties.Luminosity);
 		}
+		Properties.SetResorces();
 		GeneratePlanets();
+
+		GenerateAstroids();
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -77,4 +80,41 @@ public partial class Star : Body
 		}
 	}
 	#endregion
+	#region Generate Astroids
+	public void GenerateAstroids()
+	{
+		// Generate asteroids in the asteroid belt
+		float orbitRadius = (Properties.Planets + 1) * 100f; // in AU
+		Node2D asteroidBelt = new Node2D();
+		AddChild(asteroidBelt);
+		var random = new RandomNumberGenerator();
+		for (int i = 0; i < random.RandiRange(100, 150); i++)
+		{
+			float mass = random.RandfRange(0.1f, 10f); // Random mass between 0.1 and 10 Earth masses
+			AstroidProperties.AstroidType type = AstroidProperties.AstroidType.Rock; // Default type
+			if (Properties.SystemResources != null && Properties.SystemResources.Count > 0)
+			{
+				type = Properties.SystemResources[random.RandiRange(0, Properties.SystemResources.Count - 1)];
+			}
+			// Create a new planet properties instance
+			AstroidProperties astroidProperties = new AstroidProperties
+			{
+				Mass = mass,
+				Radius = 2.5f + (mass), // Radius scales with mass
+				Type = type
+			};
+			// Create a new asteroid
+			Astroid astroid = new Astroid(astroidProperties);
+			// Set the position of the asteroid
+			float beltWidth = 50f; // Width of the asteroid belt
+			float randomRadius = orbitRadius + random.RandfRange(-beltWidth, beltWidth * 2);
+			astroid.Position = new Vector2(randomRadius, 0).Rotated(Mathf.DegToRad(random.RandfRange(0, 360)));
+			// Add the asteroid to the asteroid belt
+			asteroidBelt.AddChild(astroid);
+		}
+
+	}
+	#endregion
 }
+
+

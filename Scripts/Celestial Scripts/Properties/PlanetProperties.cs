@@ -14,7 +14,7 @@ public partial class PlanetProperties : Properties
     public bool HasWater; // Whether the planet has water or not
     public float WaterAmount = 0.6f; // 0.0 to 1.0 
     public float Habitability; // 0.0 to 1.0
-    public void SetHabitability()
+    private void SetHabitability()
     {
         // Calculate habitability based on properties
         Habitability = 0.0f;
