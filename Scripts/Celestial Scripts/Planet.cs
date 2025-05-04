@@ -62,6 +62,18 @@ public partial class Planet : Body
 			hue = Mathf.Lerp(hue, 0.65f, 0.3f); // More definitively blue (0.65)
 			saturation = Mathf.Clamp(saturation + 0.15f, 0f, 1f);
 		}
+		else
+		{
+			// For non-water planets, avoid blue hues (0.55-0.7)
+			if (hue >= 0.55f && hue <= 0.7f)
+			{
+				// Shift blue colors to green or purple
+				if (GD.Randf() < 0.5f)
+					hue = (float)GD.RandRange(0.25f, 0.4f); // Shift to green
+				else
+					hue = (float)GD.RandRange(0.75f, 0.9f); // Shift to purple/magenta
+			}
+		}
 
 		// Atmosphere makes the planet slightly lighter and less saturated
 		if (Properties.HasAtmosphere)
