@@ -299,36 +299,44 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
     // Apply properties to the planet mesh
     public void ApplyPlanetProperties(PlanetProperties properties)
     {
-        // Apply basic properties
-        if (properties.HasWater && properties.WaterAmount > 0)
+        if (properties.IsGasGiant)
         {
-            // Use the existing continent generation logic
-            GenerateContinents(properties);
+            // Use gas giant generation
+            GenerateGasGiant(properties);
         }
         else
         {
-            // For planets without water, still color variations
-            int triangleCount = GetTriangleCount();
-            List<Color> colors = new List<Color>(new Color[triangleCount]);
-
-            // Get color from properties or use default
-            Color planetColor = properties.ColorIndex;
-            if (planetColor.R == 0 && planetColor.G == 0 && planetColor.B == 0)
+            // Existing code for terrestrial planets
+            if (properties.HasWater && properties.WaterAmount > 0)
             {
-                planetColor = DefaultColor;
+                // Use the existing continent generation logic
+                GenerateContinents(properties);
             }
-
-            // Fill all triangles with the base color
-            for (int i = 0; i < triangleCount; i++)
+            else
             {
-                colors[i] = planetColor;
+                // For planets without water, still color variations
+                int triangleCount = GetTriangleCount();
+                List<Color> colors = new List<Color>(new Color[triangleCount]);
+
+                // Get color from properties or use default
+                Color planetColor = properties.ColorIndex;
+                if (planetColor.R == 0 && planetColor.G == 0 && planetColor.B == 0)
+                {
+                    planetColor = DefaultColor;
+                }
+
+                // Fill all triangles with the base color
+                for (int i = 0; i < triangleCount; i++)
+                {
+                    colors[i] = planetColor;
+                }
+
+                // Apply random variations to create surface details
+                AddRandomColorVariation(colors, false);  // false = don't try to preserve water/land distinction
+
+                // Set the colors and generate mesh
+                SetTriangleColors(colors);
             }
-
-            // Apply random variations to create surface details
-            AddRandomColorVariation(colors, false);  // false = don't try to preserve water/land distinction
-
-            // Set the colors and generate mesh
-            SetTriangleColors(colors);
         }
     }
 
@@ -632,8 +640,6 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
                 }
             }
 
-            // Debug output
-            GD.Print($"Land triangles: {landTriangles.Count}, Water triangles: {waterTriangles.Count}");
         }
 
         // Function to lighten a color - enhanced version
@@ -720,8 +726,6 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
         float minAcceptable = Math.Max(0.0f, targetWaterAmount - 0.1f);
         float maxAcceptable = Math.Min(1.0f, targetWaterAmount + 0.1f);
 
-        GD.Print($"Water Coverage Adjustment - Current: {currentWaterCoverage:F2}, Target: {targetWaterAmount:F2}");
-
         // Check if current coverage is outside acceptable range
         if (currentWaterCoverage < minAcceptable || currentWaterCoverage > maxAcceptable)
         {
@@ -771,12 +775,10 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
             if (currentWaterCoverage < minAcceptable)
             {
                 trianglesToConvert = (int)((minAcceptable - currentWaterCoverage) * colors.Count);
-                GD.Print($"Need to convert {trianglesToConvert} triangles from land to water");
             }
             else
             {
                 trianglesToConvert = (int)((currentWaterCoverage - maxAcceptable) * colors.Count);
-                GD.Print($"Need to convert {trianglesToConvert} triangles from water to land");
             }
 
             // Convert triangles using BFS
@@ -800,10 +802,6 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
                     // Convert this triangle
                     colors[triangleIdx] = isWater ? landColor : waterColor;
                     converted++;
-
-                    // Debug
-                    if (converted % 20 == 0)
-                        GD.Print($"Converted {converted}/{trianglesToConvert} triangles");
 
                     //neighbors to frontier
                     if (triangleAdjacency.TryGetValue(triangleIdx, out var neighbors))
@@ -836,6 +834,117 @@ public partial class LowPolyPlanetMesh : MeshInstance2D
     private bool IsWaterTriangle(Color color)
     {
         return color.B > 0.3f && color.B > color.R * 1.5f && color.B > color.G * 1.2f;
+    }
+
+    public void GenerateGasGiant(PlanetProperties properties)
+    {
+        int triangleCount = GetTriangleCount();
+        List<Color> colors = new List<Color>(new Color[triangleCount]);
+
+        // Base planet color
+        Color baseColor = properties.ColorIndex.R == 0 && properties.ColorIndex.G == 0 &&
+                          properties.ColorIndex.B == 0 ?
+                          new Color(0.8f, 0.7f, 0.4f) : // Default Jupiter-like color
+                          properties.ColorIndex;
+
+        // Calculate triangle centers if not already done
+        CalculateTriangleCenters();
+
+        // Create horizontal bands based on Y coordinate (latitude)
+        var noise = new FastNoiseLite();
+        noise.SetNoiseType(FastNoiseLite.NoiseType.SimplexSmooth);
+        noise.SetSeed(new Random().Next());
+        noise.SetFrequency(0.5f);
+
+        for (int i = 0; i < triangleCount; i++)
+        {
+            // Use the Y coordinate to create horizontal bands
+            Vector3 position = triangleCenters[i];
+
+            // Latitude is based on Y coordinate (-1 to 1)
+            float latitude = position.Y;
+
+            // Create banding effect with noise - using absolute value to avoid darkening
+            float bandNoise = noise.GetNoise3d(position.X * 2, position.Y * 10, position.Z * 2);
+
+            // Use absolute value of sin to avoid negative values that create dark bands
+            float bandValue = Mathf.Abs(Mathf.Sin(latitude * 15)) * 0.5f;
+
+            // Mix noise and banding, keeping values positive
+            float colorVariation = bandValue + Mathf.Abs(bandNoise * 0.3f);
+
+            // Create lighter bands only
+            Color bandColor = new Color(
+                Mathf.Clamp(baseColor.R + colorVariation * 0.4f, 0.6f, 1.0f),
+                Mathf.Clamp(baseColor.G + colorVariation * 0.4f, 0.6f, 1.0f),
+                Mathf.Clamp(baseColor.B + colorVariation * 0.3f, 0.5f, 1.0f)
+            );
+
+            colors[i] = bandColor;
+        }
+
+        // Add storm features
+        AddStormFeatures(colors, 0.2f); // 0.2 = storm density
+
+        SetTriangleColors(colors);
+    }
+
+    private void AddStormFeatures(List<Color> colors, float stormDensity)
+    {
+        Random random = new Random();
+        int triangleCount = colors.Count;
+        int stormCount = (int)(triangleCount * stormDensity * 0.01f); // Limit storm count
+
+        // Need adjacency for creating storm spots
+        BuildTriangleAdjacency();
+
+        // Create several storm systems
+        for (int i = 0; i < stormCount; i++)
+        {
+            // Pick a random triangle as storm center
+            int stormCenter = random.Next(triangleCount);
+
+            // Determine storm size (1-5)
+            int stormSize = random.Next(1, 6);
+
+            // Determine storm color (only bright options now)
+            Color stormColor;
+            float stormType = (float)random.NextDouble();
+            if (stormType < 0.4f)
+                stormColor = new Color(0.9f, 0.5f, 0.3f); // Brighter orange-red
+            else
+                stormColor = new Color(0.95f, 0.95f, 0.8f); // Whitish/cream
+
+            // Color the storm center and expand outward
+            HashSet<int> stormTriangles = new HashSet<int>();
+            Queue<int> frontier = new Queue<int>();
+            frontier.Enqueue(stormCenter);
+
+            while (frontier.Count > 0 && stormTriangles.Count < stormSize * 5)
+            {
+                int current = frontier.Dequeue();
+                if (stormTriangles.Contains(current)) continue;
+
+                // Add to storm
+                stormTriangles.Add(current);
+                colors[current] = stormColor;
+
+                // Add neighbors to frontier for expansion
+                if (triangleAdjacency.TryGetValue(current, out var neighbors))
+                {
+                    foreach (var neighbor in neighbors)
+                    {
+                        if (neighbor < triangleCount && !stormTriangles.Contains(neighbor))
+                        {
+                            // Fade color as we get further from center
+                            float distFactor = 1.0f - ((float)stormTriangles.Count / (stormSize * 8));
+                            if (distFactor > 0)
+                                frontier.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 public class FastNoiseLite

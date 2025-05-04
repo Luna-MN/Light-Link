@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 public partial class Star : Body
 {
@@ -54,13 +56,25 @@ public partial class Star : Body
 			// Habitability calculations
 			// Determine if planet can retain atmosphere based on mass and distance
 			// Small planets and those too close to star struggle to maintain atmospheres
+			bool isGasGiant = mass >= 8f && mass <= 10f;
 			bool hasAtmosphere = mass >= 4f &&
-							   orbitRadius > Properties.Radius * 5f;
+							   orbitRadius > Properties.Radius * 5f && !isGasGiant;
 
 			bool hasWater = mass >= 0.3f &&
 						   orbitRadius >= habitableZoneInner &&
-						   orbitRadius <= habitableZoneOuter;
+						   orbitRadius <= habitableZoneOuter && !isGasGiant;
 
+			List<Properties.Type> planetResources = new List<Properties.Type>();
+
+			if (isGasGiant)
+			{
+				planetResources.Add(global::Properties.Type.Hydrogen);
+				planetResources.Add(global::Properties.Type.Helium);
+			}
+			else
+			{
+				planetResources.AddRange(Properties.SystemResources);
+			}
 			// Create a new planet properties instance
 			PlanetProperties planetProperties = new PlanetProperties
 			{
@@ -71,9 +85,12 @@ public partial class Star : Body
 				RotationPeriod = 24,
 				HasAtmosphere = hasAtmosphere,
 				HasWater = hasWater,
-				Habitability = 0.0f
+				Habitability = 0.0f,
+				PlanetResources = planetResources,
+				IsGasGiant = isGasGiant
 			};
-			GD.Print(hasAtmosphere, hasWater);
+
+			GD.Print($"GasGiant: {isGasGiant}, hasAtmosphere: {hasAtmosphere}, hasWater: {hasWater}");
 			// Create a new planet
 			Planet planet = new Planet(planetProperties);
 			// Add the planet to the star
