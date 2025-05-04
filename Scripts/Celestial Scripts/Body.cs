@@ -8,7 +8,8 @@ public partial class Body : Node2D
 	{
 		Star,
 		Planet,
-		Astroid
+		Astroid,
+		Moon,
 	}
 	public MeshType Type;
 	public Body(MeshType type)
@@ -41,6 +42,10 @@ public partial class Body : Node2D
 				break;
 			case MeshType.Astroid:
 				Mesh = new LowPolyAstroidMesh();
+				AddChild(Mesh);
+				break;
+			case MeshType.Moon:
+				Mesh = new LowPolyMoonMesh();
 				AddChild(Mesh);
 				break;
 			default:

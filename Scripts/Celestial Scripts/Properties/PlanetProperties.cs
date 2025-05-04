@@ -26,6 +26,7 @@ public partial class PlanetProperties : Properties
     public float WaterAmount = 0.6f; // 0.0 to 1.0 
     public float Habitability; // 0.0 to 1.0
     public List<Type> PlanetResources = new List<Type>(); // Resources available on the planet
+    public int Moons; // Number of moons the planet has
     private void SetHabitability()
     {
         // Calculate habitability based on properties

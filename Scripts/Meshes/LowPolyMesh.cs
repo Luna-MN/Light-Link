@@ -13,7 +13,7 @@ public partial class LowPolyMesh : MeshInstance2D
     [Export] public float VariationFrequency = 0.1f; // How many triangles to affect (0.0-1.0)
     [Export] public float VariationIntensity = 0.2f; // How much lighter to make affected triangles (0.0-1.0)
 
-    private List<Color> triangleColors = new List<Color>(); // Store colors for each triangle
+    public List<Color> triangleColors = new List<Color>(); // Store colors for each triangle
     private bool useVertexColors = false;
 
     //triangle adjacency tracking

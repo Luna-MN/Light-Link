@@ -91,7 +91,8 @@ public partial class Star : Body
 				HasWater = hasWater,
 				Habitability = 0.0f,
 				PlanetResources = planetResources,
-				IsGasGiant = isGasGiant
+				IsGasGiant = isGasGiant,
+				Moons = new RandomNumberGenerator().RandiRange(0, 2) // Random number of moons
 			};
 
 			GD.Print($"GasGiant: {isGasGiant}, hasAtmosphere: {hasAtmosphere}, hasWater: {hasWater}");

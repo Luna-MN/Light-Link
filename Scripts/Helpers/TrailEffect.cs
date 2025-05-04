@@ -6,7 +6,6 @@ public partial class TrailEffect : Line2D
     public int TrailLength = 10;
     public float MaxWidth = 2.0f;
     public float MinWidth = 0.5f;
-
     private Queue<Vector2> trailPoints = new Queue<Vector2>();
     private Node2D parentNode;
     private Vector2 lastGlobalPosition;
@@ -86,6 +85,7 @@ public partial class TrailEffect : Line2D
             // Update the line points
             Points = points;
         }
+
     }
     private void UpdateWidthCurve()
     {

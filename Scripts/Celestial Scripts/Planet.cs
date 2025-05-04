@@ -29,6 +29,7 @@ public partial class Planet : Body
 		if (Properties.HasWater)
 		{
 		}
+		GenerateMoons();
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -127,6 +128,29 @@ public partial class Planet : Body
 			Position.X * Mathf.Cos(angle) - Position.Y * Mathf.Sin(angle),
 			Position.X * Mathf.Sin(angle) + Position.Y * Mathf.Cos(angle)
 		);
+	}
+	#endregion
+	#region Moon Functions
+	public void GenerateMoons()
+	{
+		// Generate moons around the planet
+		for (int i = 0; i < Properties.Moons; i++)
+		{
+			float orbitRadius = ((i + 1) * 10f) + Properties.Radius; // in AU
+			float mass = new RandomNumberGenerator().RandfRange(0.1f, 10f); // Random mass between 0.1 and 10 Earth masses
+			MoonProperties moonProperties = new MoonProperties
+			{
+				OrbitRadius = orbitRadius,
+				Mass = mass,
+				Radius = 1 + (mass * 0.15f), // Radius scales with mass
+				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 20,
+				HasWater = mass > 6.5f,
+			};
+			GD.Print($"Moon mass: {mass}, orbit radius: {orbitRadius}");
+			// Create a moon instance
+			Moon moon = new Moon(moonProperties);
+			AddChild(moon);
+		}
 	}
 	#endregion
 }
