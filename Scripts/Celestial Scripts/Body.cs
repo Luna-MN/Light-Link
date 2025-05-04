@@ -3,10 +3,18 @@ using System;
 
 public partial class Body : Node2D
 {
-	public LowPolyPlanetMesh Mesh;
-	public Body()
+	public LowPolyMesh Mesh;
+	public enum MeshType
 	{
-		CreateMesh();
+		Star,
+		Planet,
+		Astroid
+	}
+	public MeshType Type;
+	public Body(MeshType type)
+	{
+		Type = type;
+		CreateMesh(Type);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -18,11 +26,27 @@ public partial class Body : Node2D
 	public override void _Process(double delta)
 	{
 	}
-	public void CreateMesh()
+	public void CreateMesh(MeshType type)
 	{
-		// Initialize the planet mesh
-		Mesh = new LowPolyPlanetMesh();
-		// Add the planet mesh to the planet node
-		AddChild(Mesh);
+		Type = type;
+		switch (type)
+		{
+			case MeshType.Star:
+				Mesh = new LowPolyStarMesh();
+				AddChild(Mesh);
+				break;
+			case MeshType.Planet:
+				Mesh = new LowPolyPlanetMesh();
+				AddChild(Mesh);
+				break;
+			case MeshType.Astroid:
+				Mesh = new LowPolyAstroidMesh();
+				AddChild(Mesh);
+				break;
+			default:
+				Mesh = new LowPolyPlanetMesh();
+				AddChild(Mesh);
+				break;
+		}
 	}
 }

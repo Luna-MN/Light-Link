@@ -8,14 +8,24 @@ public partial class Star : Body
 	// Properties of the star
 	public StarProperties Properties;
 	// Constructor
-	public Star(Vector2 pos, StarProperties properties)
+	public Star(Vector2 pos, StarProperties properties, MeshType type = MeshType.Star) : base(type)
 	{
 		// Set the position of the star
 		Properties = properties;
 
 		Position = pos;
-
-		Mesh.GenerateStar(Properties.Tempreture, 0.6f);
+		GD.Print(type);
+		if (Mesh is LowPolyStarMesh starMesh)
+		{
+			starMesh.GenerateStar(Properties.Tempreture, 0.6f);
+		}
+		else
+		{
+			GD.Print($"Wrong mesh type: {Mesh.GetType().Name}, creating correct one");
+			// Create the correct mesh type
+			Mesh = new LowPolyStarMesh();
+			((LowPolyStarMesh)Mesh).GenerateStar(Properties.Tempreture, 0.6f);
+		}
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 		// Apply star-specific visual properties
 		ShaderMaterial material = Mesh.Material as ShaderMaterial;

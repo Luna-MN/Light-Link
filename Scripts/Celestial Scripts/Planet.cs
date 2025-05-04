@@ -6,7 +6,7 @@ public partial class Planet : Body
 {
 	private TrailEffect trail;
 	public PlanetProperties Properties;
-	public Planet(PlanetProperties properties)
+	public Planet(PlanetProperties properties, MeshType type = MeshType.Planet) : base(type)
 	{
 		Properties = properties;
 		// Set the position of the planet
@@ -21,7 +21,7 @@ public partial class Planet : Body
 
 		AddChild(trail);
 		trail.SetTrailWidth(Properties.Radius * 0.7f);
-		Mesh.ApplyPlanetProperties(Properties);
+		((LowPolyPlanetMesh)Mesh).ApplyPlanetProperties(Properties);
 		if (Properties.HasAtmosphere)
 		{
 			CreateAtmosphere();

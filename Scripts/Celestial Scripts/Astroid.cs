@@ -5,7 +5,7 @@ using System.Linq;
 public partial class Astroid : Body
 {
 	public AstroidProperties Properties;
-	public Astroid(AstroidProperties properties)
+	public Astroid(AstroidProperties properties, MeshType type = MeshType.Astroid) : base(type)
 	{
 		Properties = properties;
 		Mesh.Scale = new Vector2(properties.Radius, properties.Radius);
@@ -50,7 +50,7 @@ public partial class Astroid : Body
 		List<Color> colors = Enumerable.Repeat(color, triangleCount).ToList();
 
 		// Add color variations to make the asteroid look more natural
-		Mesh.AddRandomColorVariation(colors, false);  // false = don't preserve water/land distinction
+		((LowPolyAstroidMesh)Mesh).AddRandomColorVariation(colors, false);  // false = don't preserve water/land distinction
 
 		// Apply the colors
 		Mesh.SetTriangleColors(colors);
