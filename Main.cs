@@ -12,6 +12,8 @@ public partial class Main : Node2D
 	// New fields for smooth scaling
 	private float scaleTransitionSpeed = 5.0f; // Adjust this value to control transition speed
 	private Dictionary<Star, Vector2> targetStarScales = new Dictionary<Star, Vector2>();
+	// Add this to store the original scales
+	private Dictionary<Star, Vector2> originalStarScales = new Dictionary<Star, Vector2>();
 
 	public override void _Ready()
 	{
@@ -45,10 +47,36 @@ public partial class Main : Node2D
 	}
 
 	public void CheckZoom()
-
 	{
+		bool shouldBeZoomedOut = camera.Zoom.X < 0.2f;
+
+		// Only update scales if zoom state changes
+		if (shouldBeZoomedOut != isZoomedOut)
+		{
+			foreach (Node2D child in GetChildren())
+			{
+				if (child is Star star && originalStarScales.ContainsKey(star))
+				{
+					if (shouldBeZoomedOut)
+					{
+						// Set target based on original scale when zooming out
+						targetStarScales[star] = originalStarScales[star] * SunIncrease;
+					}
+					else
+					{
+						// Restore original scale when zooming in
+						targetStarScales[star] = originalStarScales[star];
+					}
+				}
+			}
+
+			isZoomedOut = shouldBeZoomedOut;
+		}
+
+		// Handle planet visibility
 		if (camera.Zoom.X >= 0.2f)
 		{
+			// Show planets
 			foreach (Node2D child in GetChildren())
 			{
 				if (child is Star star)
@@ -70,18 +98,12 @@ public partial class Main : Node2D
 							}
 						}
 					}
-
-					if (isZoomedOut)
-					{
-						// Instead of immediately changing scale, set the target scale
-						targetStarScales[star] = star.Mesh.Scale / SunIncrease;
-						isZoomedOut = false;
-					}
 				}
 			}
 		}
-		else if (camera.Zoom.X < 0.2f)
+		else
 		{
+			// Hide planets
 			foreach (Node2D child in GetChildren())
 			{
 				if (child is Star star)
@@ -103,17 +125,11 @@ public partial class Main : Node2D
 							}
 						}
 					}
-
-					if (!isZoomedOut)
-					{
-						// Instead of immediately changing scale, set the target scale
-						targetStarScales[star] = star.Mesh.Scale * SunIncrease;
-						isZoomedOut = true;
-					}
 				}
 			}
 		}
 
+		// Handle moon visibility
 		if (camera.Zoom.X >= 0.5f)
 		{
 			foreach (Node2D child in GetChildren())
@@ -159,6 +175,7 @@ public partial class Main : Node2D
 			}
 		}
 	}
+
 	public Star CreateStar(Vector2 position, StarProperties starProperties)
 	{
 		// Create a new star instance
@@ -167,10 +184,14 @@ public partial class Main : Node2D
 		// Add the star to the scene
 		AddChild(star);
 
-		// Initialize target scale for the star
+		// Store the original scale when creating the star
+		originalStarScales[star] = star.Mesh.Scale;
+		// Initialize target scale to the original scale
 		targetStarScales[star] = star.Mesh.Scale;
+
 		return star;
 	}
+
 	public void CreateUniverse(int starCount = 10, float minDistance = 500f, Vector2? universeSize = null)
 	{
 		// Default universe size if not specified
@@ -214,12 +235,11 @@ public partial class Main : Node2D
 				star.Name = $"Star_{starPositions.Count + 1}";
 				// Add the position to the list
 				starPositions.Add(newPosition);
+				// No need to initialize targetStarScales here as it's already done in CreateStar
 			}
 
 			attempts++;
 		}
-
-		GD.Print($"Generated {starPositions.Count} stars out of requested {starCount}");
 	}
 
 	private StarProperties GenerateRandomStarProperties(Random random)

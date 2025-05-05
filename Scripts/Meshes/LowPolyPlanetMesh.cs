@@ -331,7 +331,6 @@ public partial class LowPolyPlanetMesh : LowPolyMesh
 
             // Final check
             float newCoverage = CalculateWaterCoverage(colors);
-            GD.Print($"Final water coverage: {newCoverage:F2} (converted {converted} triangles)");
         }
     }
 

@@ -15,14 +15,12 @@ public partial class Star : Body
 		SetStarProperties();
 		UpdateRBScale(Properties.Radius);
 		Position = pos;
-		GD.Print(type);
 		if (Mesh is LowPolyStarMesh starMesh)
 		{
 			starMesh.GenerateStar(Properties.Tempreture, 0.6f);
 		}
 		else
 		{
-			GD.Print($"Wrong mesh type: {Mesh.GetType().Name}, creating correct one");
 			// Create the correct mesh type
 			Mesh = new LowPolyStarMesh();
 			((LowPolyStarMesh)Mesh).GenerateStar(Properties.Tempreture, 0.6f);
@@ -168,10 +166,6 @@ public partial class Star : Body
 		Properties.Radius *= 50.0f; // Assuming 1 solar radius = 50 game units
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 
-		// Log the star's properties including mass
-		GD.Print($"Star Type: {Properties.SType}, Radius: {Properties.Radius / 50.0f} R☉, " +
-				 $"Mass: {Properties.Mass} M☉, Temperature: {Properties.Tempreture}K, " +
-				 $"Luminosity: {Properties.Luminosity}L☉, Planets: {Properties.Planets}");
 	}
 	#endregion
 	#region Planet Functions
@@ -226,7 +220,6 @@ public partial class Star : Body
 				Moons = new RandomNumberGenerator().RandiRange(0, 2) // Random number of moons
 			};
 
-			GD.Print($"GasGiant: {isGasGiant}, hasAtmosphere: {hasAtmosphere}, hasWater: {hasWater}");
 			// Create a new planet
 			Planet planet = new Planet(planetProperties);
 			// Add the planet to the star

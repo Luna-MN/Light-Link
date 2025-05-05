@@ -8,11 +8,16 @@ public partial class Camera : Camera2D
     public float MinZoom = 0.1f;
     public float MaxZoom = 5.0f;
     public bool SmoothZoom = true;
+    public bool SmoothFocus = false; // New variable to control smooth focus
     private bool isDragging = false;
     private Vector2 dragOrigin;
     private Vector2 targetZoom = new Vector2(1, 1);
     private float zoomDamping = 10.0f;
     private Body targetBody = null;
+    // New variables to control focus zoom
+    private Vector2 defaultFocusZoom = new Vector2(1f, 1f);
+    private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
+    private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
 
     public override void _Ready()
     {
@@ -56,10 +61,12 @@ public partial class Camera : Camera2D
             // Mouse wheel zoom
             else if (mouseButton.ButtonIndex == MouseButton.WheelUp)
             {
+                SmoothFocus = false; // Disable smooth zoom when using mouse wheel
                 ZoomCamera(ZoomSpeed);
             }
             else if (mouseButton.ButtonIndex == MouseButton.WheelDown)
             {
+                SmoothFocus = false; // Disable smooth zoom when using mouse wheel
                 ZoomCamera(-ZoomSpeed);
             }
             if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed)
@@ -106,8 +113,6 @@ public partial class Camera : Camera2D
         // Convert to global position
         Vector2 globalPos = GetGlobalMousePosition();
 
-        // Debug position
-        GD.Print($"Mouse global position: {globalPos}");
 
         var spaceState = GetWorld2D().DirectSpaceState;
 
@@ -130,7 +135,6 @@ public partial class Camera : Camera2D
         shapeQuery.CollideWithBodies = true;
 
         var shapeResults = spaceState.IntersectShape(shapeQuery);
-        GD.Print($"Shape intersect found {shapeResults.Count} results");
 
         // Use shape query results
         if (shapeResults.Count > 0)
@@ -138,13 +142,12 @@ public partial class Camera : Camera2D
             foreach (var result in shapeResults)
             {
                 GodotObject collider = result["collider"].As<GodotObject>();
-                GD.Print($"Hit: {collider.GetType()} - {collider}");
 
                 Node2D hitObject = collider as Node2D;
                 if (hitObject != null)
                 {
                     targetBody = hitObject.GetParent()?.GetParent() as Body;
-                    GD.Print($"Target body: {targetBody}");
+                    SmoothFocus = true; // Enable smooth zoom when focusing on an object
                 }
             }
         }
@@ -158,15 +161,17 @@ public partial class Camera : Camera2D
         if (Target != null)
         {
             // Calculate smooth movement speed based on distance
-            float distanceFactor = Position.DistanceTo(Target.GlobalPosition) * 0.5f;
-            float smoothFactor = Mathf.Clamp(deltaTime * distanceFactor, 0.01f, 0.15f);
+            float distanceFactor = Position.DistanceTo(Target.GlobalPosition) * 0.01f;
+            float smoothFactor = Mathf.Clamp(deltaTime * distanceFactor, 0.01f, 0.05f);
 
             // Apply the lerp and assign it back to Position
             Position = Position.Lerp(Target.GlobalPosition, smoothFactor);
+            if (SmoothFocus)
+            {
+                // Smoothly transition the target zoom
+                targetZoom = targetZoom.Lerp(defaultFocusZoom, deltaTime * focusTransitionSpeed);
+            }
 
-            // Smoothly zoom to focused view
-            Vector2 targetZoomLevel = new Vector2(2f, 2f);
-            Zoom = Zoom.Lerp(targetZoomLevel, deltaTime * 2.0f);
         }
     }
     public void ClearFocus()

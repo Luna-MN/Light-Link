@@ -146,7 +146,6 @@ public partial class Planet : Body
 				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 20,
 				HasWater = mass > 6.5f,
 			};
-			GD.Print($"Moon mass: {mass}, orbit radius: {orbitRadius}");
 			// Create a moon instance
 			Moon moon = new Moon(moonProperties);
 			AddChild(moon);

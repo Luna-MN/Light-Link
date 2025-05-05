@@ -49,7 +49,6 @@ public partial class LowPolyStarMesh : LowPolyMesh
         // Add solar flare/prominence features
         AddSolarProminences(colors, activityLevel);
 
-        GD.Print($"Generated star with temperature: {temperature} and activity level: {activityLevel}");
 
         SetTriangleColors(colors);
     }
