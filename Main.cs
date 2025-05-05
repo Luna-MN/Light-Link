@@ -159,7 +159,7 @@ public partial class Main : Node2D
 			}
 		}
 	}
-	public void CreateStar(Vector2 position, StarProperties starProperties)
+	public Star CreateStar(Vector2 position, StarProperties starProperties)
 	{
 		// Create a new star instance
 		Star star = new Star(position, starProperties);
@@ -169,6 +169,7 @@ public partial class Main : Node2D
 
 		// Initialize target scale for the star
 		targetStarScales[star] = star.Mesh.Scale;
+		return star;
 	}
 	public void CreateUniverse(int starCount = 10, float minDistance = 500f, Vector2? universeSize = null)
 	{
@@ -208,8 +209,9 @@ public partial class Main : Node2D
 				StarProperties starProperties = GenerateRandomStarProperties(random);
 
 				// Create the star at the valid position
-				CreateStar(newPosition, starProperties);
-
+				Star star = CreateStar(newPosition, starProperties);
+				// Set the star's name
+				star.Name = $"Star_{starPositions.Count + 1}";
 				// Add the position to the list
 				starPositions.Add(newPosition);
 			}

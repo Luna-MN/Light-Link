@@ -10,11 +10,11 @@ public partial class Moon : Body
 		Properties = properties;
 		Mesh.Radius = properties.Radius;
 		Position = new Vector2(Properties.OrbitRadius, 0);
-
 		MoonColor();
 		if (Mesh is LowPolyMoonMesh moonMesh)
 		{
 			moonMesh.ConfigureFromProperties(Properties);
+			CircleShape.Radius = Mesh.Radius;
 		}
 	}
 	// Called when the node enters the scene tree for the first time.

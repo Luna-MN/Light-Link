@@ -13,6 +13,7 @@ public partial class Star : Body
 		// Set the position of the star
 		Properties = properties;
 		SetStarProperties();
+		UpdateRBScale(Properties.Radius);
 		Position = pos;
 		GD.Print(type);
 		if (Mesh is LowPolyStarMesh starMesh)

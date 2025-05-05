@@ -56,6 +56,10 @@ public partial class Camera : Camera2D
             {
                 ZoomCamera(-ZoomSpeed);
             }
+            if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed)
+            {
+                DetectClickedObject();
+            }
         }
 
         // Handle mouse motion for panning
@@ -66,6 +70,7 @@ public partial class Camera : Camera2D
             Position += movement;
             dragOrigin = mouseMotion.Position;
         }
+
     }
 
     private void ZoomCamera(float zoomAmount)
@@ -85,6 +90,60 @@ public partial class Camera : Camera2D
                 Mathf.Clamp(Zoom.X, MinZoom, MaxZoom),
                 Mathf.Clamp(Zoom.Y, MinZoom, MaxZoom)
             );
+        }
+    }
+    private void DetectClickedObject()
+    {
+        // Get mouse position in viewport
+        Vector2 mousePos = GetViewport().GetMousePosition();
+
+        // Convert to global position
+        Vector2 globalPos = GetGlobalMousePosition();
+
+        // Debug position
+        GD.Print($"Mouse global position: {globalPos}");
+
+        var spaceState = GetWorld2D().DirectSpaceState;
+
+        // Cast rays in multiple directions to be more thorough
+        var queryParams = new PhysicsRayQueryParameters2D();
+        queryParams.From = globalPos;
+        queryParams.To = globalPos; // Same position for point query
+        queryParams.CollideWithAreas = true;
+        queryParams.CollideWithBodies = true;
+        queryParams.HitFromInside = true; // This is important to detect if we're inside an area
+
+        // Try a shape cast instead of a ray cast
+        var shape = new CircleShape2D();
+        shape.Radius = 5.0f; // Small radius to detect nearby objects
+
+        var shapeQuery = new PhysicsShapeQueryParameters2D();
+        shapeQuery.Shape = shape;
+        shapeQuery.Transform = new Transform2D(0, globalPos);
+        shapeQuery.CollideWithAreas = true;
+        shapeQuery.CollideWithBodies = true;
+
+        var shapeResults = spaceState.IntersectShape(shapeQuery);
+        GD.Print($"Shape intersect found {shapeResults.Count} results");
+
+        // Use shape query results
+        if (shapeResults.Count > 0)
+        {
+            foreach (var result in shapeResults)
+            {
+                GodotObject collider = result["collider"].As<GodotObject>();
+                GD.Print($"Hit: {collider.GetType()} - {collider}");
+
+                Node2D hitObject = collider as Node2D;
+                if (hitObject != null)
+                {
+                    GD.Print($"Clicked on: {hitObject.Name}, parent: {hitObject.GetParent()?.Name}, Object: {hitObject.GetParent()?.GetParent()?.Name}");
+                }
+            }
+        }
+        else
+        {
+            GD.Print("No objects found at click position");
         }
     }
 }
