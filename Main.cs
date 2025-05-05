@@ -1,9 +1,11 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Main : Node2D
 {
+	public UI ui;
 	// Called when the node enters the scene tree for the first time.
 	public Camera2D camera;
 	public Vector2 SunIncrease = new Vector2(5, 5);
@@ -15,9 +17,20 @@ public partial class Main : Node2D
 	// Add this to store the original scales
 	private Dictionary<Star, Vector2> originalStarScales = new Dictionary<Star, Vector2>();
 
+	// In _Ready() method:
 	public override void _Ready()
 	{
 		camera = GetViewport().GetCamera2D();
+		ui = (UI)GetChildren().FirstOrDefault(x => x is UI ui);
+
+		foreach (Node child in GetChildren())
+		{
+			if (child is Star star)
+			{
+				originalStarScales[star] = star.Mesh.Scale;
+			}
+		}
+
 
 		CreateUniverse(20, 4000, new Vector2(20000, 20000));
 	}
@@ -33,7 +46,7 @@ public partial class Main : Node2D
 	{
 		float lerpFactor = (float)(scaleTransitionSpeed * delta);
 
-		foreach (Node2D child in GetChildren())
+		foreach (Node child in GetChildren())
 		{
 			if (child is Star star && targetStarScales.ContainsKey(star))
 			{
@@ -53,7 +66,7 @@ public partial class Main : Node2D
 		// Only update scales if zoom state changes
 		if (shouldBeZoomedOut != isZoomedOut)
 		{
-			foreach (Node2D child in GetChildren())
+			foreach (Node child in GetChildren())
 			{
 				if (child is Star star && originalStarScales.ContainsKey(star))
 				{
@@ -77,11 +90,11 @@ public partial class Main : Node2D
 		if (camera.Zoom.X >= 0.2f)
 		{
 			// Show planets
-			foreach (Node2D child in GetChildren())
+			foreach (Node child in GetChildren())
 			{
 				if (child is Star star)
 				{
-					foreach (Node2D planet in star.GetChildren())
+					foreach (Node planet in star.GetChildren())
 					{
 						if (planet is Planet planetBody)
 						{
@@ -104,11 +117,11 @@ public partial class Main : Node2D
 		else
 		{
 			// Hide planets
-			foreach (Node2D child in GetChildren())
+			foreach (Node child in GetChildren())
 			{
 				if (child is Star star)
 				{
-					foreach (Node2D planet in star.GetChildren())
+					foreach (Node planet in star.GetChildren())
 					{
 						if (planet is Planet planetBody)
 						{
@@ -132,11 +145,11 @@ public partial class Main : Node2D
 		// Handle moon visibility
 		if (camera.Zoom.X >= 0.5f)
 		{
-			foreach (Node2D child in GetChildren())
+			foreach (Node child in GetChildren())
 			{
 				if (child is Star star)
 				{
-					foreach (Node2D planet in star.GetChildren())
+					foreach (Node planet in star.GetChildren())
 					{
 						if (planet is Planet planetBody)
 						{
@@ -154,11 +167,11 @@ public partial class Main : Node2D
 		}
 		else if (camera.Zoom.X < 0.5f)
 		{
-			foreach (Node2D child in GetChildren())
+			foreach (Node child in GetChildren())
 			{
 				if (child is Star star)
 				{
-					foreach (Node2D planet in star.GetChildren())
+					foreach (Node planet in star.GetChildren())
 					{
 						if (planet is Planet planetBody)
 						{
@@ -271,7 +284,7 @@ public partial class Main : Node2D
 
 		return new StarProperties
 		{
-			Tempreture = temp,
+			Temperature = temp,
 			Age = age
 		};
 	}

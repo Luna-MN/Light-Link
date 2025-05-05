@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public partial class StarProperties : Properties
 {
-    public float Tempreture;
+    public string Name;
+    public float Temperature;
     public float Luminosity;
     public int Planets;
     public List<Type> SystemResources = new List<Type>();
+    public Vector2 Position;
     public enum StarType
     {
         M,

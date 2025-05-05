@@ -147,6 +147,10 @@ public partial class Camera : Camera2D
                 if (hitObject != null)
                 {
                     targetBody = hitObject.GetParent()?.GetParent() as Body;
+                    if (targetBody is Star star)
+                    {
+                        star.starUI.SetUIVisible(true);
+                    }
                     SmoothFocus = true; // Enable smooth zoom when focusing on an object
                 }
             }
@@ -176,6 +180,10 @@ public partial class Camera : Camera2D
     }
     public void ClearFocus()
     {
+        if (targetBody is Star star)
+        {
+            star.starUI.SetUIVisible(false);
+        }
         targetBody = null;
     }
 }

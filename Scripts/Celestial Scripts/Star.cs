@@ -7,6 +7,7 @@ public partial class Star : Body
 {
 	// Properties of the star
 	public StarProperties Properties;
+	public StarUI starUI;
 	// Constructor
 	public Star(Vector2 pos, StarProperties properties, MeshType type = MeshType.Star) : base(type)
 	{
@@ -15,15 +16,16 @@ public partial class Star : Body
 		SetStarProperties();
 		UpdateRBScale(Properties.Radius);
 		Position = pos;
+		Properties.Position = pos;
 		if (Mesh is LowPolyStarMesh starMesh)
 		{
-			starMesh.GenerateStar(Properties.Tempreture, 0.6f);
+			starMesh.GenerateStar(Properties.Temperature, 0.6f);
 		}
 		else
 		{
 			// Create the correct mesh type
 			Mesh = new LowPolyStarMesh();
-			((LowPolyStarMesh)Mesh).GenerateStar(Properties.Tempreture, 0.6f);
+			((LowPolyStarMesh)Mesh).GenerateStar(Properties.Temperature, 0.6f);
 		}
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 		// Apply star-specific visual properties
@@ -32,10 +34,12 @@ public partial class Star : Body
 		GeneratePlanets();
 
 		GenerateAstroids();
+		CreateStarUI();
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		starUI.SetStarProperties(Properties);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -49,7 +53,7 @@ public partial class Star : Body
 		random.Randomize();
 
 		// First determine star type based on temperature
-		if (Properties.Tempreture <= 3200)
+		if (Properties.Temperature <= 3200)
 		{
 			Properties.SType = StarProperties.StarType.M;
 			// M-type: red dwarf
@@ -63,7 +67,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(1, 4);
 			Properties.ColorIndex = new Color(1.0f, 0.4f, 0.4f); // Reddish
 		}
-		else if (Properties.Tempreture <= 4000)
+		else if (Properties.Temperature <= 4000)
 		{
 			Properties.SType = StarProperties.StarType.K;
 			// K-type: orange dwarf
@@ -77,7 +81,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(2, 6);
 			Properties.ColorIndex = new Color(1.0f, 0.6f, 0.4f); // Orange
 		}
-		else if (Properties.Tempreture <= 5200)
+		else if (Properties.Temperature <= 5200)
 		{
 			Properties.SType = StarProperties.StarType.KG;
 			// KG-type: boundary between K and G
@@ -91,7 +95,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(3, 8);
 			Properties.ColorIndex = new Color(1.0f, 0.8f, 0.6f); // Yellow-orange
 		}
-		else if (Properties.Tempreture < 6000)
+		else if (Properties.Temperature < 6000)
 		{
 			Properties.SType = StarProperties.StarType.G;
 			// G-type: yellow (Sun-like)
@@ -105,7 +109,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(3, 10);
 			Properties.ColorIndex = new Color(1.0f, 1.0f, 0.8f); // Yellow
 		}
-		else if (Properties.Tempreture < 7200)
+		else if (Properties.Temperature < 7200)
 		{
 			Properties.SType = StarProperties.StarType.F;
 			// F-type: yellow-white
@@ -119,7 +123,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(2, 8);
 			Properties.ColorIndex = new Color(1.0f, 1.0f, 0.9f); // Yellow-white
 		}
-		else if (Properties.Tempreture < 10000)
+		else if (Properties.Temperature < 10000)
 		{
 			Properties.SType = StarProperties.StarType.A;
 			// A-type: white
@@ -133,7 +137,7 @@ public partial class Star : Body
 			Properties.Planets = random.RandiRange(1, 4);
 			Properties.ColorIndex = new Color(0.9f, 0.9f, 1.0f); // White with blue tint
 		}
-		else if (Properties.Tempreture < 30000)
+		else if (Properties.Temperature < 30000)
 		{
 			Properties.SType = StarProperties.StarType.B;
 			// B-type: blue-white
@@ -259,6 +263,17 @@ public partial class Star : Body
 			// Add the asteroid to the asteroid belt
 			asteroidBelt.AddChild(astroid);
 		}
+
+	}
+	#endregion
+	#region Star UI
+	public void CreateStarUI()
+	{
+		// Create a new star UI instance
+		starUI = new StarUI();
+		// Add the star UI to the scene
+		AddChild(starUI);
+		// Set the star properties
 
 	}
 	#endregion
