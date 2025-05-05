@@ -7,6 +7,7 @@ public partial class Ship : Node2D
     public bool shipSelected = false;
     public bool isMine = true;
     public Vector2 targetPosition;
+    public Control selectionBrackets;
     public float speed = 100f;
     public Area2D area2D;
     public CollisionShape2D collisionShape;
@@ -26,6 +27,10 @@ public partial class Ship : Node2D
         collisionShape = new CollisionShape2D();
         area2D.AddChild(collisionShape);
 
+        CreateSelectionBrackets();
+        selectionBrackets.Scale *= new Vector2(5f, 5f);
+        selectionBrackets.Visible = false;
+
         circleShape = new CircleShape2D();
         circleShape.Radius = 20;
         collisionShape.Shape = circleShape;
@@ -41,7 +46,15 @@ public partial class Ship : Node2D
     {
 
         MoveShip((float)delta);
-
+        if (shipSelected)
+        {
+            selectionBrackets.Visible = true;
+            selectionBrackets.GlobalPosition = GlobalPosition;
+        }
+        else
+        {
+            selectionBrackets.Visible = false;
+        }
     }
     public void SetShipTarget(Vector2 pos)
     {
@@ -80,5 +93,31 @@ public partial class Ship : Node2D
                 Position += direction * speed * delta;
             }
         }
+    }
+    private void CreateSelectionBrackets()
+    {
+        selectionBrackets = new Control();
+        selectionBrackets.Name = "SelectionBrackets";
+        AddChild(selectionBrackets);
+        selectionBrackets.TopLevel = true;
+        // Create smaller brackets
+        CreateBracket("TopLeftBracket", new Vector2(-1, -1), new Vector2(-0.5f, -1), new Vector2(-1, -0.5f));
+        CreateBracket("TopRightBracket", new Vector2(1, -1), new Vector2(0.5f, -1), new Vector2(1, -0.5f));
+        CreateBracket("BottomLeftBracket", new Vector2(-1, 1), new Vector2(-0.5f, 1), new Vector2(-1, 0.5f));
+        CreateBracket("BottomRightBracket", new Vector2(1, 1), new Vector2(0.5f, 1), new Vector2(1, 0.5f));
+    }
+    private void CreateBracket(string name, Vector2 corner, Vector2 horizontalEnd, Vector2 verticalEnd)
+    {
+        var bracket = new Line2D();
+        bracket.Name = name;
+        bracket.Width = 0.5f;
+        bracket.DefaultColor = Colors.White;
+        // Create smaller brackets (reduce from 40 to 10)
+        bracket.AddPoint(corner * 5);
+        bracket.AddPoint(horizontalEnd * 5);
+        bracket.AddPoint(corner * 5);
+        bracket.AddPoint(verticalEnd * 5);
+
+        selectionBrackets.AddChild(bracket);
     }
 }
