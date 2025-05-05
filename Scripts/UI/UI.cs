@@ -50,7 +50,6 @@ public partial class UI : CanvasLayer
 		// Create Food indicator with icon
 		var foodContainer = new HBoxContainer();
 		var foodIcon = new TextureRect();
-		foodIcon.Texture = ResourceLoader.Load<Texture2D>("res://assets/ui/food_icon.png"); // Create this icon
 		foodIcon.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
 		foodIcon.CustomMinimumSize = new Vector2(24, 24);
 		foodContainer.AddChild(foodIcon);
@@ -63,7 +62,6 @@ public partial class UI : CanvasLayer
 		// Create Power indicator with icon
 		var powerContainer = new HBoxContainer();
 		var powerIcon = new TextureRect();
-		powerIcon.Texture = ResourceLoader.Load<Texture2D>("res://assets/ui/power_icon.png"); // Create this icon
 		powerIcon.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
 		powerIcon.CustomMinimumSize = new Vector2(24, 24);
 		powerContainer.AddChild(powerIcon);
@@ -76,7 +74,6 @@ public partial class UI : CanvasLayer
 		// Create Happiness indicator with icon
 		var happinessContainer = new HBoxContainer();
 		var happinessIcon = new TextureRect();
-		happinessIcon.Texture = ResourceLoader.Load<Texture2D>("res://assets/ui/happiness_icon.png"); // Create this icon
 		happinessIcon.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
 		happinessIcon.CustomMinimumSize = new Vector2(24, 24);
 		happinessContainer.AddChild(happinessIcon);
@@ -89,7 +86,6 @@ public partial class UI : CanvasLayer
 		// Create Population indicator with icon
 		var populationContainer = new HBoxContainer();
 		var populationIcon = new TextureRect();
-		populationIcon.Texture = ResourceLoader.Load<Texture2D>("res://assets/ui/population_icon.png"); // Create this icon
 		populationIcon.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
 		populationIcon.CustomMinimumSize = new Vector2(24, 24);
 		populationContainer.AddChild(populationIcon);
