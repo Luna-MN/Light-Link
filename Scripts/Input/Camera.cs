@@ -76,11 +76,29 @@ public partial class Camera : Camera2D
                 GD.Print($"Moving {ships.Count} ships to target position.");
                 if (hitObject == null && ships.Count > 0)
                 {
+                    Vector2 baseTargetPosition = GetGlobalMousePosition();
 
-                    foreach (Ship ship in ships)
+                    // Calculate formation parameters
+                    int shipsPerRow = (int)Math.Ceiling(Math.Sqrt(ships.Count)); // Arrange in a square-ish grid
+                    float spacing = 100f; // Space between ships in the formation
+
+                    for (int i = 0; i < ships.Count; i++)
                     {
-                        ship.SetShipTarget();
+                        // Calculate grid position (row, column)
+                        int row = i / shipsPerRow;
+                        int col = i % shipsPerRow;
+
+                        // Calculate offset from center
+                        float xOffset = (col - (shipsPerRow - 1) / 2.0f) * spacing;
+                        float yOffset = (row - ((ships.Count - 1) / shipsPerRow) / 2.0f) * spacing;
+
+                        // Apply offset to create formation
+                        Vector2 offsetPosition = baseTargetPosition + new Vector2(xOffset, yOffset);
+
+                        ships[i].SetShipTarget(offsetPosition);
                     }
+
+                    GD.Print($"Moving {ships.Count} ships in formation");
                 }
             }
         }

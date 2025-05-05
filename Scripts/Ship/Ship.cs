@@ -16,7 +16,7 @@ public partial class Ship : Node2D
         Mesh = new PlayerShipMesh();
         Mesh.Scale = 25; // Set the scale of the ship
         AddChild(Mesh);
-
+        targetPosition = Position;
         area2D = new Area2D();
         area2D.Position = new Vector2(0, 0);
         AddChild(area2D);
@@ -31,7 +31,7 @@ public partial class Ship : Node2D
         TrailEffect trailEffect = new TrailEffect();
         trailEffect.TrailLength = 100;
         trailEffect.SetTrailWidth(10);
-        trailEffect.DefaultColor = new Color(0.2f, 0.6f, 1.0f).Darkened(0.2f);
+        trailEffect.DefaultColor = new Color(0.2f, 0.6f, 1.0f).Darkened(0.4f);
         AddChild(trailEffect);
     }
     public override void _Process(double delta)
@@ -40,12 +40,12 @@ public partial class Ship : Node2D
         MoveShip((float)delta);
 
     }
-    public void SetShipTarget()
+    public void SetShipTarget(Vector2 pos)
     {
         if (shipSelected && isMine)
         {
             // Get the mouse position in global coordinates
-            targetPosition = GetGlobalMousePosition();
+            targetPosition = pos;
         }
     }
 

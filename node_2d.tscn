@@ -17,3 +17,7 @@ script = ExtResource("3_kumu2")
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("4_gm7n2")
+
+[node name="Node2D2" type="Node2D" parent="."]
+position = Vector2(167, 0)
+script = ExtResource("4_gm7n2")
