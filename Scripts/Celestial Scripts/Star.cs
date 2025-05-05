@@ -239,7 +239,12 @@ public partial class Star : Body
 		Node2D asteroidBelt = new Node2D();
 		AddChild(asteroidBelt);
 		var random = new RandomNumberGenerator();
-		for (int i = 0; i < random.RandiRange(100, 150); i++)
+
+		// List to track existing asteroid positions and sizes
+		List<(Vector2 position, float radius)> existingAsteroids = new List<(Vector2, float)>();
+
+		int asteroidsToGenerate = random.RandiRange(100, 150);
+		for (int i = 0; i < asteroidsToGenerate; i++)
 		{
 			float mass = random.RandfRange(0.1f, 10f); // Random mass between 0.1 and 10 Earth masses
 			Properties.Type type = global::Properties.Type.Rock; // Default type
@@ -247,6 +252,7 @@ public partial class Star : Body
 			{
 				type = Properties.SystemResources[random.RandiRange(0, Properties.SystemResources.Count - 1)];
 			}
+
 			// Create a new planet properties instance
 			AstroidProperties astroidProperties = new AstroidProperties
 			{
@@ -254,16 +260,47 @@ public partial class Star : Body
 				Radius = 2.5f + (mass), // Radius scales with mass
 				AstroidType = type
 			};
+
 			// Create a new asteroid
 			Astroid astroid = new Astroid(astroidProperties);
-			// Set the position of the asteroid
-			float beltWidth = 50f; // Width of the asteroid belt
-			float randomRadius = orbitRadius + random.RandfRange(-beltWidth, beltWidth * 2);
-			astroid.Position = new Vector2(randomRadius, 0).Rotated(Mathf.DegToRad(random.RandfRange(0, 360)));
+
+			// Try to find a position that doesn't overlap with existing asteroids
+			Vector2 position;
+			bool validPosition = false;
+			int maxAttempts = 50;
+			int attempts = 0;
+
+			do
+			{
+				// Generate a random position
+				float beltWidth = 50f; // Width of the asteroid belt
+				float randomRadius = orbitRadius + random.RandfRange(-beltWidth, beltWidth * 2);
+				position = new Vector2(randomRadius, 0).Rotated(Mathf.DegToRad(random.RandfRange(0, 360)));
+
+				// Check for overlap with existing asteroids
+				validPosition = true;
+				foreach (var (existingPos, existingRadius) in existingAsteroids)
+				{
+					// If the distance between centers is less than sum of radii, they overlap
+					if (position.DistanceTo(existingPos) < (astroidProperties.Radius + existingRadius + 10f))
+					{
+						validPosition = false;
+						break;
+					}
+				}
+
+				attempts++;
+			} while (!validPosition && attempts < maxAttempts);
+
+			// If we found a valid position or reached max attempts, place the asteroid
+			astroid.Position = position;
+
+			// Track this asteroid's position and radius
+			existingAsteroids.Add((position, astroidProperties.Radius));
+
 			// Add the asteroid to the asteroid belt
 			asteroidBelt.AddChild(astroid);
 		}
-
 	}
 	#endregion
 	#region Star UI
