@@ -60,10 +60,10 @@ public partial class StarUI : Node2D
         rootContainer.AddChild(selectionBrackets);
 
         // Create smaller brackets
-        CreateBracket("TopLeftBracket", new Vector2(-1, -1), new Vector2(0, -1), new Vector2(-1, 0));
-        CreateBracket("TopRightBracket", new Vector2(1, -1), new Vector2(0, -1), new Vector2(1, 0));
-        CreateBracket("BottomLeftBracket", new Vector2(-1, 1), new Vector2(0, 1), new Vector2(-1, 0));
-        CreateBracket("BottomRightBracket", new Vector2(1, 1), new Vector2(0, 1), new Vector2(1, 0));
+        CreateBracket("TopLeftBracket", new Vector2(-1, -1), new Vector2(-0.5f, -1), new Vector2(-1, -0.5f));
+        CreateBracket("TopRightBracket", new Vector2(1, -1), new Vector2(0.5f, -1), new Vector2(1, -0.5f));
+        CreateBracket("BottomLeftBracket", new Vector2(-1, 1), new Vector2(-0.5f, 1), new Vector2(-1, 0.5f));
+        CreateBracket("BottomRightBracket", new Vector2(1, 1), new Vector2(0.5f, 1), new Vector2(1, 0.5f));
     }
 
     private void CreateBracket(string name, Vector2 corner, Vector2 horizontalEnd, Vector2 verticalEnd)
@@ -72,7 +72,6 @@ public partial class StarUI : Node2D
         bracket.Name = name;
         bracket.Width = 0.5f;
         bracket.DefaultColor = Colors.White;
-
         // Create smaller brackets (reduce from 40 to 10)
         bracket.AddPoint(corner * 5);
         bracket.AddPoint(horizontalEnd * 5);
