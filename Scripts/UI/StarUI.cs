@@ -34,9 +34,9 @@ public partial class StarUI : CelestialUI
 
         starNameLabel = AddProperty("Star Name", properties.Name ?? "Unknown Star");
         starTypeLabel = AddProperty("Star Type", properties.SType);
-        starPropertiesLabel = AddProperty("Star Properties",
-            $"\nSize: {properties.Radius}\n" +
-            $"Temperature: {properties.Temperature}K");
+        starPropertiesLabel = AddProperty("Star Properties", "");
+        AddProperty("Size", properties.Radius);
+        AddProperty("Temperature", properties.Temperature, "K");
 
         // Position UI around the star
         UpdateUIPosition();

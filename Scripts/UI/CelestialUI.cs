@@ -14,13 +14,12 @@ public partial class CelestialUI : Node2D
 	public CelestialUI()
 	{
 		CreateUI();
-
 		// Initially hide everything until a star is selected
 		SetUIVisible(false);
 	}
 	public override void _Ready()
 	{
-
+		ZIndex = 1000; // Set a high ZIndex to ensure UI is on top of other elements
 	}
 
 
@@ -69,7 +68,7 @@ public partial class CelestialUI : Node2D
 		infoPanel.AnchorBottom = 0;
 
 		infoPanel.Position = new Vector2(100, 10);
-		infoPanel.Size = new Vector2(200, 10);
+		infoPanel.Size = new Vector2(250, 10);
 
 		// IMPORTANT: Set MouseFilter to Pass to allow proper event propagation
 		infoPanel.MouseFilter = Control.MouseFilterEnum.Pass;
@@ -122,13 +121,21 @@ public partial class CelestialUI : Node2D
 		if (rootContainer != null)
 			rootContainer.Visible = visible;
 	}
-	public Label AddProperty(string name, object value)
+	public Label AddProperty(string name, object value, string Units = "")
 	{
-		infoPanel.Size += new Vector2(0, 45); // Increase the height of the info area
+		infoPanel.Size += new Vector2(0, 30); // Increase the height of the info area
 		Label propertyLabel = new Label();
+		if (value is float f)
+		{
+			value = Mathf.Round(f * 100) / 100;
+		}
 		propertyLabel.Text = $"{name}: {value}";
 		propertyLabel.Name = name + "Label";
+		if (Units != "")
+		{
+			propertyLabel.Text += " " + Units;
 
+		}
 		if (infoPanel != null)
 		{
 			var vbox = infoPanel.GetNode<Panel>("Background").GetNode<VBoxContainer>("Content");
