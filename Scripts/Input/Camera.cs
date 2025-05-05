@@ -12,6 +12,7 @@ public partial class Camera : Camera2D
     private Vector2 dragOrigin;
     private Vector2 targetZoom = new Vector2(1, 1);
     private float zoomDamping = 10.0f;
+    private Body targetBody = null;
 
     public override void _Ready()
     {
@@ -24,6 +25,10 @@ public partial class Camera : Camera2D
         if (SmoothZoom)
         {
             Zoom = Zoom.Lerp(targetZoom, zoomDamping * (float)delta);
+        }
+        if (targetBody != null)
+        {
+            Focus(targetBody, (float)delta);
         }
     }
 
@@ -40,6 +45,7 @@ public partial class Camera : Camera2D
                     // Start dragging
                     isDragging = true;
                     dragOrigin = mouseButton.Position;
+                    ClearFocus();
                 }
                 else
                 {
@@ -137,7 +143,8 @@ public partial class Camera : Camera2D
                 Node2D hitObject = collider as Node2D;
                 if (hitObject != null)
                 {
-                    GD.Print($"Clicked on: {hitObject.Name}, parent: {hitObject.GetParent()?.Name}, Object: {hitObject.GetParent()?.GetParent()?.Name}");
+                    targetBody = hitObject.GetParent()?.GetParent() as Body;
+                    GD.Print($"Target body: {targetBody}");
                 }
             }
         }
@@ -145,5 +152,25 @@ public partial class Camera : Camera2D
         {
             GD.Print("No objects found at click position");
         }
+    }
+    public void Focus(Body Target, float deltaTime)
+    {
+        if (Target != null)
+        {
+            // Calculate smooth movement speed based on distance
+            float distanceFactor = Position.DistanceTo(Target.GlobalPosition) * 0.5f;
+            float smoothFactor = Mathf.Clamp(deltaTime * distanceFactor, 0.01f, 0.15f);
+
+            // Apply the lerp and assign it back to Position
+            Position = Position.Lerp(Target.GlobalPosition, smoothFactor);
+
+            // Smoothly zoom to focused view
+            Vector2 targetZoomLevel = new Vector2(2f, 2f);
+            Zoom = Zoom.Lerp(targetZoomLevel, deltaTime * 2.0f);
+        }
+    }
+    public void ClearFocus()
+    {
+        targetBody = null;
     }
 }
