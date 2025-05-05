@@ -28,7 +28,7 @@ public partial class PlanetProperties : Properties
     public float Habitability; // 0.0 to 1.0
     public List<Type> PlanetResources = new List<Type>(); // Resources available on the planet
     public int Moons; // Number of moons the planet has
-    private void SetHabitability()
+    public void SetHabitability()
     {
         // Calculate habitability based on properties
         Habitability = 0.0f;
@@ -51,6 +51,10 @@ public partial class PlanetProperties : Properties
         if (RotationPeriod < 24)
         {
             Habitability += 0.1f; // Faster rotation is better for habitability
+        }
+        if (IsGasGiant)
+        {
+            Habitability = 0.0f; // Gas giants are not habitable
         }
     }
 }

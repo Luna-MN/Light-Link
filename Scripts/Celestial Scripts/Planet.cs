@@ -10,6 +10,7 @@ public partial class Planet : Body
 	public Planet(PlanetProperties properties, MeshType type = MeshType.Planet) : base(type)
 	{
 		Properties = properties;
+		Properties.SetHabitability();
 		// Set the position of the planet
 		Position = new Vector2(Properties.OrbitRadius, 0);
 		// Set the size of the planet

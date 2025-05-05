@@ -36,7 +36,7 @@ public partial class PlanetUI : CelestialUI
         planetTypeLabel = AddProperty("Planet Type", properties.IsGasGiant ? "Gas Giant" : "Terrestrial");
         planetPropertiesLabel = AddProperty("Planet Properties",
             $"\nSize: {properties.Radius}\n" +
-            $"Temperature: {properties.Habitability}K");
+            $"Habitability: {Mathf.Round(properties.Habitability * 100)}%");
 
         // Position UI around the star
         UpdateUIPosition();
