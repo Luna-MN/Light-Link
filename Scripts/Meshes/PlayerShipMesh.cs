@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public partial class PlayerShipMesh : ShipMesh
 {
+    [Export] public Color CockpitColor = new Color(0.2f, 0.6f, 1.0f);
+
     protected override List<Vector3> DefineVertices()
     {
         return new List<Vector3>

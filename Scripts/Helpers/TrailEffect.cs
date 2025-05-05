@@ -61,30 +61,26 @@ public partial class TrailEffect : Line2D
         // Add current global position to the trail
         Vector2 currentGlobalPos = parentNode.GlobalPosition;
 
-        // Only add point if it's different from the last one to avoid redundancy
-        if (currentGlobalPos != lastGlobalPosition)
+        trailPoints.Enqueue(currentGlobalPos);
+        lastGlobalPosition = currentGlobalPos;
+
+        // Remove oldest point if we exceed the trail length
+        while (trailPoints.Count > TrailLength)
         {
-            trailPoints.Enqueue(currentGlobalPos);
-            lastGlobalPosition = currentGlobalPos;
-
-            // Remove oldest point if we exceed the trail length
-            while (trailPoints.Count > TrailLength)
-            {
-                trailPoints.Dequeue();
-            }
-
-            // Convert all stored global positions to local positions for drawing
-            var points = new Vector2[trailPoints.Count];
-            int i = 0;
-            foreach (var point in trailPoints)
-            {
-                points[i] = ToLocal(point);
-                i++;
-            }
-
-            // Update the line points
-            Points = points;
+            trailPoints.Dequeue();
         }
+
+        // Convert all stored global positions to local positions for drawing
+        var points = new Vector2[trailPoints.Count];
+        int i = 0;
+        foreach (var point in trailPoints)
+        {
+            points[i] = ToLocal(point);
+            i++;
+        }
+
+        // Update the line points
+        Points = points;
 
     }
     private void UpdateWidthCurve()

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Camera : Camera2D
 {
@@ -18,7 +19,7 @@ public partial class Camera : Camera2D
     private Vector2 defaultFocusZoom = new Vector2(1f, 1f);
     private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
     private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
-
+    private List<Ship> ships = new List<Ship>();
     public override void _Ready()
     {
         targetZoom = Zoom;
@@ -71,19 +72,26 @@ public partial class Camera : Camera2D
             }
             if (mouseButton.ButtonIndex == MouseButton.Left && mouseButton.Pressed)
             {
-                DetectClickedObject();
+                Node2D hitObject = DetectClickedObject();
+                GD.Print($"Moving {ships.Count} ships to target position.");
+                if (hitObject == null && ships.Count > 0)
+                {
+
+                    foreach (Ship ship in ships)
+                    {
+                        ship.SetShipTarget();
+                    }
+                }
             }
         }
-
-        // Handle mouse motion for panning
-        if (@event is InputEventMouseMotion mouseMotion && isDragging)
+        // Handle mouse motion for panning - MOVED OUTSIDE THE MOUSE BUTTON BLOCK
+        else if (@event is InputEventMouseMotion mouseMotion && isDragging)
         {
             // Calculate movement based on mouse motion and zoom level
             Vector2 movement = (dragOrigin - mouseMotion.Position) * PanSpeed / Zoom;
             Position += movement;
             dragOrigin = mouseMotion.Position;
         }
-
     }
 
     private void ZoomCamera(float zoomAmount)
@@ -105,7 +113,7 @@ public partial class Camera : Camera2D
             );
         }
     }
-    private void DetectClickedObject()
+    private Node2D DetectClickedObject()
     {
         // Get mouse position in viewport
         Vector2 mousePos = GetViewport().GetMousePosition();
@@ -163,6 +171,31 @@ public partial class Camera : Camera2D
                         }
                         SmoothFocus = true; // Enable smooth zoom when focusing on an object
                     }
+                    if (hitObject.GetParent() is Ship ship)
+                    {
+                        if (!ship.isMine)
+                        {
+                            GD.Print("Clicked on: " + hitObject.Name);
+                            return hitObject;
+
+                        }
+                        ship.shipSelected = !ship.shipSelected;
+                        if (ship.shipSelected)
+                        {
+                            ships.Add(ship);
+                            GD.Print("Clicked on: " + hitObject.Name);
+                        }
+                        else
+                        {
+                            ships.Remove(ship);
+                        }
+                    }
+                    else
+                    {
+                        GD.Print("Clicked on: " + hitObject.Name);
+
+                    }
+                    return hitObject; // Return the clicked object
                 }
             }
         }
@@ -170,6 +203,7 @@ public partial class Camera : Camera2D
         {
             GD.Print("No objects found at click position");
         }
+        return null; // No object clicked
     }
     public void Focus(Body Target, float deltaTime)
     {
