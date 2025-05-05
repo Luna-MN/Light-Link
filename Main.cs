@@ -102,7 +102,7 @@ public partial class Main : Node2D
 						}
 						if (planet is Node2D astroid)
 						{
-							foreach (Node2D a in astroid.GetChildren())
+							foreach (Node a in astroid.GetChildren())
 							{
 								if (a is Astroid astroidBody)
 								{
@@ -129,7 +129,7 @@ public partial class Main : Node2D
 						}
 						if (planet is Node2D astroid)
 						{
-							foreach (Node2D a in astroid.GetChildren())
+							foreach (Node a in astroid.GetChildren())
 							{
 								if (a is Astroid astroidBody)
 								{

@@ -146,12 +146,15 @@ public partial class Camera : Camera2D
                 Node2D hitObject = collider as Node2D;
                 if (hitObject != null)
                 {
-                    targetBody = hitObject.GetParent()?.GetParent() as Body;
-                    if (targetBody is Star star)
+                    if (hitObject.GetParent()?.GetParent() is Body body)
                     {
-                        star.starUI.SetUIVisible(true);
+                        targetBody = body;
+                        if (targetBody is Star star)
+                        {
+                            star.starUI.SetUIVisible(true);
+                        }
+                        SmoothFocus = true; // Enable smooth zoom when focusing on an object
                     }
-                    SmoothFocus = true; // Enable smooth zoom when focusing on an object
                 }
             }
         }
