@@ -17,6 +17,7 @@ public partial class PlanetProperties : Properties
         }
 
     }
+    public string Name;
     public float OrbitRadius; // in AU (Astronomical Units)
     public float OrbitPeriod; // in Earth days
     public float RotationPeriod; // in Earth hours

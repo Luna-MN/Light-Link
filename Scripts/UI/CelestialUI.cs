@@ -11,12 +11,15 @@ public partial class CelestialUI : Node2D
 	private Vector2 dragStartPosition;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public CelestialUI()
 	{
 		CreateUI();
 
 		// Initially hide everything until a star is selected
 		SetUIVisible(false);
+	}
+	public override void _Ready()
+	{
 
 	}
 
@@ -86,8 +89,6 @@ public partial class CelestialUI : Node2D
 		rootContainer.AddChild(infoPanel);
 
 		infoPanel.QueueRedraw();
-
-		GD.Print("Created draggable info panel using Control node");
 	}
 	private void CreateSelectionBrackets()
 	{

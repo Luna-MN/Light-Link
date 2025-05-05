@@ -148,10 +148,18 @@ public partial class Camera : Camera2D
                 {
                     if (hitObject.GetParent()?.GetParent() is Body body)
                     {
+                        if (targetBody != null && targetBody != body)
+                        {
+                            ClearFocus(); // Clear previous focus
+                        }
                         targetBody = body;
                         if (targetBody is Star star)
                         {
                             star.starUI.SetUIVisible(true);
+                        }
+                        if (targetBody is Planet planet)
+                        {
+                            planet.planetUI.SetUIVisible(true);
                         }
                         SmoothFocus = true; // Enable smooth zoom when focusing on an object
                     }
@@ -186,6 +194,10 @@ public partial class Camera : Camera2D
         if (targetBody is Star star)
         {
             star.starUI.SetUIVisible(false);
+        }
+        if (targetBody is Planet planet)
+        {
+            planet.planetUI.SetUIVisible(false);
         }
         targetBody = null;
     }

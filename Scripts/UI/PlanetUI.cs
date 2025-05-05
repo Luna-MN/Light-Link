@@ -1,16 +1,16 @@
 using Godot;
 using System;
 
-public partial class StarUI : CelestialUI
+public partial class PlanetUI : CelestialUI
 {
     // UI elements
 
-    private Label starNameLabel;
-    private Label starTypeLabel;
-    private Label starPropertiesLabel;
+    private Label PlanetNameLabel;
+    private Label planetTypeLabel;
+    private Label planetPropertiesLabel;
 
     // Current star properties
-    private StarProperties currentProperties;
+    private PlanetProperties currentProperties;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -21,22 +21,22 @@ public partial class StarUI : CelestialUI
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        // You might want to update the UI position if the star moves
+        // You might want to update the UI position if the Planet moves
         if (currentProperties != null)
         {
             UpdateUIPosition();
         }
     }
 
-    public void SetStarProperties(StarProperties properties)
+    public void SetPlanetProperties(PlanetProperties properties)
     {
         currentProperties = properties;
 
-        starNameLabel = AddProperty("Star Name", properties.Name ?? "Unknown Star");
-        starTypeLabel = AddProperty("Star Type", properties.SType);
-        starPropertiesLabel = AddProperty("Star Properties",
+        PlanetNameLabel = AddProperty("Planet Name", properties.Name ?? "Unknown Planet");
+        planetTypeLabel = AddProperty("Planet Type", properties.IsGasGiant ? "Gas Giant" : "Terrestrial");
+        planetPropertiesLabel = AddProperty("Planet Properties",
             $"\nSize: {properties.Radius}\n" +
-            $"Temperature: {properties.Temperature}K");
+            $"Temperature: {properties.Habitability}K");
 
         // Position UI around the star
         UpdateUIPosition();
@@ -65,6 +65,4 @@ public partial class StarUI : CelestialUI
         // Connect to left side of info panel
         connectionLine.AddPoint(infoPanel.Position + new Vector2(0, 20));
     }
-
-
 }

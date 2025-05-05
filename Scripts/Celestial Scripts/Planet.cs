@@ -6,6 +6,7 @@ public partial class Planet : Body
 {
 	private TrailEffect trail;
 	public PlanetProperties Properties;
+	public PlanetUI planetUI;
 	public Planet(PlanetProperties properties, MeshType type = MeshType.Planet) : base(type)
 	{
 		Properties = properties;
@@ -30,10 +31,13 @@ public partial class Planet : Body
 		{
 		}
 		GenerateMoons();
+		planetUI = new PlanetUI();
+		AddChild(planetUI);
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		planetUI.SetPlanetProperties(Properties);
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
