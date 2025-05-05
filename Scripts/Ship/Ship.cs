@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Godot;
 
 public partial class Ship : Node2D
@@ -16,6 +17,8 @@ public partial class Ship : Node2D
         Mesh = new PlayerShipMesh();
         Mesh.Scale = 25; // Set the scale of the ship
         AddChild(Mesh);
+        AddToGroup("Ships");
+
         targetPosition = Position;
         area2D = new Area2D();
         area2D.Position = new Vector2(0, 0);
