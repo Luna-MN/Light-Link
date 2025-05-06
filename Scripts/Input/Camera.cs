@@ -14,7 +14,7 @@ public partial class Camera : Camera2D
     private Vector2 dragOrigin;
     private Vector2 targetZoom = new Vector2(1, 1);
     private float zoomDamping = 10.0f;
-    private Body targetBody = null;
+    public Body targetBody = null;
     // New variables to control focus zoom
     private Vector2 defaultFocusZoom = new Vector2(1f, 1f);
     private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
@@ -74,19 +74,28 @@ public partial class Camera : Camera2D
         // Handle mouse button events for panning
         if (@event is InputEventMouseButton mouseButton)
         {
-            // Middle mouse button drag
+            // Right mouse button for context menu
             if (mouseButton.ButtonIndex == MouseButton.Right)
             {
                 if (mouseButton.Pressed)
                 {
-                    // Start dragging
-                    isDragging = true;
-                    dragOrigin = mouseButton.Position;
-                    ClearFocus();
+                    // Detect what was clicked
+                    Node2D hitObject = DetectClickedObject(MouseButton.Right);
+
+                    if (hitObject != null)
+                    {
+                        ShowContextMenuFor(hitObject, mouseButton.Position);
+                        GetViewport().SetInputAsHandled();
+                    }
+                    else
+                    {
+                        isDragging = true;
+                        dragOrigin = mouseButton.Position;
+                        ClearFocus();
+                    }
                 }
                 else
                 {
-                    // Stop dragging
                     isDragging = false;
                 }
             }
@@ -160,6 +169,69 @@ public partial class Camera : Camera2D
                 selectionEnd = GetGlobalMousePosition();
             }
         }
+    }
+
+    private void ShowContextMenuFor(Node2D hitObject, Vector2 position)
+    {
+        // Hide any existing context menus
+        HideAllContextMenus();
+
+        // Determine which menu to show based on the object
+        ContextMenu menu = null;
+
+        if (hitObject.GetParent() is Ship ship)
+        {
+            // menu = GetShipContextMenu(ship);
+        }
+        else if (hitObject.GetParent()?.GetParent() is Planet planet)
+        {
+            menu = GetPlanetContextMenu(planet);
+        }
+        else if (hitObject.GetParent()?.GetParent() is Star star)
+        {
+            // menu = GetStarContextMenu(star);
+        }
+
+        // Show the menu if one was found
+        if (menu != null)
+        {
+            menu.ShowAt(position);
+        }
+    }
+
+    private void ShowGeneralContextMenu(Vector2 position)
+    {
+        // Create or get a general context menu
+        // ContextMenu menu = GetOrCreateGeneralContextMenu();
+        // menu.ShowAt(position);
+    }
+
+    private void HideAllContextMenus()
+    {
+        // Find all active context menus and hide them
+        foreach (ContextMenu menu in GetTree().GetNodesInGroup("ContextMenus"))
+        {
+            menu.Hide();
+        }
+    }
+
+    private PlanetContextMenu GetPlanetContextMenu(Planet planet)
+    {
+        // Check if one already exists for this planet
+        PlanetContextMenu menu = GetNodeOrNull<PlanetContextMenu>($"%PlanetMenu_{planet.GetInstanceId()}");
+
+        // Create a new one if needed
+        if (menu == null)
+        {
+            menu = new PlanetContextMenu(planet);
+            menu.Name = $"PlanetMenu_{planet.GetInstanceId()}";
+            menu.AddToGroup("ContextMenus");
+            AddChild(menu);
+            // Set up the menu with planet-specific data
+            // menu.SetupFor(planet);
+        }
+
+        return menu;
     }
 
     private void SelectShipsInRectangle()
@@ -253,7 +325,7 @@ public partial class Camera : Camera2D
         }
     }
 
-    private Node2D DetectClickedObject()
+    private Node2D DetectClickedObject(MouseButton button = MouseButton.Left)
     {
         // Get mouse position in viewport
         Vector2 mousePos = GetViewport().GetMousePosition();
@@ -291,7 +363,7 @@ public partial class Camera : Camera2D
                 GodotObject collider = result["collider"].As<GodotObject>();
 
                 Node2D hitObject = collider as Node2D;
-                if (hitObject != null)
+                if (hitObject != null && button == MouseButton.Left)
                 {
                     if (hitObject.GetParent()?.GetParent() is Body body)
                     {
@@ -334,8 +406,8 @@ public partial class Camera : Camera2D
                         GD.Print("Clicked on: " + hitObject.Name);
 
                     }
-                    return hitObject; // Return the clicked object
                 }
+                return hitObject; // Return the clicked object
             }
         }
         else
