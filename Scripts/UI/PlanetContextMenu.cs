@@ -1,11 +1,13 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class PlanetContextMenu : ContextMenu
 {
     public Planet planet;
     public Camera camera;
+    public MainShip mainShip;
     // Called when the node enters the scene tree for the first time.
     public PlanetContextMenu(Planet planet)
     {
@@ -14,7 +16,10 @@ public partial class PlanetContextMenu : ContextMenu
     public override void _Ready()
     {
         base._Ready();
+
         camera = (Camera)GetViewport().GetCamera2D();
+        mainShip = GetTree().Root.FindChild("MainShip", true, false) as MainShip;
+
         AddItem("View Planet", OnViewPlanet);
         AddItem("Scan Planet", OnScanPlanet);
         AddItem("Set Up Colony", SetUpColony);

@@ -19,7 +19,7 @@ public partial class Camera : Camera2D
     private Vector2 defaultFocusZoom = new Vector2(1f, 1f);
     private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
     private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
-    private List<Ship> ships = new List<Ship>();
+    private List<PlayerShips> ships = new List<PlayerShips>();
 
     // New variables for drag selection
     private bool isDragSelecting = false;
@@ -263,7 +263,7 @@ public partial class Camera : Camera2D
         // Check each ship
         foreach (Node node in allShips)
         {
-            if (node is Ship ship && ship.isMine)
+            if (node is PlayerShips ship && ship.isMine)
             {
                 Vector2 shipPos = ship.GlobalPosition;
 
@@ -382,7 +382,7 @@ public partial class Camera : Camera2D
                         }
                         SmoothFocus = true; // Enable smooth zoom when focusing on an object
                     }
-                    if (hitObject.GetParent() is Ship ship)
+                    if (hitObject.GetParent() is PlayerShips ship)
                     {
                         if (!ship.isMine)
                         {

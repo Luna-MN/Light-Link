@@ -15,11 +15,7 @@ public partial class Ship : Node2D
     public float rotationSpeed = 5.0f;
     public override void _Ready()
     {
-        Mesh = new PlayerShipMesh();
-        Mesh.Scale = 25; // Set the scale of the ship
-        AddChild(Mesh);
         AddToGroup("Ships");
-
         targetPosition = Position;
         area2D = new Area2D();
         area2D.Position = new Vector2(0, 0);
@@ -54,14 +50,6 @@ public partial class Ship : Node2D
         else
         {
             selectionBrackets.Visible = false;
-        }
-    }
-    public void SetShipTarget(Vector2 pos)
-    {
-        if (shipSelected && isMine)
-        {
-            // Get the mouse position in global coordinates
-            targetPosition = pos;
         }
     }
 

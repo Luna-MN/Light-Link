@@ -41,12 +41,6 @@ public partial class ContextMenu : Node2D
         popup.Popup();
     }
 
-    // Hide the menu
-    public void Hide()
-    {
-        popup.Hide();
-    }
-
     // Add an item to the menu
     public int AddItem(string text, Action callback = null)
     {
