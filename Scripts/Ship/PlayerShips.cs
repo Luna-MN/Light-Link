@@ -6,7 +6,7 @@ public partial class PlayerShips : Ship
     public override void _Ready()
     {
         AddToGroup("MyShips");
-
+        isMine = true;
         base._Ready();
     }
     public void SetShipTarget(Vector2 pos)

@@ -41,6 +41,9 @@ public partial class PlanetContextMenu : ContextMenu
 
     private void SetUpColony()
     {
+        ColonyShip colonyShip = new ColonyShip(planet);
+        colonyShip.Position = mainShip.Position;
+        GetTree().Root.AddChild(colonyShip);
         // Logic to land on the planet
         GD.Print("Landing on planet...");
     }

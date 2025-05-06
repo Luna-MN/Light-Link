@@ -5,13 +5,14 @@ public partial class Ship : Node2D
 {
     public ShipMesh Mesh;
     public bool shipSelected = false;
-    public bool isMine = true;
+    public bool isMine = false;
     public Vector2 targetPosition;
     public Control selectionBrackets;
     public float speed = 100f;
     public Area2D area2D;
     public CollisionShape2D collisionShape;
     public CircleShape2D circleShape;
+    public TrailEffect trailEffect;
     public float rotationSpeed = 5.0f;
     public override void _Ready()
     {
@@ -32,7 +33,7 @@ public partial class Ship : Node2D
         collisionShape.Shape = circleShape;
         collisionShape.Position = new Vector2(0, 0);
 
-        TrailEffect trailEffect = new TrailEffect();
+        trailEffect = new TrailEffect();
         trailEffect.TrailLength = 100;
         trailEffect.SetTrailWidth(10);
         trailEffect.DefaultColor = new Color(0.2f, 0.6f, 1.0f).Darkened(0.4f);

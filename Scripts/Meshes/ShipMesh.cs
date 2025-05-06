@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public partial class ShipMesh : MeshInstance2D
 {
+    [Export] public Color CockpitColor = new Color(0.2f, 0.6f, 1.0f);
     [Export] public Color BodyColor = new Color(0.8f, 0.8f, 0.8f);
     [Export] public Color WingColor = new Color(0.7f, 0.7f, 0.7f);
     [Export] public float Scale = 1.0f;
