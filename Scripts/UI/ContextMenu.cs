@@ -55,6 +55,13 @@ public partial class ContextMenu : Node2D
         return id;
     }
 
+    // Add a disabled (grayed out) item to the menu
+    public int AddDisabledItem(string text)
+    {
+        int id = AddItem(text);
+        SetItemDisabled(popup.GetItemIndex(id), true);
+        return id;
+    }
     // Add a separator line
     public void AddSeparator()
     {

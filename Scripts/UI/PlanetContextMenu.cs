@@ -22,7 +22,14 @@ public partial class PlanetContextMenu : ContextMenu
 
         AddItem("View Planet", OnViewPlanet);
         AddItem("Scan Planet", OnScanPlanet);
-        AddItem("Set Up Colony", SetUpColony);
+        if (planet.Properties.Habitability > 0.3f)
+        {
+            AddItem("Set Up Colony", SetUpColony);
+        }
+        else
+        {
+            AddDisabledItem("Set Up Colony");
+        }
     }
 
     private void OnViewPlanet()

@@ -36,6 +36,9 @@ public partial class ColonyShip : PlayerShips
             if (planet == this.planet)
             {
                 GD.Print("Entered area of planet: " + planet.Name);
+                Colony colony = new Colony(planet);
+                planet.AddChild(colony);
+                QueueFree();
                 // Handle the interaction with the planet here
             }
         }
