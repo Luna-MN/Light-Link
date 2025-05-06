@@ -7,14 +7,6 @@ public partial class PlanetProperties : Properties
     public PlanetProperties()
     {
         SetHabitability();
-        if (HasWater)
-        {
-            WaterAmount = 0.25f; // Default water amount
-            if (HasAtmosphere)
-            {
-                WaterAmount = 0.8f; // Higher water amount if atmosphere is present
-            }
-        }
 
     }
     public string Name;
@@ -24,7 +16,7 @@ public partial class PlanetProperties : Properties
     public bool IsGasGiant;
     public bool HasAtmosphere; // Whether the planet has an atmosphere or not
     public bool HasWater; // Whether the planet has water or not
-    public float WaterAmount = 0.6f; // 0.0 to 1.0 
+    public float WaterAmount = 0.0f; // 0.0 to 1.0 
     public float Habitability; // 0.0 to 1.0
     public List<Type> PlanetResources = new List<Type>(); // Resources available on the planet
     public int Moons; // Number of moons the planet has
@@ -55,6 +47,16 @@ public partial class PlanetProperties : Properties
         if (IsGasGiant)
         {
             Habitability = 0.0f; // Gas giants are not habitable
+        }
+        if (HasWater)
+        {
+            WaterAmount = 0.25f; // Default water amount
+            if (HasAtmosphere)
+            {
+                WaterAmount = 0.8f; // Higher water amount if atmosphere is present
+            }
+            WaterAmount += new RandomNumberGenerator().RandfRange(0.0f, 0.25f);
+            WaterAmount = Mathf.Clamp(WaterAmount, 0.0f, 1.0f); // Ensure water amount is between 0 and 1
         }
     }
 }
