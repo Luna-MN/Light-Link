@@ -28,7 +28,7 @@ public partial class PlanetContextMenu : ContextMenu
         }
         else
         {
-            AddDisabledItem("Set Up Colony");
+            AddDisabledItem("Set Up Colony", "Planet is not habitable.");
         }
     }
 

@@ -22,9 +22,30 @@ public partial class ContextMenu : Node2D
         // Create the popup menu
         popup = new PopupMenu();
         AddChild(popup);
+        AddToGroup("ContextMenus");
 
-        // Connect to the popup's id_pressed signal
+        // Set properties to allow proper menu interaction
+        popup.Exclusive = false;
+
         popup.IdPressed += OnIdPressed;
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+
+        // Only check for input when the popup is visible
+        if (popup.Visible)
+        {
+            Vector2 mousePos = GetViewport().GetMousePosition();
+            Rect2 rect = new Rect2(popup.Position, popup.Size);
+
+            if (rect.HasPoint(mousePos))
+            {
+                // When mouse is over menu, make sure it can receive input
+                GetViewport().SetInputAsHandled();
+            }
+        }
     }
 
     // Show the menu at the mouse position
@@ -38,6 +59,7 @@ public partial class ContextMenu : Node2D
     public void ShowAt(Vector2 position)
     {
         popup.Position = new Vector2I((int)position.X, (int)position.Y);
+        popup.Exclusive = false; // Allow input to pass through
         popup.Popup();
     }
 
@@ -56,12 +78,20 @@ public partial class ContextMenu : Node2D
     }
 
     // Add a disabled (grayed out) item to the menu
-    public int AddDisabledItem(string text)
+    public int AddDisabledItem(string text, string disabledReason = null)
     {
         int id = AddItem(text);
-        SetItemDisabled(popup.GetItemIndex(id), true);
+        int idx = popup.GetItemIndex(id);
+        SetItemDisabled(idx, true);
+
+        if (!string.IsNullOrEmpty(disabledReason))
+        {
+            popup.SetItemTooltip(idx, disabledReason);
+        }
+
         return id;
     }
+
     // Add a separator line
     public void AddSeparator()
     {
@@ -93,6 +123,11 @@ public partial class ContextMenu : Node2D
         }
     }
 
+    public void Hide()
+    {
+        popup.Hide();
+    }
+
     // Close the menu when clicking outside
     public override void _UnhandledInput(InputEvent @event)
     {
@@ -104,7 +139,7 @@ public partial class ContextMenu : Node2D
             if (!rect.HasPoint(mousePos))
             {
                 Hide();
-                GetViewport().SetInputAsHandled();
+                // GetViewport().SetInputAsHandled();
             }
         }
     }

@@ -13,6 +13,8 @@ public partial class ColonyShip : PlayerShips
     {
         base._Ready();
 
+        DisableMovement = true; // Disable movement for the colony ship
+
         Mesh = new ColonyShipMesh();
         Mesh.Scale = 10; // Set the scale of the ship
         Mesh.Rotation = -(Mathf.Pi / 2); // Rotate the ship to face upwards

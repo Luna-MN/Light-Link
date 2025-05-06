@@ -79,16 +79,20 @@ public partial class Camera : Camera2D
             {
                 if (mouseButton.Pressed)
                 {
-                    // Detect what was clicked
+                    bool menuOpen = IsAnyContextMenuVisible();
+                    GD.Print("Menu open: " + menuOpen);
                     Node2D hitObject = DetectClickedObject(MouseButton.Right);
 
                     if (hitObject != null)
                     {
                         ShowContextMenuFor(hitObject, mouseButton.Position);
-                        GetViewport().SetInputAsHandled();
                     }
                     else
                     {
+                        // Always hide context menus when clicking outside
+                        HideAllContextMenus();
+
+                        // Allow dragging regardless of previous menu state
                         isDragging = true;
                         dragOrigin = mouseButton.Position;
                         ClearFocus();
@@ -169,6 +173,18 @@ public partial class Camera : Camera2D
                 selectionEnd = GetGlobalMousePosition();
             }
         }
+    }
+
+    private bool IsAnyContextMenuVisible()
+    {
+        foreach (ContextMenu menu in GetTree().GetNodesInGroup("ContextMenus"))
+        {
+            if (menu.IsVisible())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void ShowContextMenuFor(Node2D hitObject, Vector2 position)
@@ -263,7 +279,7 @@ public partial class Camera : Camera2D
         // Check each ship
         foreach (Node node in allShips)
         {
-            if (node is PlayerShips ship && ship.isMine)
+            if (node is PlayerShips ship && ship.isMine && !ship.DisableMovement)
             {
                 Vector2 shipPos = ship.GlobalPosition;
 
@@ -390,6 +406,11 @@ public partial class Camera : Camera2D
                             return hitObject;
 
                         }
+                        if (ship.DisableMovement)
+                        {
+                            GD.Print("Clicked on: " + hitObject.Name);
+                            return hitObject;
+                        }
                         ship.shipSelected = !ship.shipSelected;
                         if (ship.shipSelected)
                         {
@@ -409,10 +430,6 @@ public partial class Camera : Camera2D
                 }
                 return hitObject; // Return the clicked object
             }
-        }
-        else
-        {
-            GD.Print("No objects found at click position");
         }
         return null; // No object clicked
     }

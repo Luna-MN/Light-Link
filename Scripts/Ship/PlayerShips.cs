@@ -3,6 +3,7 @@ using System;
 
 public partial class PlayerShips : Ship
 {
+    public bool DisableMovement = false;
     public override void _Ready()
     {
         AddToGroup("MyShips");
