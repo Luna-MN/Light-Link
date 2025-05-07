@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bcdnhl4ewo02r"]
+[gd_scene load_steps=6 format=3 uid="uid://bcdnhl4ewo02r"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="Script" path="res://Scripts/UI/UI.cs" id="3_kumu2"]
 [ext_resource type="Script" path="res://Scripts/Ship/MainShip.cs" id="4_5lsw7"]
+[ext_resource type="Script" path="res://Scripts/Meshes/GasCollectorMesh.cs" id="5_piwga"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jk2el")
@@ -17,3 +18,13 @@ script = ExtResource("3_kumu2")
 
 [node name="MainShip" type="Node2D" parent="."]
 script = ExtResource("4_5lsw7")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(150, 25)
+script = ExtResource("5_piwga")
+PrimaryColor = null
+SecondaryColor = null
+EmissiveColor = null
+BuildingScale = null
+HasEmissiveElements = null
+BuildingType = null

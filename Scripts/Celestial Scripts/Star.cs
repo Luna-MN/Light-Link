@@ -8,6 +8,7 @@ public partial class Star : Body
 	// Properties of the star
 	public StarProperties Properties;
 	public StarUI starUI;
+	public ShadowEffect shadowEffect;
 	// Constructor
 	public Star(Vector2 pos, StarProperties properties, MeshType type = MeshType.Star) : base(type)
 	{
@@ -17,6 +18,11 @@ public partial class Star : Body
 		UpdateRBScale(Properties.Radius);
 		Position = pos;
 		Properties.Position = pos;
+
+		shadowEffect = new ShadowEffect();
+		shadowEffect.star = this;
+		AddChild(shadowEffect);
+
 		if (Mesh is LowPolyStarMesh starMesh)
 		{
 			starMesh.GenerateStar(Properties.Temperature, 0.6f);
@@ -40,6 +46,7 @@ public partial class Star : Body
 	public override void _Ready()
 	{
 		starUI.SetStarProperties(Properties);
+		shadowEffect.QueueRedraw();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -228,6 +235,7 @@ public partial class Star : Body
 			Planet planet = new Planet(planetProperties);
 			// Add the planet to the star
 			AddChild(planet);
+			shadowEffect.AddOccluder(planet);
 		}
 	}
 	#endregion
