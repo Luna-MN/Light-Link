@@ -74,11 +74,13 @@ public partial class Main : Node2D
 					{
 						// Set target based on original scale when zooming out
 						targetStarScales[star] = originalStarScales[star] * SunIncrease;
+						star.zoomedOut = true;
 					}
 					else
 					{
 						// Restore original scale when zooming in
 						targetStarScales[star] = originalStarScales[star];
+						star.zoomedOut = false;
 					}
 				}
 			}

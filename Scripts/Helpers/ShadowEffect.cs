@@ -42,7 +42,16 @@ public partial class ShadowEffect : Node2D
 
     public override void _Draw()
     {
-        if (star == null) return;
+        if (star == null || !star.Visible || star.zoomedOut)
+        {
+            GD.Print("Star is null or not visible or zoomed out.");
+            Visible = false;
+            return;
+        }
+        else
+        {
+            Visible = true;
+        }
 
         foreach (var planet in Planets)
         {

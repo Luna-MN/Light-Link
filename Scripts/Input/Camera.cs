@@ -49,8 +49,73 @@ public partial class Camera : Camera2D
         {
             QueueRedraw();
         }
+        UpdateStarVisibility();
+    }
+    private void UpdateStarVisibility()
+    {
+        // Get the visible rectangle in global coordinates
+        Rect2 visibleRect = GetVisibleRect();
+
+        // Find all stars in the scene
+        var allStars = GetTree().GetNodesInGroup("Stars");
+
+        foreach (Node node in allStars)
+        {
+            if (node is Star star)
+            {
+                // Check if star is within visible area (with some margin for smooth transitions)
+                bool isVisible = visibleRect.HasPoint(star.GlobalPosition);
+                if (!isVisible)
+                {
+                    // Check if any of the planets are within the visible area
+                    foreach (var planet in star.Planets)
+                    {
+                        if (visibleRect.HasPoint(planet.GlobalPosition))
+                        {
+                            isVisible = true; // If any planet is visible, star should be visible
+                            break;
+                        }
+                    }
+                    foreach (Astroid astroid in star.Astroids)
+                    {
+                        if (visibleRect.HasPoint(astroid.GlobalPosition))
+                        {
+                            isVisible = true; // If any astroid is visible, star should be visible
+                            break;
+                        }
+                    }
+                }
+                // Only change visibility if needed to avoid unnecessary processing
+                if (star.Visible != isVisible)
+                {
+                    star.Visible = isVisible;
+                }
+            }
+        }
+        // Update star visibility based on camera view
+
     }
 
+    // Helper method to get the current visible rectangle in global coordinates
+    private Rect2 GetVisibleRect()
+    {
+        // Get viewport size
+        Vector2 viewportSize = GetViewport().GetVisibleRect().Size;
+
+        // Calculate visible rectangle size based on zoom
+        Vector2 visibleSize = viewportSize / Zoom;
+
+        // Calculate the top-left corner of visible area
+        Vector2 topLeft = GlobalPosition - (visibleSize / 2);
+
+        // Add a margin to prevent pop-in/pop-out effects
+        float margin = 100.0f;
+        topLeft -= new Vector2(margin, margin);
+        visibleSize += new Vector2(margin * 2, margin * 2);
+
+        // Return the rectangle representing visible area
+        return new Rect2(topLeft, visibleSize);
+    }
     public override void _Draw()
     {
         // Draw selection rectangle if drag selecting

@@ -9,6 +9,9 @@ public partial class Star : Body
 	public StarProperties Properties;
 	public StarUI starUI;
 	public ShadowEffect shadowEffect;
+	public List<Planet> Planets = new List<Planet>();
+	public List<Astroid> Astroids = new List<Astroid>();
+	public bool zoomedOut = false;
 	// Constructor
 	public Star(Vector2 pos, StarProperties properties, MeshType type = MeshType.Star) : base(type)
 	{
@@ -18,7 +21,7 @@ public partial class Star : Body
 		UpdateRBScale(Properties.Radius);
 		Position = pos;
 		Properties.Position = pos;
-
+		AddToGroup("Stars");
 		shadowEffect = new ShadowEffect();
 		shadowEffect.star = this;
 		AddChild(shadowEffect);
@@ -52,6 +55,14 @@ public partial class Star : Body
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (zoomedOut)
+		{
+			shadowEffect.Visible = false;
+		}
+		else
+		{
+			shadowEffect.Visible = true;
+		}
 	}
 	#region Star Properties
 	public void SetStarProperties()
@@ -235,6 +246,7 @@ public partial class Star : Body
 			Planet planet = new Planet(planetProperties);
 			// Add the planet to the star
 			AddChild(planet);
+			Planets.Add(planet);
 			shadowEffect.AddOccluder(planet);
 		}
 	}
@@ -271,7 +283,7 @@ public partial class Star : Body
 
 			// Create a new asteroid
 			Astroid astroid = new Astroid(astroidProperties);
-
+			Astroids.Add(astroid);
 			// Try to find a position that doesn't overlap with existing asteroids
 			Vector2 position;
 			bool validPosition = false;
