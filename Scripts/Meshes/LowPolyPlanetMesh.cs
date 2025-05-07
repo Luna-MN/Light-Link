@@ -333,12 +333,34 @@ public partial class LowPolyPlanetMesh : LowPolyMesh
             float newCoverage = CalculateWaterCoverage(colors);
         }
     }
+    public List<Vector2> GetVisibleLandTrianglePositions()
+    {
+        List<Vector2> landPositions = new List<Vector2>();
+
+        for (int i = 0; i < triangleCenters.Count; i++)
+        {
+            Color triangleColor = triangleColors[i];
+            Vector3 center3D = triangleCenters[i];
+
+            // Check if the triangle is land (not water) and visible (Z > 0)
+            if (!IsWaterTriangle(triangleColor) && center3D.Z > 0)
+            {
+                // Project 3D position to 2D and scale appropriately
+                Vector2 position2D = new Vector2(center3D.X, center3D.Y) * (Radius * Scale);
+
+                landPositions.Add(position2D);
+            }
+        }
+
+        return landPositions;
+    }
 
     // Helper method to check if a triangle is water
     private bool IsWaterTriangle(Color color)
     {
         return color.B > 0.3f && color.B > color.R * 1.5f && color.B > color.G * 1.2f;
     }
+
     #endregion
     #region Gas Giant Generation
     public void GenerateGasGiant(PlanetProperties properties)

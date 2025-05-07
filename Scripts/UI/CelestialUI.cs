@@ -143,5 +143,29 @@ public partial class CelestialUI : Node2D
 		}
 		return propertyLabel;
 	}
-
+	public void RemoveProperty(string name)
+	{
+		if (infoPanel != null)
+		{
+			var vbox = infoPanel.GetNode<Panel>("Background").GetNode<VBoxContainer>("Content");
+			var label = vbox.GetNodeOrNull<Label>(name + "Label");
+			if (label != null)
+			{
+				vbox.RemoveChild(label);
+				label.QueueFree();
+			}
+		}
+	}
+	public void UpdateProperty(string name, object value)
+	{
+		if (infoPanel != null)
+		{
+			var vbox = infoPanel.GetNode<Panel>("Background").GetNode<VBoxContainer>("Content");
+			var label = vbox.GetNodeOrNull<Label>(name + "Label");
+			if (label != null)
+			{
+				label.Text = $"{name}: {value}";
+			}
+		}
+	}
 }
