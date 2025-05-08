@@ -21,9 +21,8 @@ public partial class MainShip : PlayerShips
     {
         base._Process(delta);
         // Additional processing for the main ship
-        if (tractorBeam != null)
+        if (tractorBeam != null && mineObject != null)
         {
-
             tractorBeam.Points = new Vector2[]
             {
                 ToLocal(GlobalPosition),
@@ -43,6 +42,7 @@ public partial class MainShip : PlayerShips
         // Create tractor beam visual
         tractorBeam = new Line2D();
         tractorBeam.Width = 2;
+        tractorBeam.ZIndex = -1;
         Color color = Colors.Cyan - new Color(0, 0, 0, 0.5f);
         tractorBeam.DefaultColor = color;
         tractorBeam.Points = new Vector2[]
@@ -58,10 +58,11 @@ public partial class MainShip : PlayerShips
         await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
         // Remove asteroid and tractor beam
+        mineObject = null;
         asteroid.QueueFree();
         tractorBeam.QueueFree();
         tractorBeam = null;
-        mineObject = null;
+
     }
     public float GetApproachDistance()
     {
