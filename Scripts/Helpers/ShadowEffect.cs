@@ -4,13 +4,13 @@ using System.Collections.Generic;
 public partial class ShadowEffect : Node2D
 {
     [Export]
-    private float shadowIntensity = 0.7f;
+    private float shadowIntensity = 0.5f;
 
     [Export]
     private float shadowLength = 400.0f;
 
     [Export]
-    private Color shadowColor = new Color(0, 0, 0, 0.5f);
+    private Color shadowColor = new Color(0.02f, 0.02f, 0.02f, 0.5f);
 
     [Export]
     private bool useGradient = true;
@@ -109,7 +109,7 @@ public partial class ShadowEffect : Node2D
         Vector2 perpendicular = new Vector2(-shadowDir.Y, shadowDir.X).Normalized() * radius;
 
         // Calculate the four corners of the shadow polygon with narrowing effect
-        float endRadius = radius * 0.2f; // Adjust this factor to control how narrow the shadow becomes
+        float endRadius = radius * 0.01f; // Adjust this factor to control how narrow the shadow becomes
         Vector2 endPerpendicular = perpendicular.Normalized() * endRadius;
 
         Vector2[] points = new Vector2[4];

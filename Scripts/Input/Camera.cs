@@ -145,7 +145,6 @@ public partial class Camera : Camera2D
                 if (mouseButton.Pressed)
                 {
                     bool menuOpen = IsAnyContextMenuVisible();
-                    GD.Print("Menu open: " + menuOpen);
                     Node2D hitObject = DetectClickedObject(MouseButton.Right);
 
                     if (hitObject != null)
@@ -276,7 +275,6 @@ public partial class Camera : Camera2D
         else if (hitObject.GetParent()?.GetParent() is Astroid astroid)
         {
             menu = GetAstroidContextMenu(astroid);
-            GD.Print("Astroid menu created: " + menu.Name);
         }
 
         // Show the menu if one was found

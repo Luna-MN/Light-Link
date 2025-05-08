@@ -66,7 +66,6 @@ public partial class AstroidContextMenu : ContextMenu
         // Set the ship's target position
         mainShip.targetPosition = targetPos;
 
-        GD.Print($"Moving ship to mining position at {targetPos}");
     }
 
 }

@@ -185,7 +185,7 @@ public partial class Star : Body
 		}
 
 		// Convert radius from solar radii to game units
-		Properties.Radius *= 50.0f; // Assuming 1 solar radius = 50 game units
+		Properties.Radius *= 100.0f; // Assuming 1 solar radius = 50 game units
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 
 	}
@@ -233,7 +233,7 @@ public partial class Star : Body
 				Radius = 10 + (mass * 3), // Radius scales with mass
 				OrbitRadius = orbitRadius,
 				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 10,
-				RotationPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 24,
+				RotationPeriod = new RandomNumberGenerator().RandfRange(0.5f, 1.5f) * 24,
 				HasAtmosphere = hasAtmosphere,
 				HasWater = hasWater,
 				Habitability = 0.0f,

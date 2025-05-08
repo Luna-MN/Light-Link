@@ -10,11 +10,12 @@ public partial class MainShip : PlayerShips
     {
         // Initialize ship properties
         Mesh = new PlayerShipMesh();
-        Mesh.Scale = 25; // Set the scale of the ship
+        Mesh.Scale = 10; // Set the scale of the ship+
         AddChild(Mesh);
 
 
         base._Ready();
+        trailEffect.SetTrailWidth(5);
     }
 
     public override void _Process(double delta)
@@ -56,7 +57,10 @@ public partial class MainShip : PlayerShips
 
         // Wait for visual effect duration
         await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
-
+        if (asteroid.GetParent()?.GetParent() is Star star)
+        {
+            star.Astroids.Remove(asteroid);
+        }
         // Remove asteroid and tractor beam
         mineObject = null;
         asteroid.QueueFree();
