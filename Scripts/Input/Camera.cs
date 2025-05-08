@@ -151,6 +151,7 @@ public partial class Camera : Camera2D
                     if (hitObject != null)
                     {
                         ShowContextMenuFor(hitObject, mouseButton.Position);
+                        GD.Print("Clicked on: " + hitObject.Name);
                     }
                     else
                     {
@@ -272,6 +273,11 @@ public partial class Camera : Camera2D
         {
             // menu = GetStarContextMenu(star);
         }
+        else if (hitObject.GetParent()?.GetParent() is Astroid astroid)
+        {
+            menu = GetAstroidContextMenu(astroid);
+            GD.Print("Astroid menu created: " + menu.Name);
+        }
 
         // Show the menu if one was found
         if (menu != null)
@@ -312,6 +318,24 @@ public partial class Camera : Camera2D
             // menu.SetupFor(planet);
         }
 
+        return menu;
+    }
+    private AstroidContextMenu GetAstroidContextMenu(Astroid astroid)
+    {
+        // Check if one already exists for this astroid
+        AstroidContextMenu menu = GetNodeOrNull<AstroidContextMenu>($"%AstroidMenu_{astroid.GetInstanceId()}");
+
+        // Create a new one if needed
+        if (menu == null)
+        {
+            menu = new AstroidContextMenu(astroid);
+            menu.Name = $"AstroidMenu_{astroid.GetInstanceId()}";
+            menu.AddToGroup("ContextMenus");
+            AddChild(menu);
+            // Set up the menu with astroid-specific data
+            // menu.SetupFor(astroid);
+        }
+        GD.Print("Astroid menu created: " + menu.Name);
         return menu;
     }
 
