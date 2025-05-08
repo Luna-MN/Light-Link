@@ -72,7 +72,7 @@ public partial class Colony : Node2D
 	{
 		// Get land positions from planet mesh
 		var planetMesh = (LowPolyPlanetMesh)planet.Mesh;
-		List<Vector2> landPositions = planetMesh.GetVisibleLandTrianglePositions();
+		List<Vector2> landPositions = planetMesh.GetVisibleLandTrianglePositions(planet.Properties.Radius);
 
 		// Instantiate buildings at random land positions
 		int buildingsToPlace = Mathf.Min(3, landPositions.Count); // Place up to 3 buildings
@@ -86,10 +86,13 @@ public partial class Colony : Node2D
 			MeshInstance2D buildingMesh = new MeshInstance2D();
 			buildingMesh.Mesh = new BoxMesh();
 			buildingMesh.Scale = new Vector2(0.5f, 0.5f);
-			buildingMesh.Modulate = new Color(1, 1, 1);
 			buildingMesh.Position = buildingPosition;
+			buildingMesh.Rotation = (float)GD.RandRange(0, Mathf.Pi * 2); // Random rotation
+			buildingMesh.UseParentMaterial = false;
+			buildingMesh.Modulate = Colors.White;
+			planet.rotatingNode.AddChild(buildingMesh);
 
-			AddChild(buildingMesh);
+
 
 			// Remove used position to avoid duplicates
 			landPositions.RemoveAt(randomIndex);

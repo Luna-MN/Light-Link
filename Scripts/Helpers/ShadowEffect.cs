@@ -108,12 +108,15 @@ public partial class ShadowEffect : Node2D
         // Create perpendicular vector to get the sides of the shadow
         Vector2 perpendicular = new Vector2(-shadowDir.Y, shadowDir.X).Normalized() * radius;
 
-        // Calculate the four corners of the shadow polygon
+        // Calculate the four corners of the shadow polygon with narrowing effect
+        float endRadius = radius * 0.2f; // Adjust this factor to control how narrow the shadow becomes
+        Vector2 endPerpendicular = perpendicular.Normalized() * endRadius;
+
         Vector2[] points = new Vector2[4];
         points[0] = center + perpendicular;
         points[1] = center - perpendicular;
-        points[2] = points[1] + shadowDir * shadowLength;
-        points[3] = points[0] + shadowDir * shadowLength;
+        points[2] = center - endPerpendicular + shadowDir * shadowLength;
+        points[3] = center + endPerpendicular + shadowDir * shadowLength;
 
         return points;
     }

@@ -53,9 +53,9 @@ public partial class PlanetProperties : Properties
             WaterAmount = 0.25f; // Default water amount
             if (HasAtmosphere)
             {
-                WaterAmount = 0.8f; // Higher water amount if atmosphere is present
+                WaterAmount = 0.55f; // Higher water amount if atmosphere is present
             }
-            WaterAmount += new RandomNumberGenerator().RandfRange(0.0f, 0.25f);
+            WaterAmount += new RandomNumberGenerator().RandfRange(0.0f, 0.45f);
             WaterAmount = Mathf.Clamp(WaterAmount, 0.0f, 1.0f); // Ensure water amount is between 0 and 1
         }
     }

@@ -7,6 +7,7 @@ public partial class Planet : Body
 	private TrailEffect trail;
 	public PlanetProperties Properties;
 	public PlanetUI planetUI;
+	public Node2D rotatingNode;
 	public Planet(PlanetProperties properties, MeshType type = MeshType.Planet) : base(type)
 	{
 		Properties = properties;
@@ -15,12 +16,14 @@ public partial class Planet : Body
 		Position = new Vector2(Properties.OrbitRadius, 0);
 		// Set the size of the planet
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
+		rotatingNode = new Node2D();
+		AddChild(rotatingNode);
+		rotatingNode.ZIndex = 50;
 
 		// Set the color of the planet
 		trail = new TrailEffect();
 		trail.TrailLength = 500;
 		SetPlanetColor();
-
 		AddChild(trail);
 		trail.SetTrailWidth(Properties.Radius * 0.7f);
 		((LowPolyPlanetMesh)Mesh).ApplyPlanetProperties(Properties);
@@ -154,6 +157,7 @@ public partial class Planet : Body
 			angle = Mathf.DegToRad(angle);
 		}
 		Mesh.Rotation += angle;
+		rotatingNode.Rotation += angle;
 	}
 	#endregion
 	#region Moon Functions

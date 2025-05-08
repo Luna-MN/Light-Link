@@ -333,7 +333,7 @@ public partial class LowPolyPlanetMesh : LowPolyMesh
             float newCoverage = CalculateWaterCoverage(colors);
         }
     }
-    public List<Vector2> GetVisibleLandTrianglePositions()
+    public List<Vector2> GetVisibleLandTrianglePositions(float radius)
     {
         List<Vector2> landPositions = new List<Vector2>();
 
