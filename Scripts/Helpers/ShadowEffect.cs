@@ -22,6 +22,7 @@ public partial class ShadowEffect : Node2D
 
     public override void _Ready()
     {
+        ZIndex = 10; // Ensure this is drawn above the planets
     }
 
     public override void _Process(double delta)

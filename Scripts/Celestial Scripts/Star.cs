@@ -233,7 +233,7 @@ public partial class Star : Body
 				Radius = 10 + (mass * 3), // Radius scales with mass
 				OrbitRadius = orbitRadius,
 				OrbitPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 10,
-				RotationPeriod = 24,
+				RotationPeriod = new RandomNumberGenerator().RandfRange(0.1f, 1f) * 24,
 				HasAtmosphere = hasAtmosphere,
 				HasWater = hasWater,
 				Habitability = 0.0f,

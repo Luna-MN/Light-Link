@@ -45,6 +45,7 @@ public partial class Planet : Body
 	{
 		// Rotate the planet around the star
 		Orbit(Properties.OrbitPeriod, (float)delta);
+		Rotate(Properties.RotationPeriod, (float)delta);
 	}
 	#region Planet Properties Functions
 	public void SetPlanetColor()
@@ -133,6 +134,26 @@ public partial class Planet : Body
 			Position.X * Mathf.Cos(angle) - Position.Y * Mathf.Sin(angle),
 			Position.X * Mathf.Sin(angle) + Position.Y * Mathf.Cos(angle)
 		);
+	}
+	#endregion
+	#region Planet Rotation Functions
+	public void Rotate(float speed, float time)
+	{
+		// Rotate the planet around its own axis
+		float angle = speed * time;
+		if (angle > 360)
+		{
+			angle = 0;
+		}
+		else if (angle < -360)
+		{
+			angle = 0;
+		}
+		else
+		{
+			angle = Mathf.DegToRad(angle);
+		}
+		Mesh.Rotation += angle;
 	}
 	#endregion
 	#region Moon Functions
