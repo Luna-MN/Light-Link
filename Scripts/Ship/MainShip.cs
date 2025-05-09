@@ -1,20 +1,23 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class MainShip : PlayerShips
 {
     public Line2D tractorBeam;
     public Astroid mineObject;
     public float MineDistance = 1000f; // Distance to mine asteroids
+    public float AutoMineDistance = 500f; // Distance to auto mine asteroids
     public List<Astroid> MiningAstroids = new List<Astroid>();
+    private bool isMiningInProgress = false;
+
     public override void _Ready()
     {
         // Initialize ship properties
         Mesh = new PlayerShipMesh();
         Mesh.Scale = 10; // Set the scale of the ship+
         AddChild(Mesh);
-
 
         base._Ready();
         trailEffect.SetTrailWidth(5);
@@ -24,7 +27,7 @@ public partial class MainShip : PlayerShips
     {
         base._Process(delta);
         // Additional processing for the main ship
-        if (tractorBeam != null && mineObject != null)
+        if (tractorBeam != null && IsInstanceValid(mineObject))
         {
             tractorBeam.Points = new Vector2[]
             {
@@ -33,9 +36,56 @@ public partial class MainShip : PlayerShips
             };
         }
     }
-    public async void MineAstroid(Astroid asteroid)
+
+    public void startMining(Astroid asteroid)
     {
-        if (tractorBeam != null)
+        if (asteroid == null || !IsInstanceValid(asteroid))
+            return;
+
+        if (!MiningAstroids.Contains(asteroid))
+        {
+            MiningAstroids.Add(asteroid);
+        }
+
+        if (!isMiningInProgress)
+        {
+            isMiningInProgress = true;
+            _ = MineAstroids().ContinueWith(_ => isMiningInProgress = false);
+        }
+    }
+
+    private async Task MineAstroids()
+    {
+        while (MiningAstroids.Count > 0)
+        {
+            Astroid asteroid = MiningAstroids[0];
+
+            if (asteroid == null || !IsInstanceValid(asteroid))
+            {
+                MiningAstroids.RemoveAt(0);
+                continue;
+            }
+
+            // Move towards asteroid until within mining distance
+            while (IsInstanceValid(asteroid) && GlobalPosition.DistanceTo(asteroid.GlobalPosition) > AutoMineDistance)
+            {
+                targetPosition = asteroid.GlobalPosition;
+                await ToSignal(GetTree(), "process_frame");
+            }
+
+            if (IsInstanceValid(asteroid))
+            {
+                await MineAstroid(asteroid);
+            }
+
+            if (MiningAstroids.Count > 0)
+                MiningAstroids.RemoveAt(0);
+        }
+    }
+
+    private async Task MineAstroid(Astroid asteroid)
+    {
+        if (tractorBeam != null || asteroid == null || !IsInstanceValid(asteroid))
         {
             return;
         }
@@ -43,33 +93,45 @@ public partial class MainShip : PlayerShips
         mineObject = asteroid;
 
         // Create tractor beam visual
-        tractorBeam = new Line2D();
-        tractorBeam.Width = 2;
-        tractorBeam.ZIndex = -1;
-        Color color = Colors.Cyan - new Color(0, 0, 0, 0.5f);
-        tractorBeam.DefaultColor = color;
-        tractorBeam.Points = new Vector2[]
+        tractorBeam = new Line2D
         {
-        ToLocal(GlobalPosition),
-        ToLocal(asteroid.GlobalPosition)
+            Width = 2,
+            ZIndex = -1,
+            DefaultColor = Colors.Cyan - new Color(0, 0, 0, 0.5f),
+            Points = new Vector2[]
+            {
+                ToLocal(GlobalPosition),
+                ToLocal(asteroid.GlobalPosition)
+            }
         };
         AddChild(tractorBeam);
 
-        // Animate the beam or add particle effects here
-
-        // Wait for visual effect duration
-        await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
-        if (asteroid.GetParent()?.GetParent() is Star star)
+        try
         {
-            star.Astroids.Remove(asteroid);
-        }
-        // Remove asteroid and tractor beam
-        mineObject = null;
-        asteroid.QueueFree();
-        tractorBeam.QueueFree();
-        tractorBeam = null;
+            // Wait for visual effect duration
+            await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
 
+            if (IsInstanceValid(asteroid) && asteroid.GetParent()?.GetParent() is Star star)
+            {
+                star.Astroids.Remove(asteroid);
+            }
+        }
+        finally
+        {
+            // Cleanup - execute even if there was an exception
+            mineObject = null;
+
+            if (asteroid != null && IsInstanceValid(asteroid))
+                asteroid.QueueFree();
+
+            if (tractorBeam != null && IsInstanceValid(tractorBeam))
+            {
+                tractorBeam.QueueFree();
+                tractorBeam = null;
+            }
+        }
     }
+
     public float GetApproachDistance()
     {
         return Mesh.Scale;

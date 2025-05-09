@@ -34,7 +34,7 @@ public partial class AstroidContextMenu : ContextMenu
     }
     public void MineAstroidMyself()
     {
-        mainShip.MineAstroid(astroid);
+        mainShip.startMining(astroid);
     }
     public void MoveToAstroid()
     {
