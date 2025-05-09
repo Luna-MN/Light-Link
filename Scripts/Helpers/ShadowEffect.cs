@@ -11,7 +11,7 @@ public partial class ShadowEffect : Node2D
 
     [Export]
     private Color shadowColor = new Color(0.02f, 0.02f, 0.02f, 0.5f);
-
+    // private Color shadowColor = new Color(1f, 1f, 1f, 0.5f);
     [Export]
     private bool useGradient = true;
 
@@ -78,9 +78,24 @@ public partial class ShadowEffect : Node2D
         // Draw the shadow
         if (useGradient)
         {
-            Color startColor = shadowColor;
+            Color startColor = new Color(shadowColor.R, shadowColor.G, shadowColor.B, 0.3f);
+            Color midColor = shadowColor;
             Color endColor = new Color(shadowColor.R, shadowColor.G, shadowColor.B, 0);
+            for (int i = 0; i < 5; i++)
+            {
+                float t = i / 100.0f;
+                float len = Mathf.Lerp(0, shadowLength, t);
+                Color color = startColor.Lerp(endColor, t);
 
+                Vector2[] segmentPoints = {
+                    points[0] + shadowDir * len,
+                    points[1] + shadowDir * len,
+                    points[1] + shadowDir * (len + shadowLength/5),
+                    points[0] + shadowDir * (len + shadowLength/5)
+                };
+
+                DrawColoredPolygon(segmentPoints, color);
+            }
             for (int i = 0; i < 10; i++)
             {
                 float t = i / 10.0f;
@@ -88,11 +103,11 @@ public partial class ShadowEffect : Node2D
                 Color color = startColor.Lerp(endColor, t);
 
                 Vector2[] segmentPoints = {
-                points[0] + shadowDir * len,
-                points[1] + shadowDir * len,
-                points[1] + shadowDir * (len + shadowLength/10),
-                points[0] + shadowDir * (len + shadowLength/10)
-            };
+                    points[0] + shadowDir * len,
+                    points[1] + shadowDir * len,
+                    points[1] + shadowDir * (len + shadowLength/10),
+                    points[0] + shadowDir * (len + shadowLength/10)
+                };
 
                 DrawColoredPolygon(segmentPoints, color);
             }
