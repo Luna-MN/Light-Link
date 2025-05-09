@@ -109,7 +109,7 @@ public partial class MainShip : PlayerShips
         try
         {
             // Wait for visual effect duration
-            await ToSignal(GetTree().CreateTimer(1.0f), "timeout");
+            await ToSignal(GetTree().CreateTimer(5.0f), "timeout");
 
             if (IsInstanceValid(asteroid) && asteroid.GetParent()?.GetParent() is Star star)
             {
