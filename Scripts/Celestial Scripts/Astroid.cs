@@ -5,6 +5,8 @@ using System.Linq;
 public partial class Astroid : Body
 {
 	public AstroidProperties Properties;
+	public Control selectionBrackets;
+
 	public Astroid(AstroidProperties properties, MeshType type = MeshType.Astroid) : base(type)
 	{
 		Properties = properties;
@@ -15,6 +17,8 @@ public partial class Astroid : Body
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		CreateSelectionBrackets();
+		ShowSelectionBrackets(false);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -55,5 +59,40 @@ public partial class Astroid : Body
 
 		// Apply the colors
 		Mesh.SetTriangleColors(colors);
+	}
+	private void CreateSelectionBrackets()
+	{
+		selectionBrackets = new Control();
+		selectionBrackets.Name = "SelectionBrackets";
+		AddChild(selectionBrackets);
+
+		// Create smaller brackets
+		CreateBracket("TopLeftBracket", new Vector2(-1, -1), new Vector2(-0.5f, -1), new Vector2(-1, -0.5f));
+		CreateBracket("TopRightBracket", new Vector2(1, -1), new Vector2(0.5f, -1), new Vector2(1, -0.5f));
+		CreateBracket("BottomLeftBracket", new Vector2(-1, 1), new Vector2(-0.5f, 1), new Vector2(-1, 0.5f));
+		CreateBracket("BottomRightBracket", new Vector2(1, 1), new Vector2(0.5f, 1), new Vector2(1, 0.5f));
+	}
+
+	private void CreateBracket(string name, Vector2 corner, Vector2 horizontalEnd, Vector2 verticalEnd)
+	{
+		var bracket = new Line2D();
+		bracket.Name = name;
+		bracket.Width = 0.5f;
+		bracket.DefaultColor = Colors.White;
+		// Create smaller brackets (reduce from 40 to 10)
+		bracket.AddPoint(corner * 5);
+		bracket.AddPoint(horizontalEnd * 5);
+		bracket.AddPoint(corner * 5);
+		bracket.AddPoint(verticalEnd * 5);
+
+		selectionBrackets.AddChild(bracket);
+	}
+	public void ShowSelectionBrackets(bool isVisible)
+	{
+		if (selectionBrackets == null)
+		{
+			CreateSelectionBrackets();
+		}
+		selectionBrackets.Visible = isVisible;
 	}
 }

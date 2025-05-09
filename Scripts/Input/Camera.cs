@@ -365,6 +365,13 @@ public partial class Camera : Camera2D
                 ship.shipSelected = false;
             }
         }
+        foreach (Astroid astroid in mainShip.MiningAstroids)
+        {
+            if (astroid != null)
+            {
+                astroid.ShowSelectionBrackets(false);
+            }
+        }
         ships.Clear();
         mainShip.MiningAstroids.Clear();
 
@@ -400,6 +407,7 @@ public partial class Camera : Camera2D
                         astroidPos.Y >= minY && astroidPos.Y <= maxY)
                     {
                         mainShip.MiningAstroids.Add(astroid);
+                        astroid.ShowSelectionBrackets(true);
                     }
                 }
             }
