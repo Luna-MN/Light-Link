@@ -10,6 +10,7 @@ public partial class Astroid : Body
 		Properties = properties;
 		Mesh.Scale = new Vector2(properties.Radius, properties.Radius);
 		SetAstroidColor();
+		AddToGroup("Astroids");
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

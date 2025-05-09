@@ -1,11 +1,13 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class MainShip : PlayerShips
 {
     public Line2D tractorBeam;
     public Astroid mineObject;
     public float MineDistance = 1000f; // Distance to mine asteroids
+    public List<Astroid> MiningAstroids = new List<Astroid>();
     public override void _Ready()
     {
         // Initialize ship properties

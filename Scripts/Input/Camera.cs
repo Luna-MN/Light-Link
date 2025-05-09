@@ -20,6 +20,7 @@ public partial class Camera : Camera2D
     private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
     private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
     private List<PlayerShips> ships = new List<PlayerShips>();
+    private MainShip mainShip;
 
     // New variables for drag selection
     private bool isDragSelecting = false;
@@ -30,6 +31,7 @@ public partial class Camera : Camera2D
     public override void _Ready()
     {
         targetZoom = Zoom;
+        mainShip = GetTree().Root.FindChild("MainShip", true, false) as MainShip;
     }
 
     public override void _Process(double delta)
@@ -352,6 +354,8 @@ public partial class Camera : Camera2D
 
         // Get all ships in the scene
         var allShips = GetTree().GetNodesInGroup("Ships");
+        var allAstroids = GetTree().GetNodesInGroup("Astroids");
+
 
         // Clear current selection
         foreach (Ship ship in ships)
@@ -362,7 +366,9 @@ public partial class Camera : Camera2D
             }
         }
         ships.Clear();
+        mainShip.MiningAstroids.Clear();
 
+        bool shipsSelected = false;
         // Check each ship
         foreach (Node node in allShips)
         {
@@ -376,10 +382,29 @@ public partial class Camera : Camera2D
                 {
                     ship.shipSelected = true;
                     ships.Add(ship);
+                    shipsSelected = true;
                 }
             }
         }
+        // Check each astroid
+        if (!shipsSelected)
+        {
+            foreach (Node node in allAstroids)
+            {
+                if (node is Astroid astroid)
+                {
+                    Vector2 astroidPos = astroid.GlobalPosition;
 
+                    // Check if the astroid is within the selection rectangle
+                    if (astroidPos.X >= minX && astroidPos.X <= maxX &&
+                        astroidPos.Y >= minY && astroidPos.Y <= maxY)
+                    {
+                        mainShip.MiningAstroids.Add(astroid);
+                    }
+                }
+            }
+        }
+        GD.Print("Selected astroids: " + mainShip.MiningAstroids.Count);
         GD.Print($"Selected {ships.Count} ships via drag selection");
     }
 
