@@ -28,14 +28,14 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		// Create the panel as left side panel
 		_colonyPanel = new Panel();
 		_colonyPanel.Name = "ColonyPanel";
-		_colonyPanel.Position = new Vector2(_hiddenPositionX, 0);
-		_colonyPanel.Size = new Vector2(350, viewportSize.Y);
+		_colonyPanel.Position = new Vector2(_hiddenPositionX, 35);
+		_colonyPanel.Size = new Vector2(350, viewportSize.Y - 35);
 		AddChild(_colonyPanel);
 
 		// Create close button (positioned at the top-right of the panel)
 		_closeButton = new Button();
 		_closeButton.Text = "X";
-		_closeButton.Position = new Vector2(310, 10);
+		_closeButton.Position = new Vector2(310, 40);
 		_closeButton.Size = new Vector2(30, 30);
 		_closeButton.Pressed += TogglePanel;
 		_colonyPanel.AddChild(_closeButton);
@@ -43,8 +43,8 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		// Create content container
 		_contentContainer = new VBoxContainer();
 		_contentContainer.Name = "ContentContainer";
-		_contentContainer.Position = new Vector2(20, 20);
-		_contentContainer.Size = new Vector2(310, viewportSize.Y - 40);
+		_contentContainer.Position = new Vector2(20, 40);
+		_contentContainer.Size = new Vector2(310, viewportSize.Y - 100);
 		_contentContainer.SizeFlagsHorizontal = Control.SizeFlags.Fill;
 		_contentContainer.SizeFlagsVertical = Control.SizeFlags.Fill;
 		_colonyPanel.AddChild(_contentContainer);
