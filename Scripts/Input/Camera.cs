@@ -515,6 +515,10 @@ public partial class Camera : Camera2D
                         if (targetBody is Planet planet)
                         {
                             planet.planetUI.SetUIVisible(true);
+                            if (planet.hasColony)
+                            {
+                                planet.colonyUI.SetUIVisible(true);
+                            }
                         }
                         SmoothFocus = true; // Enable smooth zoom when focusing on an object
                     }
@@ -582,6 +586,11 @@ public partial class Camera : Camera2D
         if (targetBody is Planet planet)
         {
             planet.planetUI.SetUIVisible(false);
+            if (planet.hasColony)
+            {
+                planet.colonyUI.SetUIVisible(false);
+            }
+
         }
         targetBody = null;
     }

@@ -40,6 +40,10 @@ public partial class ColonyShip : PlayerShips
                 GD.Print("Entered area of planet: " + planet.Name);
                 Colony colony = new Colony(planet);
                 planet.AddChild(colony);
+                planet.hasColony = true;
+                ColonyUI colonyUI = new ColonyUI();
+                planet.AddChild(colonyUI);
+                planet.colonyUI = colonyUI;
                 QueueFree();
                 // Handle the interaction with the planet here
             }

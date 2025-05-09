@@ -8,6 +8,8 @@ public partial class Planet : Body
 	public PlanetProperties Properties;
 	public PlanetUI planetUI;
 	public Node2D rotatingNode;
+	public bool hasColony = false;
+	public ColonyUI colonyUI;
 	public Planet(PlanetProperties properties, MeshType type = MeshType.Planet) : base(type)
 	{
 		Properties = properties;
