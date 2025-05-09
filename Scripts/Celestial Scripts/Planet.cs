@@ -13,7 +13,11 @@ public partial class Planet : Body
 		Properties = properties;
 		Properties.SetHabitability();
 		// Set the position of the planet
-		Position = new Vector2(Properties.OrbitRadius, 0);
+		float randomAngle = (float)GD.RandRange(0, Mathf.Tau); // Random angle between 0 and 2π radians
+		Position = new Vector2(
+			Properties.OrbitRadius * Mathf.Cos(randomAngle),
+			Properties.OrbitRadius * Mathf.Sin(randomAngle)
+		);
 		// Set the size of the planet
 		Mesh.Scale = new Vector2(Properties.Radius, Properties.Radius);
 		rotatingNode = new Node2D();
