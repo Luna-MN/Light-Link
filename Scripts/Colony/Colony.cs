@@ -27,6 +27,7 @@ public partial class Colony : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		colonyIcon();
 		// Set the position of the colony
 		Position = new Vector2(0, 0);
 	}
@@ -66,6 +67,19 @@ public partial class Colony : Node2D
 		{
 			GD.Print("Max population reached: " + maxPopulation);
 		}
+	}
+	public void colonyIcon()
+	{
+		// Create a new Sprite node
+		MeshInstance2D colonyIcon = new MeshInstance2D();
+		colonyIcon.Name = "ColonyIcon";
+		colonyIcon.Mesh = new SphereMesh();
+		planet.AddChild(colonyIcon);
+		colonyIcon.Position = new Vector2(planet.Properties.Radius, -(planet.Properties.Radius));
+		colonyIcon.Modulate = Colors.Green;
+		colonyIcon.Scale = new Vector2(4f, 4f);
+		colonyIcon.ZIndex = 1; // Set the Z index to ensure it's on top of other elements
+
 	}
 	public void OnPopGroth()
 	{
