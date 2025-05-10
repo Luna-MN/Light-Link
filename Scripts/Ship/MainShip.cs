@@ -110,9 +110,30 @@ public partial class MainShip : PlayerShips
         {
             // Wait for visual effect duration
             await ToSignal(GetTree().CreateTimer(5.0f), "timeout");
+            Color color;
+            Star star_ = null;
+            switch (asteroid.Properties.AstroidType)
+            {
+                case Properties.Type.Rock:
+                    color = Colors.Brown;
+                    break;
+                case Properties.Type.Ice:
+                    color = Colors.LightBlue;
+                    break;
+                case Properties.Type.Iron:
+                    color = Colors.Gray;
+                    break;
+                case Properties.Type.Carbon:
+                    color = Colors.DarkGray;
+                    break;
+                default:
+                    color = Colors.White;
+                    break;
+            }
 
             if (IsInstanceValid(asteroid) && asteroid.GetParent()?.GetParent() is Star star)
             {
+                CreateResources(color, star, asteroid);
                 star.Astroids.Remove(asteroid);
             }
         }
@@ -135,5 +156,38 @@ public partial class MainShip : PlayerShips
     public float GetApproachDistance()
     {
         return Mesh.Scale;
+    }
+    public void CreateResources(Color color, Star star, Astroid astroid)
+    {
+        // Create 3 resource meshes in a triangle formation
+        for (int i = 0; i < 3; i++)
+        {
+            ResourceMesh resourceMesh = new ResourceMesh
+            {
+                Scale = 0.8f,
+                PrimaryColor = color,
+                VariationAmount = 0.3f
+            };
+            if (star != null)
+            {
+                star.AddChild(resourceMesh);
+            }
+
+
+            // Position in a triangle formation
+            float angle = (float)(2 * Math.PI * i / 3); // 120 degrees apart
+            Vector2 offset = new Vector2(
+                (float)Math.Cos(angle) * 10f,
+                (float)Math.Sin(angle) * 10f
+            );
+            resourceMesh.Position = offset + astroid.Position;
+
+            // Add some random rotation for visual variety
+            if (resourceMesh.AddRandomRotation)
+            {
+                resourceMesh.RotationDegrees = (float)GD.RandRange(0, 360);
+            }
+            Console.WriteLine($"Resource mesh created at position: {resourceMesh.Position}");
+        }
     }
 }

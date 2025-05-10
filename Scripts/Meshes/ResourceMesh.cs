@@ -6,9 +6,9 @@ using System.Linq;
 public partial class ResourceMesh : MeshInstance2D
 {
     [Export] public Color PrimaryColor = new Color(0.6f, 0.8f, 1.0f); // Main resource color
-    [Export] public float Scale = 0.5f; // Overall scale of the resource
-    [Export] public bool AddRandomRotation = false; // Whether to randomize orientation
-    [Export] public float VariationAmount = 0.5f; // How much to vary the shape (0-1)
+    [Export] public float Scale = 1f; // Overall scale of the resource
+    [Export] public bool AddRandomRotation = true; // Whether to randomize orientation
+    [Export] public float VariationAmount = 0.3f; // How much to vary the shape (0-1)
 
     private Random random = new Random();
 

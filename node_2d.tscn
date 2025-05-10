@@ -20,15 +20,5 @@ script = ExtResource("3_kumu2")
 script = ExtResource("4_5lsw7")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(73, 93)
-scale = Vector2(76.065, 76.065)
+position = Vector2(43, 0)
 script = ExtResource("5_vqxe0")
-PrimaryColor = Color(1, 0.360784, 0.360784, 1)
-SecondaryColor = Color(0.937255, 0, 0, 1)
-
-[node name="MeshInstance2D2" type="MeshInstance2D" parent="."]
-position = Vector2(222, 75)
-rotation = 1.5708
-scale = Vector2(33.945, 33.945)
-script = ExtResource("5_vqxe0")
-SecondaryColor = Color(0.243137, 0.517647, 0.662745, 1)
