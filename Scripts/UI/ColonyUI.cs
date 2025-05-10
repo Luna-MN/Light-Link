@@ -35,8 +35,8 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		// Create the panel as left side panel
 		colonyPanel = new Panel();
 		colonyPanel.Name = "ColonyPanel";
-		colonyPanel.Position = new Vector2(hiddenPositionX, 35);
-		colonyPanel.Size = new Vector2(350, viewportSize.Y - 35);
+		colonyPanel.Position = new Vector2(hiddenPositionX, viewportSize.Y / 2 - 400);
+		colonyPanel.Size = new Vector2(350, 800);
 		AddChild(colonyPanel);
 
 		// Create close button (positioned at the top-right of the panel)

@@ -73,28 +73,29 @@ public partial class Colony : Node2D
 		var planetMesh = (LowPolyPlanetMesh)planet.Mesh;
 		List<Vector2> landPositions = planetMesh.GetVisibleLandTrianglePositions(planet.Properties.Radius);
 
+		// Check if we have any land positions available
+		if (landPositions == null || landPositions.Count == 0)
+		{
+			GD.Print("No available land positions for buildings");
+			return; // Exit the method if we have no positions
+		}
+
 		// Instantiate buildings at random land positions
-		int buildingsToPlace = Mathf.Min(3, landPositions.Count); // Place up to 3 buildings
 		var random = new Random();
 
-		for (int i = 0; i < buildingsToPlace; i++)
-		{
-			int randomIndex = random.Next(landPositions.Count);
-			Vector2 buildingPosition = landPositions[randomIndex];
+		int randomIndex = random.Next(landPositions.Count);
+		Vector2 buildingPosition = landPositions[randomIndex];
 
-			MeshInstance2D buildingMesh = new MeshInstance2D();
-			buildingMesh.Mesh = new BoxMesh();
-			buildingMesh.Scale = new Vector2(0.5f, 0.5f);
-			buildingMesh.Position = buildingPosition;
-			buildingMesh.Rotation = (float)GD.RandRange(0, Mathf.Pi * 2); // Random rotation
-			buildingMesh.UseParentMaterial = false;
-			buildingMesh.Modulate = Colors.White;
-			planet.rotatingNode.AddChild(buildingMesh);
+		MeshInstance2D buildingMesh = new MeshInstance2D();
+		buildingMesh.Mesh = new BoxMesh();
+		buildingMesh.Scale = new Vector2(0.5f, 0.5f);
+		buildingMesh.Position = buildingPosition;
+		buildingMesh.Rotation = (float)GD.RandRange(0, Mathf.Pi * 2); // Random rotation
+		buildingMesh.UseParentMaterial = false;
+		buildingMesh.Modulate = Colors.White;
+		planet.rotatingNode.AddChild(buildingMesh);
 
-
-
-			// Remove used position to avoid duplicates
-			landPositions.RemoveAt(randomIndex);
-		}
+		// Remove used position to avoid duplicates
+		landPositions.RemoveAt(randomIndex);
 	}
 }

@@ -12,7 +12,7 @@ public partial class ColonyShip : PlayerShips
     public override void _Ready()
     {
         base._Ready();
-
+        speed = 175; // Set the speed of the colony ship
         DisableMovement = true; // Disable movement for the colony ship
 
         Mesh = new ColonyShipMesh();
