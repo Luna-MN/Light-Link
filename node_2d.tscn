@@ -19,5 +19,5 @@ script = ExtResource("3_kumu2")
 [node name="MainShip" type="Node2D" parent="."]
 script = ExtResource("4_5lsw7")
 
-[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+[node name="BuildingUI" type="CanvasLayer" parent="."]
 script = ExtResource("5_n26vg")

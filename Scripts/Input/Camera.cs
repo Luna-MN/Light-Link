@@ -21,7 +21,7 @@ public partial class Camera : Camera2D
     private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
     private List<PlayerShips> ships = new List<PlayerShips>();
     private MainShip mainShip;
-
+    private BuildingPlacementUI buildingPlacementUI;
     // New variables for drag selection
     private bool isDragSelecting = false;
     private Vector2 selectionStart;
@@ -32,6 +32,7 @@ public partial class Camera : Camera2D
     {
         targetZoom = Zoom;
         mainShip = GetTree().Root.FindChild("MainShip", true, false) as MainShip;
+        buildingPlacementUI = GetTree().Root.FindChild("BuildingUI", true, false) as BuildingPlacementUI;
     }
 
     public override void _Process(double delta)
@@ -238,6 +239,17 @@ public partial class Camera : Camera2D
             {
                 // Update selection rectangle end point with GLOBAL position
                 selectionEnd = GetGlobalMousePosition();
+            }
+        }
+        else if (@event is InputEventKey keyEvent)
+        {
+            // Handle keyboard shortcuts for zooming
+            if (keyEvent.IsPressed())
+            {
+                if (keyEvent.Keycode == Key.Q)
+                {
+                    buildingPlacementUI.TogglePanel();
+                }
             }
         }
     }
