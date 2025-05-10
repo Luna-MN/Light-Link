@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bcdnhl4ewo02r"]
+[gd_scene load_steps=6 format=3 uid="uid://bcdnhl4ewo02r"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="Script" path="res://Scripts/UI/UI.cs" id="3_kumu2"]
 [ext_resource type="Script" path="res://Scripts/Ship/MainShip.cs" id="4_5lsw7"]
+[ext_resource type="Script" path="res://Scripts/Meshes/ResourceMesh.cs" id="5_vqxe0"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jk2el")
@@ -17,3 +18,17 @@ script = ExtResource("3_kumu2")
 
 [node name="MainShip" type="Node2D" parent="."]
 script = ExtResource("4_5lsw7")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(73, 93)
+scale = Vector2(76.065, 76.065)
+script = ExtResource("5_vqxe0")
+PrimaryColor = Color(1, 0.360784, 0.360784, 1)
+SecondaryColor = Color(0.937255, 0, 0, 1)
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="."]
+position = Vector2(222, 75)
+rotation = 1.5708
+scale = Vector2(33.945, 33.945)
+script = ExtResource("5_vqxe0")
+SecondaryColor = Color(0.243137, 0.517647, 0.662745, 1)
