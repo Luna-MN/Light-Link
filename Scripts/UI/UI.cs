@@ -5,17 +5,17 @@ public partial class UI : CanvasLayer
 {
 	// UI element references
 	private Control resourcePanel;
-	private Label foodLabel;
-	private Label powerLabel;
-	private Label happinessLabel;
-	private Label populationLabel;
+	private Label energyLabel;
+	private Label metalLabel;
+	private Label waterLabel;
+	private Label fuelLabel;
 	private Control pauseMenu;
 
 	// Colony state
-	private int food = 100;
-	private int power = 50;
-	private float happiness = 75.0f;
-	private int population = 10;
+	private int energy = 100;
+	private int metal = 50;
+	private float water = 75.0f;
+	private int fuel = 10;
 	private bool isPaused = false;
 
 	// Called when the node enters the scene tree for the first time.
@@ -54,9 +54,9 @@ public partial class UI : CanvasLayer
 		foodIcon.CustomMinimumSize = new Vector2(24, 24);
 		foodContainer.AddChild(foodIcon);
 
-		foodLabel = new Label();
-		foodLabel.Text = "Food: 100";
-		foodContainer.AddChild(foodLabel);
+		energyLabel = new Label();
+		energyLabel.Text = "Energy:";
+		foodContainer.AddChild(energyLabel);
 		hboxContainer.AddChild(foodContainer);
 
 		// Create Power indicator with icon
@@ -66,9 +66,9 @@ public partial class UI : CanvasLayer
 		powerIcon.CustomMinimumSize = new Vector2(24, 24);
 		powerContainer.AddChild(powerIcon);
 
-		powerLabel = new Label();
-		powerLabel.Text = "Power: 50";
-		powerContainer.AddChild(powerLabel);
+		metalLabel = new Label();
+		metalLabel.Text = "Metal:";
+		powerContainer.AddChild(metalLabel);
 		hboxContainer.AddChild(powerContainer);
 
 		// Create Happiness indicator with icon
@@ -78,9 +78,9 @@ public partial class UI : CanvasLayer
 		happinessIcon.CustomMinimumSize = new Vector2(24, 24);
 		happinessContainer.AddChild(happinessIcon);
 
-		happinessLabel = new Label();
-		happinessLabel.Text = "Happiness: 75%";
-		happinessContainer.AddChild(happinessLabel);
+		waterLabel = new Label();
+		waterLabel.Text = "Water:";
+		happinessContainer.AddChild(waterLabel);
 		hboxContainer.AddChild(happinessContainer);
 
 		// Create Population indicator with icon
@@ -90,9 +90,9 @@ public partial class UI : CanvasLayer
 		populationIcon.CustomMinimumSize = new Vector2(24, 24);
 		populationContainer.AddChild(populationIcon);
 
-		populationLabel = new Label();
-		populationLabel.Text = "Population: 10";
-		populationContainer.AddChild(populationLabel);
+		fuelLabel = new Label();
+		fuelLabel.Text = "Fuel:";
+		populationContainer.AddChild(fuelLabel);
 		hboxContainer.AddChild(populationContainer);
 
 		resourcePanel.AddChild(hboxContainer);
@@ -159,43 +159,43 @@ public partial class UI : CanvasLayer
 	}
 
 	// Resource update methods
-	public void UpdateFood(int amount)
+	public void UpdateEnergy(int amount)
 	{
-		food += amount;
+		energy += amount;
 		UpdateResourceDisplay();
 	}
 
-	public void UpdatePower(int amount)
+	public void UpdateMetal(int amount)
 	{
-		power += amount;
+		metal += amount;
 		UpdateResourceDisplay();
 	}
 
-	public void UpdateHappiness(float amount)
+	public void UpdateWater(float amount)
 	{
-		happiness = Mathf.Clamp(happiness + amount, 0, 100);
+		water += amount;
 		UpdateResourceDisplay();
 	}
 
-	public void UpdatePopulation(int amount)
+	public void UpdateFuel(int amount)
 	{
-		population += amount;
+		fuel += amount;
 		UpdateResourceDisplay();
 	}
 
 	private void UpdateResourceDisplay()
 	{
-		if (foodLabel != null)
-			foodLabel.Text = $"Food: {food}";
+		if (energyLabel != null)
+			energyLabel.Text = $"Energy: {energy}";
 
-		if (powerLabel != null)
-			powerLabel.Text = $"Power: {power}";
+		if (metalLabel != null)
+			metalLabel.Text = $"Metal: {metal}";
 
-		if (happinessLabel != null)
-			happinessLabel.Text = $"Happiness: {happiness:F0}%";
+		if (waterLabel != null)
+			waterLabel.Text = $"Water: {water}";
 
-		if (populationLabel != null)
-			populationLabel.Text = $"Population: {population}";
+		if (fuelLabel != null)
+			fuelLabel.Text = $"Fuel: {fuel}";
 	}
 
 	private void TogglePause()
