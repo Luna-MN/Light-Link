@@ -23,7 +23,6 @@ public partial class Colony : Node2D
 		popTimer.Timeout += OnPopTimerTimeout;
 		AddChild(popTimer);
 		OnPopGroth();
-		planet.planetUI.AddProperty("Population", population.ToString());
 	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -50,7 +49,7 @@ public partial class Colony : Node2D
 			}
 			GD.Print("Population: " + population);
 			float populationRatio = (float)population / maxPopulation;
-			planet.planetUI.UpdateProperty("Population", population.ToString());
+			planet.colonyUI.UpdateText("Population:", population.ToString());
 			OnPopGroth();
 			// Adjust wait time based on population ratio
 			// More population = longer wait times (slower growth)

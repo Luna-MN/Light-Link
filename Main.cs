@@ -155,7 +155,7 @@ public partial class Main : Node2D
 					{
 						if (planet is Planet planetBody)
 						{
-							foreach (Node2D moon in planetBody.GetChildren())
+							foreach (Node moon in planetBody.GetChildren())
 							{
 								if (moon is Moon moonBody)
 								{
@@ -177,7 +177,7 @@ public partial class Main : Node2D
 					{
 						if (planet is Planet planetBody)
 						{
-							foreach (Node2D moon in planetBody.GetChildren())
+							foreach (Node moon in planetBody.GetChildren())
 							{
 								if (moon is Moon moonBody)
 								{

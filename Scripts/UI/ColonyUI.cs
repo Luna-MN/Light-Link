@@ -1,21 +1,28 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 {
 	// UI components
-	private Panel _colonyPanel;
-	private Button _closeButton;
-	private VBoxContainer _contentContainer;
+	private Panel colonyPanel;
+	private Button closeButton;
+	private VBoxContainer contentContainer;
 
 	// Animation parameters
-	private Tween _tween;
-	private bool _isPanelVisible = false;
-	private readonly float _animationDuration = 0.3f;
+	private Tween tween;
+	private bool isPanelVisible = false;
+	private readonly float animationDuration = 0.3f;
 
 	// Position constants
-	private readonly float _hiddenPositionX = -350f; // Hidden to the left
-	private readonly float _visiblePositionX = 0f;   // Visible at left edge
+	private readonly float hiddenPositionX = -350f; // Hidden to the left
+	private readonly float visiblePositionX = 0f;   // Visible at left edge
+	public Colony colony;
+
+	public ColonyUI(Colony colony)
+	{
+		this.colony = colony;
+	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -26,28 +33,28 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		var viewportSize = GetViewport().GetVisibleRect().Size;
 
 		// Create the panel as left side panel
-		_colonyPanel = new Panel();
-		_colonyPanel.Name = "ColonyPanel";
-		_colonyPanel.Position = new Vector2(_hiddenPositionX, 35);
-		_colonyPanel.Size = new Vector2(350, viewportSize.Y - 35);
-		AddChild(_colonyPanel);
+		colonyPanel = new Panel();
+		colonyPanel.Name = "ColonyPanel";
+		colonyPanel.Position = new Vector2(hiddenPositionX, 35);
+		colonyPanel.Size = new Vector2(350, viewportSize.Y - 35);
+		AddChild(colonyPanel);
 
 		// Create close button (positioned at the top-right of the panel)
-		_closeButton = new Button();
-		_closeButton.Text = "X";
-		_closeButton.Position = new Vector2(310, 40);
-		_closeButton.Size = new Vector2(30, 30);
-		_closeButton.Pressed += TogglePanel;
-		_colonyPanel.AddChild(_closeButton);
+		closeButton = new Button();
+		closeButton.Text = "X";
+		closeButton.Position = new Vector2(310, 40);
+		closeButton.Size = new Vector2(30, 30);
+		closeButton.Pressed += TogglePanel;
+		colonyPanel.AddChild(closeButton);
 
 		// Create content container
-		_contentContainer = new VBoxContainer();
-		_contentContainer.Name = "ContentContainer";
-		_contentContainer.Position = new Vector2(20, 40);
-		_contentContainer.Size = new Vector2(310, viewportSize.Y - 100);
-		_contentContainer.SizeFlagsHorizontal = Control.SizeFlags.Fill;
-		_contentContainer.SizeFlagsVertical = Control.SizeFlags.Fill;
-		_colonyPanel.AddChild(_contentContainer);
+		contentContainer = new VBoxContainer();
+		contentContainer.Name = "ContentContainer";
+		contentContainer.Position = new Vector2(20, 40);
+		contentContainer.Size = new Vector2(310, viewportSize.Y - 100);
+		contentContainer.SizeFlagsHorizontal = Control.SizeFlags.Fill;
+		contentContainer.SizeFlagsVertical = Control.SizeFlags.Fill;
+		colonyPanel.AddChild(contentContainer);
 
 		// Add title label
 		var titleLabel = new Label();
@@ -55,7 +62,7 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		titleLabel.HorizontalAlignment = HorizontalAlignment.Center;
 		titleLabel.AddThemeFontSizeOverride("font_size", 24);
 		titleLabel.CustomMinimumSize = new Vector2(0, 40);
-		_contentContainer.AddChild(titleLabel);
+		contentContainer.AddChild(titleLabel);
 
 		// Add sample UI elements
 		CreateColonyUI();
@@ -70,84 +77,96 @@ public partial class ColonyUI : CanvasLayer // Change from Node2D to CanvasLayer
 		// Colony name section
 		var nameLabel = new Label();
 		nameLabel.Text = "Colony Name:";
-		_contentContainer.AddChild(nameLabel);
+		contentContainer.AddChild(nameLabel);
 
 		var nameValue = new Label();
 		nameValue.Text = "Alpha Settlement";
 		nameValue.AddThemeColorOverride("font_color", Colors.Yellow);
-		_contentContainer.AddChild(nameValue);
+		contentContainer.AddChild(nameValue);
 
 		// Population section
 		var populationLabel = new Label();
 		populationLabel.Text = "Population:";
-		_contentContainer.AddChild(populationLabel);
+		contentContainer.AddChild(populationLabel);
 
 		var populationValue = new Label();
-		populationValue.Text = "250";
-		_contentContainer.AddChild(populationValue);
+		populationValue.Text = colony.population.ToString();
+		contentContainer.AddChild(populationValue);
 
 		// Resources section
 		var resourcesLabel = new Label();
 		resourcesLabel.Text = "Resources:";
-		_contentContainer.AddChild(resourcesLabel);
+		contentContainer.AddChild(resourcesLabel);
 
 		// Add some space
 		var spacer = new Control();
 		spacer.CustomMinimumSize = new Vector2(0, 20);
-		_contentContainer.AddChild(spacer);
+		contentContainer.AddChild(spacer);
 
 		// Actions section header
 		var actionsHeader = new Label();
 		actionsHeader.Text = "Actions";
 		actionsHeader.HorizontalAlignment = HorizontalAlignment.Center;
 		actionsHeader.AddThemeFontSizeOverride("font_size", 18);
-		_contentContainer.AddChild(actionsHeader);
+		contentContainer.AddChild(actionsHeader);
 
 		// Action buttons
 		var harvestButton = new Button();
 		harvestButton.Text = "Harvest Resources";
 		harvestButton.Pressed += () => OnHarvestPressed();
-		_contentContainer.AddChild(harvestButton);
+		contentContainer.AddChild(harvestButton);
 
 		var buildButton = new Button();
 		buildButton.Text = "Build Structure";
 		buildButton.Pressed += () => OnBuildPressed();
-		_contentContainer.AddChild(buildButton);
+		contentContainer.AddChild(buildButton);
 
 		var researchButton = new Button();
 		researchButton.Text = "Research Technology";
 		researchButton.Pressed += () => OnResearchPressed();
-		_contentContainer.AddChild(researchButton);
+		contentContainer.AddChild(researchButton);
 	}
 
 	// Toggle panel visibility
 	private void TogglePanel()
 	{
-		SetUIVisible(!_isPanelVisible);
+		SetUIVisible(!isPanelVisible);
 	}
 
 	public void SetUIVisible(bool visible)
 	{
-		if (_isPanelVisible == visible)
+		if (isPanelVisible == visible)
 			return; // Already in the requested state
 
-		if (_tween != null && _tween.IsRunning())
-			_tween.Kill();
+		if (tween != null && tween.IsRunning())
+			tween.Kill();
 
-		_tween = CreateTween();
-		_isPanelVisible = visible;
+		tween = CreateTween();
+		isPanelVisible = visible;
 
 		// Slide in/out animation
-		float targetX = _isPanelVisible ? _visiblePositionX : _hiddenPositionX;
-		_tween.TweenProperty(_colonyPanel, "position:x", targetX, _animationDuration);
+		float targetX = isPanelVisible ? visiblePositionX : hiddenPositionX;
+		tween.TweenProperty(colonyPanel, "position:x", targetX, animationDuration);
 
 		// Enable/disable input processing based on visibility
-		_colonyPanel.ProcessMode = visible ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
+		colonyPanel.ProcessMode = visible ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
 
 		// Always keep the panel visible to enable animations but block input when hidden
-		_colonyPanel.Visible = true;
+		colonyPanel.Visible = true;
 	}
-
+	public void UpdateText(string text, string value)
+	{
+		// Update the text of the label
+		var label = contentContainer.GetChildren().OfType<Label>().FirstOrDefault(l => l.Text == text);
+		if (label != null)
+		{
+			var updateLabel = contentContainer.GetChild(label.GetIndex() + 1) as Label;
+			if (updateLabel != null)
+			{
+				updateLabel.Text = value;
+			}
+		}
+	}
 	// Example action handlers
 	private void OnHarvestPressed()
 	{

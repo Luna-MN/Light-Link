@@ -41,7 +41,7 @@ public partial class ColonyShip : PlayerShips
                 Colony colony = new Colony(planet);
                 planet.AddChild(colony);
                 planet.hasColony = true;
-                ColonyUI colonyUI = new ColonyUI();
+                ColonyUI colonyUI = new ColonyUI(colony);
                 planet.AddChild(colonyUI);
                 planet.colonyUI = colonyUI;
                 QueueFree();
