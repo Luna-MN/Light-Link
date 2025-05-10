@@ -132,41 +132,68 @@ public partial class BuildingPlacementUI : CanvasLayer
     // Create building selection buttons
     private void CreateBuildingOptions()
     {
+        // Clear any existing children first
+        foreach (Node child in buildingGrid.GetChildren())
+        {
+            buildingGrid.RemoveChild(child);
+            child.QueueFree();
+        }
+
         foreach (var building in buildingTypes)
         {
-            var buildingContainer = new VBoxContainer();
-            buildingContainer.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-            buildingContainer.CustomMinimumSize = new Vector2(180, 170);
+            // Create a button as the main container
+            var buildingButton = new Button();
+            buildingButton.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            buildingButton.CustomMinimumSize = new Vector2(180, 170);
+            buildingButton.FocusMode = Control.FocusModeEnum.None;
+            buildingButton.Pressed += () => OnBuildingSelected(building.Key);
+
+            // Center align button content
+            buildingButton.Alignment = HorizontalAlignment.Center;
+            // Use a CenterContainer to force better centering
+            var centerContainer = new CenterContainer();
+            centerContainer.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            centerContainer.LayoutMode = 1;
+            centerContainer.AnchorsPreset = 15;
+            centerContainer.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            centerContainer.MouseFilter = Control.MouseFilterEnum.Ignore;
+            buildingButton.AddChild(centerContainer);
+
+            // Add a VBox inside the center container to organize content
+            var contentContainer = new VBoxContainer();
+            contentContainer.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+            contentContainer.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            contentContainer.MouseFilter = Control.MouseFilterEnum.Ignore;
+            // Add custom margins to improve spacing
+            contentContainer.AddThemeConstantOverride("separation", 10);
+            centerContainer.AddChild(contentContainer);
 
             // Building icon (placeholder)
             var iconPanel = new Panel();
             iconPanel.CustomMinimumSize = new Vector2(60, 60);
             iconPanel.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
-
-            buildingContainer.AddChild(iconPanel);
+            iconPanel.MouseFilter = Control.MouseFilterEnum.Ignore;
+            contentContainer.AddChild(iconPanel);
 
             // Label for building name
             var nameLabel = new Label();
             nameLabel.Text = building.Key;
             nameLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            buildingContainer.AddChild(nameLabel);
+            nameLabel.AddThemeFontSizeOverride("font_size", 16);
+            nameLabel.MouseFilter = Control.MouseFilterEnum.Ignore;
+            contentContainer.AddChild(nameLabel);
 
             // Label for cost
             var costLabel = new Label();
             costLabel.Text = $"Cost: {building.Value.Cost}";
             costLabel.HorizontalAlignment = HorizontalAlignment.Center;
-            buildingContainer.AddChild(costLabel);
+            costLabel.MouseFilter = Control.MouseFilterEnum.Ignore;
+            contentContainer.AddChild(costLabel);
 
-            // Button to select building
-            var selectButton = new Button();
-            selectButton.Text = "Select";
-            selectButton.Pressed += () => OnBuildingSelected(building.Key);
-            buildingContainer.AddChild(selectButton);
-
-            buildingGrid.AddChild(buildingContainer);
+            // Add the button to the grid
+            buildingGrid.AddChild(buildingButton);
         }
     }
-
     // Toggle panel visibility
     public void TogglePanel()
     {
