@@ -25,7 +25,7 @@ public partial class Planet : Body
 		rotatingNode = new Node2D();
 		AddChild(rotatingNode);
 		rotatingNode.ZIndex = 50;
-
+		AddToGroup("planets");
 		// Set the color of the planet
 		trail = new TrailEffect();
 		trail.TrailLength = 500;

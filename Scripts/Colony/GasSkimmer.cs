@@ -9,7 +9,7 @@ public partial class GasSkimmer : Building
 
         // create the mesh for the gas skimmer
         Mesh = new GasSkimmerMesh();
-        Scale = new Vector2(50, 50);
+        Scale = new Vector2(10, 10);
         AddChild(Mesh);
     }
 
