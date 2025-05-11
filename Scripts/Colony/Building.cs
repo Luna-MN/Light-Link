@@ -9,10 +9,6 @@ public partial class Building : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Mesh = new MeshInstance2D();
-		Mesh.Mesh = new SphereMesh();
-		Scale = new Vector2(50, 50);
-		AddChild(Mesh);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
