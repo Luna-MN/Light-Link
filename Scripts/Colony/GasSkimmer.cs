@@ -5,6 +5,7 @@ public partial class GasSkimmer : Building
 {
     public override void _Ready()
     {
+        orbitRadius = 10f;
         base._Ready();
 
         // create the mesh for the gas skimmer

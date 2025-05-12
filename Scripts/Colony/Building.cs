@@ -11,7 +11,7 @@ public partial class Building : Node2D
 	private float orbitSpeed = 0.25f; // Speed of orbiting
 	private Planet orbitingPlanet = null; // The planet the building is orbiting
 	private Planet previewPlanet = null; // Planet for orbit preview during placement
-	private float orbitRadius = 0f; // Radius of the orbit
+	public float orbitRadius = 0f; // Radius of the orbit
 	[Export] private Color orbitPreviewColor = new Color(1.0f, 1f, 1f, 0.4f); // Brighter, more visible color
 
 	public override void _Ready()
@@ -67,7 +67,10 @@ public partial class Building : Node2D
 					orbitAngle = Mathf.Atan2(direction.Y, direction.X);
 
 					// Store the orbit radius
-					orbitRadius = GlobalPosition.DistanceTo(orbitingPlanet.GlobalPosition);
+					if (orbitRadius == 0f)
+					{
+						orbitRadius = GlobalPosition.DistanceTo(orbitingPlanet.GlobalPosition);
+					}
 				}
 			}
 		}
