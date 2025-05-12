@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bcdnhl4ewo02r"]
+[gd_scene load_steps=7 format=3 uid="uid://bcdnhl4ewo02r"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://Scripts/Ship/MainShip.cs" id="4_5lsw7"]
 [ext_resource type="Script" path="res://Scripts/UI/BuildingPlacementUI.cs" id="5_n26vg"]
 [ext_resource type="Script" path="res://Scripts/Colony/GasSkimmer.cs" id="6_81uny"]
-[ext_resource type="Script" path="res://Scripts/Meshes/GasSkimmerMesh.cs" id="7_co7t1"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jk2el")
@@ -26,8 +25,3 @@ script = ExtResource("5_n26vg")
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("6_81uny")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(88, 69)
-scale = Vector2(27.57, 27.57)
-script = ExtResource("7_co7t1")

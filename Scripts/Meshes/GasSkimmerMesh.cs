@@ -101,8 +101,8 @@ public partial class GasSkimmerMesh : ShipMesh
         {
             CockpitColor,    // Top triangular section (blue)
             
-            WingColor,       // Left side connection
-            WingColor,       // Right side connection
+            BodyColor,       // Left side connection
+            BodyColor,       // Right side connection
 
             BodyColor,       // Main body connectors
             BodyColor,
@@ -111,8 +111,8 @@ public partial class GasSkimmerMesh : ShipMesh
             BodyColor,
             BodyColor,
 
-            WingColor,       // Main body rectangle
-            WingColor,
+            BodyColor,       // Main body rectangle
+            BodyColor,
 
             BodyColor,       // Beveled transition - left
             BodyColor,       // Beveled transition - right
@@ -120,8 +120,8 @@ public partial class GasSkimmerMesh : ShipMesh
             BodyColor,       // Probe section
             BodyColor,
 
-            WingColor,       // Left antenna
-            WingColor,       // Right antenna
+            BodyColor,       // Left antenna
+            BodyColor,       // Right antenna
         };
     }
 }
