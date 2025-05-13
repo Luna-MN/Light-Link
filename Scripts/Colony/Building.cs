@@ -106,7 +106,11 @@ public partial class Building : Node2D
 				if (orbitingPlanet != null)
 				{
 					Vector2 direction = GlobalPosition - orbitingPlanet.GlobalPosition;
-					orbitRadius = direction.Length();
+					if (orbitRadius == 0f)
+					{
+						// Set the orbit radius based on the distance to the planet
+						orbitRadius = direction.Length();
+					}
 					orbitAngle = Mathf.Atan2(direction.Y, direction.X);
 				}
 			}
