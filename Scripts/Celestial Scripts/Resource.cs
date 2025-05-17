@@ -18,6 +18,7 @@ public partial class Resource : Node2D
 			VariationAmount = new RandomNumberGenerator().RandfRange(0.01f, 1f),
 		};
 		AddChild(resourceMesh);
+		AddToGroup("Resources");
 	}
 
 	// Called when the node enters the scene tree for the first time.
