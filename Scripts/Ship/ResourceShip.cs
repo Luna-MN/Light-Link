@@ -20,6 +20,10 @@ public partial class ResourceShip : Ship
         {
             targetPosition = closestResource.Position;
         }
+        if (closestResource != null && Position.DistanceTo(closestResource.Position) < 10f)
+        {
+            AttachResource(closestResource);
+        }
     }
     public Resource FindNearbyResources()
     {
@@ -36,5 +40,13 @@ public partial class ResourceShip : Ship
             }
         }
         return closestResource;
+    }
+    public void AttachResource(Resource resource)
+    {
+        if (resource != null)
+        {
+            // Implement logic to attach the resource to the ship
+            GD.Print("Resource attached: " + resource.Name);
+        }
     }
 }
