@@ -64,7 +64,7 @@ public partial class AstroidContextMenu : ContextMenu
         );
 
         // Set the ship's target position
-        mainShip.targetPosition = targetPos;
+        mainShip.path.Add(targetPos);
 
     }
 

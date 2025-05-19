@@ -18,7 +18,7 @@ public partial class ResourceShip : Ship
         Resource closestResource = FindNearbyResources();
         if (closestResource != null && Position.DistanceTo(closestResource.Position) < MaxRange)
         {
-            targetPosition = closestResource.Position;
+            path.Add(closestResource.Position);
         }
         if (closestResource != null && Position.DistanceTo(closestResource.Position) < 10f)
         {

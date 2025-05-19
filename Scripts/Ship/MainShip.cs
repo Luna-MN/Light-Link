@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 public partial class MainShip : PlayerShips
@@ -69,7 +70,7 @@ public partial class MainShip : PlayerShips
             // Move towards asteroid until within mining distance
             while (IsInstanceValid(asteroid) && GlobalPosition.DistanceTo(asteroid.GlobalPosition) > AutoMineDistance)
             {
-                targetPosition = asteroid.GlobalPosition;
+                path.Add(asteroid.GlobalPosition);
                 await ToSignal(GetTree(), "process_frame");
             }
 

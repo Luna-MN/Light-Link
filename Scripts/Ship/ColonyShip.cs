@@ -26,7 +26,7 @@ public partial class ColonyShip : PlayerShips
     public override void _Process(double delta)
     {
         base._Process(delta);
-        targetPosition = planet.GlobalPosition;
+        path.Add(planet.GlobalPosition);
         // Additional processing for the colony ship
     }
     private void OnAreaEntered(Area2D area)

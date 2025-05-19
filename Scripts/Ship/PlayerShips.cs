@@ -15,7 +15,7 @@ public partial class PlayerShips : Ship
         if (shipSelected && isMine)
         {
             // Get the mouse position in global coordinates
-            targetPosition = pos;
+            path.Add(pos);
         }
     }
 }

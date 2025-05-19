@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using Godot;
 
 public partial class Ship : Node2D
@@ -6,7 +7,6 @@ public partial class Ship : Node2D
     public ShipMesh Mesh;
     public bool shipSelected = false;
     public bool isMine = false;
-    public Vector2 targetPosition;
     public Control selectionBrackets;
     public float speed = 100f;
     public Area2D area2D;
@@ -14,10 +14,11 @@ public partial class Ship : Node2D
     public CircleShape2D circleShape;
     public TrailEffect trailEffect;
     public float rotationSpeed = 5.0f;
+    public List<Vector2> path = new List<Vector2>();
     public override void _Ready()
     {
         AddToGroup("Ships");
-        targetPosition = Position;
+        path.Add(Position);
         area2D = new Area2D();
         area2D.Position = new Vector2(0, 0);
         AddChild(area2D);
@@ -57,6 +58,7 @@ public partial class Ship : Node2D
 
     public void MoveShip(float delta)
     {
+        Vector2 targetPosition = path[0];
         // Get the direction vector to the target
         Vector2 direction = targetPosition - Position;
         float distance = direction.Length();
@@ -81,6 +83,10 @@ public partial class Ship : Node2D
                 direction = direction.Normalized();
                 Position += direction * speed * delta;
             }
+        }
+        else if (path.Count > 1)
+        {
+            path.RemoveAt(0); // Remove the first point if we are close enough
         }
     }
     private void CreateSelectionBrackets()
