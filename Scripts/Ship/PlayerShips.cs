@@ -10,11 +10,15 @@ public partial class PlayerShips : Ship
         isMine = true;
         base._Ready();
     }
-    public void SetShipTarget(Vector2 pos)
+    public void SetShipTarget(Vector2 pos, bool clear = true)
     {
         if (shipSelected && isMine)
         {
             // Get the mouse position in global coordinates
+            if (clear)
+            {
+                path.Clear();
+            }
             path.Add(pos);
         }
     }
