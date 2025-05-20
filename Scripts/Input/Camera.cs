@@ -446,8 +446,14 @@ public partial class Camera : Camera2D
 
             // Apply offset to create formation
             Vector2 offsetPosition = baseTargetPosition + new Vector2(xOffset, yOffset);
-
-            ships[i].SetShipTarget(offsetPosition);
+            if (Input.IsKeyPressed(Key.Ctrl))
+            {
+                ships[i].SetShipTarget(offsetPosition, false);
+            }
+            else
+            {
+                ships[i].SetShipTarget(offsetPosition);
+            }
         }
 
         GD.Print($"Moving {ships.Count} ships in formation");
