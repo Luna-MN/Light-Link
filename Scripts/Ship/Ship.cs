@@ -15,6 +15,11 @@ public partial class Ship : Node2D
     public TrailEffect trailEffect;
     public float rotationSpeed = 5.0f;
     public List<Vector2> path = new List<Vector2>();
+
+    // Add these new variables
+    private Line2D pathLine;
+    private Node2D waypointMarkers;
+
     public override void _Ready()
     {
         AddToGroup("Ships");
@@ -39,22 +44,32 @@ public partial class Ship : Node2D
         trailEffect.SetTrailWidth(10);
         trailEffect.DefaultColor = new Color(0.2f, 0.6f, 1.0f).Darkened(0.4f);
         AddChild(trailEffect);
+
+        // Create path visualization elements
+        CreatePathVisuals();
     }
+
     public override void _Process(double delta)
     {
 
         MoveShip((float)delta);
+
+        // Update selection brackets
         if (shipSelected)
         {
             selectionBrackets.Visible = true;
             selectionBrackets.GlobalPosition = GlobalPosition;
+
+            // Only show path when selected
+            UpdatePathVisuals();
         }
         else
         {
             selectionBrackets.Visible = false;
+            pathLine.Visible = false;
+            waypointMarkers.Visible = false;
         }
     }
-
 
     public void MoveShip(float delta)
     {
@@ -87,6 +102,104 @@ public partial class Ship : Node2D
         else if (path.Count > 1)
         {
             path.RemoveAt(0); // Remove the first point if we are close enough
+            if (shipSelected)
+            {
+                UpdatePathVisuals(); // Update visual after removing a point
+            }
+        }
+    }
+    private void CreatePathVisuals()
+    {
+        // Create the line for the path
+        pathLine = new Line2D();
+        pathLine.Name = "PathLine";
+        pathLine.Width = 1.0f;
+        pathLine.DefaultColor = Colors.White;
+        AddChild(pathLine);
+        // Make path line top-level so it stays in world space
+        pathLine.TopLevel = true;
+
+        // Create a container for waypoint markers
+        waypointMarkers = new Node2D();
+        waypointMarkers.Name = "WaypointMarkers";
+        AddChild(waypointMarkers);
+        // Make waypoint markers top-level
+        waypointMarkers.TopLevel = true;
+
+        // Initially hide both
+        pathLine.Visible = false;
+        waypointMarkers.Visible = false;
+    }
+
+    private void UpdatePathVisuals()
+    {
+        // Show path elements
+        pathLine.Visible = true;
+        waypointMarkers.Visible = true;
+
+        // Clear existing points
+        pathLine.ClearPoints();
+
+        // Remove old waypoint markers
+        foreach (Node child in waypointMarkers.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        // Start from current position (use global position)
+        pathLine.AddPoint(GlobalPosition);
+
+        // Add each path point (use global coordinates)
+        for (int i = 0; i < path.Count; i++)
+        {
+            // Use global path points directly
+            Vector2 globalPoint = path[i];
+            pathLine.AddPoint(globalPoint);
+
+            // Only create waypoint markers for future waypoints (skip current target)
+            if (i > 0 || GlobalPosition.DistanceSquaredTo(path[0]) > 25)
+            {
+                CreateWaypointMarker(globalPoint, i);
+            }
+        }
+    }
+
+    private void CreateWaypointMarker(Vector2 position, int index)
+    {
+        // Create waypoint circle
+        var marker = new Node2D();
+        marker.Name = $"Waypoint{index}";
+        waypointMarkers.AddChild(marker);
+        marker.Position = position;
+
+        // White outer circle
+        var outerCircle = new MeshInstance2D();
+        outerCircle.Name = "OuterCircle";
+        outerCircle.Mesh = new SphereMesh();
+        outerCircle.Scale = new Vector2(5f, 5f);
+        outerCircle.Modulate = Colors.White;
+
+        // Black inner circle
+        var innerCircle = new MeshInstance2D();
+        innerCircle.Name = "InnerCircle";
+        innerCircle.Mesh = new SphereMesh();
+        innerCircle.Scale = new Vector2(3f, 3f);
+        innerCircle.Modulate = Colors.Black;
+
+        marker.AddChild(outerCircle);
+        marker.AddChild(innerCircle);
+
+    }
+
+    // This method should be called whenever the path list changes
+    public void SetDestination(Vector2 destination)
+    {
+        path.Clear();
+        path.Add(destination);
+
+        if (shipSelected)
+        {
+            UpdatePathVisuals();
         }
     }
     private void CreateSelectionBrackets()
