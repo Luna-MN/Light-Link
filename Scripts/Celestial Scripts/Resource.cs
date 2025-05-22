@@ -6,6 +6,9 @@ public partial class Resource : Node2D
 	public Color color = Colors.White;
 	public Properties.Type type;
 	public Vector2 startPosition;
+	public ResourceShip resourceShip;
+	public bool isAttaching = false;
+	public bool isAttached = false;
 	public Resource(Properties.Type type)
 	{
 		this.type = type;

@@ -18,6 +18,10 @@ config/icon="res://icon.svg"
 
 project/assembly_name="Light Link"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.0196078, 0.0235294, 0.0392157, 1)

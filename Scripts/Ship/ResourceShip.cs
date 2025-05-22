@@ -4,6 +4,9 @@ using System;
 public partial class ResourceShip : Ship
 {
     public float MaxRange = 1000f;
+    public float PickupRange = 100f;
+    public Vector2 offset = new Vector2(0, 0);
+    public Resource closestResource = null;
     public override void _Ready()
     {
         base._Ready();
@@ -15,14 +18,26 @@ public partial class ResourceShip : Ship
     {
         base._Process(delta);
         // Add any additional processing logic here
-        Resource closestResource = FindNearbyResources();
-        if (closestResource != null && Position.DistanceTo(closestResource.Position) < MaxRange)
+        resourceAttachment();
+    }
+    public void resourceAttachment()
+    {
+        if (closestResource == null)
+        {
+            closestResource = FindNearbyResources();
+        }
+        if (closestResource != null && Position.DistanceTo(closestResource.Position) < MaxRange && closestResource.resourceShip == null)
         {
             path.Add(closestResource.Position);
+            closestResource.resourceShip = this;
         }
-        if (closestResource != null && Position.DistanceTo(closestResource.Position) < 10f)
+        if (closestResource?.resourceShip == this && closestResource.isAttached == false)
         {
             AttachResource(closestResource);
+        }
+        else if (closestResource?.resourceShip != this)
+        {
+            closestResource = null;
         }
     }
     public Resource FindNearbyResources()
@@ -43,10 +58,43 @@ public partial class ResourceShip : Ship
     }
     public void AttachResource(Resource resource)
     {
-        if (resource != null)
+        if (resource.resourceShip != this)
         {
-            // Implement logic to attach the resource to the ship
+            GD.Print("Resource is already attached to another ship: " + resource.Name);
+            return;
+        }
+        if (GlobalPosition.DistanceTo(resource.GlobalPosition) < PickupRange && !resource.isAttached)
+        {
+            // Set the resource's position to match the ship's position
+            // This will make the resource lerp toward the ship
+            // the Vector2(0, 0) is the offset from the ship's position
+            resource.startPosition = GlobalPosition + offset;
+
+            // Mark the resource as attached to this ship
+            resource.RemoveFromGroup("Resources");
+            resource.AddToGroup("AttachedResources");
+
             GD.Print("Resource attached: " + resource.Name);
+
+            // Create a tractor beam effect
+            Line2D tractorBeam = new Line2D();
+            tractorBeam.AddPoint(Vector2.Zero);
+            tractorBeam.AddPoint(resource.GlobalPosition);
+            tractorBeam.DefaultColor = Colors.Green;
+            tractorBeam.Width = 2;
+            AddChild(tractorBeam);
+            tractorBeam.GlobalPosition = GlobalPosition;
+
+            resource.isAttaching = true;
+        }
+        else if (GlobalPosition.DistanceTo(resource.GlobalPosition) > PickupRange)
+        {
+            GD.Print("Resource is out of range: " + resource.Name);
+        }
+        else if (resource.isAttached && resource.startPosition == GlobalPosition + offset)
+        {
+            resource.isAttached = true;
+            resource.isAttaching = false;
         }
     }
 }
