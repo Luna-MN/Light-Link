@@ -7,12 +7,15 @@ public partial class ResourceShip : Ship
     public float PickupRange = 100f;
     public Vector2 offset = new Vector2(0, 0);
     public Resource closestResource = null;
+    public Line2D tractorBeam;
     public override void _Ready()
     {
         base._Ready();
         Mesh = new ResourceShipMesh();
-        Scale = new Vector2(10, 10);
+        Mesh.Scale = 10f;
         AddChild(Mesh);
+        tractorBeam = new Line2D();
+        AddChild(tractorBeam);
     }
     public override void _Process(double delta)
     {
@@ -28,7 +31,7 @@ public partial class ResourceShip : Ship
         }
         if (closestResource != null && Position.DistanceTo(closestResource.Position) < MaxRange && closestResource.resourceShip == null)
         {
-            path.Add(closestResource.Position);
+            path.Add(closestResource.GlobalPosition);
             closestResource.resourceShip = this;
         }
         if (closestResource?.resourceShip == this && closestResource.isAttached == false)
@@ -47,10 +50,10 @@ public partial class ResourceShip : Ship
         // Implement logic to find nearby resources
         foreach (Resource resource in GetTree().GetNodesInGroup("Resources"))
         {
-            float distance = resource.Position.DistanceTo(Position);
-            if (distance < ClosestResource.DistanceTo(Position))
+            float distance = resource.GlobalPosition.DistanceTo(GlobalPosition);
+            if (distance < ClosestResource.DistanceTo(GlobalPosition))
             {
-                ClosestResource = resource.Position;
+                ClosestResource = resource.GlobalPosition;
                 closestResource = resource;
             }
         }
@@ -77,12 +80,11 @@ public partial class ResourceShip : Ship
             GD.Print("Resource attached: " + resource.Name);
 
             // Create a tractor beam effect
-            Line2D tractorBeam = new Line2D();
-            tractorBeam.AddPoint(Vector2.Zero);
+            tractorBeam.ClearPoints();
+            tractorBeam.AddPoint(GlobalPosition);
             tractorBeam.AddPoint(resource.GlobalPosition);
             tractorBeam.DefaultColor = Colors.Green;
             tractorBeam.Width = 2;
-            AddChild(tractorBeam);
             tractorBeam.GlobalPosition = GlobalPosition;
 
             resource.isAttaching = true;

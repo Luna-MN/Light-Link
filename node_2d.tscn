@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=7 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="Script" path="res://Scripts/UI/UI.cs" id="3_kumu2"]
 [ext_resource type="Script" path="res://Scripts/Ship/MainShip.cs" id="4_5lsw7"]
 [ext_resource type="Script" path="res://Scripts/UI/BuildingPlacementUI.cs" id="5_n26vg"]
+[ext_resource type="Script" path="res://Scripts/Ship/ResourceShip.cs" id="6_8yfe5"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jk2el")
@@ -21,3 +22,6 @@ script = ExtResource("4_5lsw7")
 
 [node name="BuildingUI" type="CanvasLayer" parent="."]
 script = ExtResource("5_n26vg")
+
+[node name="Node2D" type="Node2D" parent="."]
+script = ExtResource("6_8yfe5")
