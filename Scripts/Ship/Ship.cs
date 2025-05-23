@@ -73,6 +73,10 @@ public partial class Ship : Node2D
 
     public void MoveShip(float delta)
     {
+        if (path.Count == 0)
+        {
+            return;
+        }
         Vector2 targetPosition = path[0];
         // Get the direction vector to the target
         Vector2 direction = targetPosition - Position;

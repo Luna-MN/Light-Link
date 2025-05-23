@@ -33,6 +33,10 @@ public partial class Resource : Node2D
 	public override void _Process(double delta)
 	{
 		moveToStartPosition((float)delta);
+		if (isAttached)
+		{
+			Position = resourceShip.GlobalPosition + resourceShip.offset;
+		}
 	}
 	public void SetAstroidType()
 	{
@@ -59,9 +63,9 @@ public partial class Resource : Node2D
 	{
 		if (startPosition != Vector2.Inf)
 		{
-			if (startPosition != Position)
+			if (startPosition != GlobalPosition)
 			{
-				Position = Position.Lerp(startPosition, delta * 2);
+				GlobalPosition = GlobalPosition.Lerp(startPosition, delta * 2);
 			}
 			else
 			{

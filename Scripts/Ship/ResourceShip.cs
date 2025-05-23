@@ -14,14 +14,21 @@ public partial class ResourceShip : Ship
         Mesh = new ResourceShipMesh();
         Mesh.Scale = 10f;
         AddChild(Mesh);
-        tractorBeam = new Line2D();
-        AddChild(tractorBeam);
     }
     public override void _Process(double delta)
     {
         base._Process(delta);
         // Add any additional processing logic here
         resourceAttachment();
+
+        if (tractorBeam != null && IsInstanceValid(closestResource))
+        {
+            tractorBeam.Points = new Vector2[]
+            {
+                ToLocal(GlobalPosition),
+                ToLocal(closestResource.GlobalPosition)
+            };
+        }
     }
     public void resourceAttachment()
     {
@@ -66,7 +73,7 @@ public partial class ResourceShip : Ship
             GD.Print("Resource is already attached to another ship: " + resource.Name);
             return;
         }
-        if (GlobalPosition.DistanceTo(resource.GlobalPosition) < PickupRange && !resource.isAttached)
+        if (GlobalPosition.DistanceTo(resource.GlobalPosition) < PickupRange && !resource.isAttached && !resource.isAttaching)
         {
             // Set the resource's position to match the ship's position
             // This will make the resource lerp toward the ship
@@ -80,23 +87,28 @@ public partial class ResourceShip : Ship
             GD.Print("Resource attached: " + resource.Name);
 
             // Create a tractor beam effect
-            tractorBeam.ClearPoints();
-            tractorBeam.AddPoint(GlobalPosition);
-            tractorBeam.AddPoint(resource.GlobalPosition);
-            tractorBeam.DefaultColor = Colors.Green;
-            tractorBeam.Width = 2;
-            tractorBeam.GlobalPosition = GlobalPosition;
+            if (tractorBeam == null)
+            {
+                tractorBeam = new Line2D();
+                AddChild(tractorBeam);
+                tractorBeam.DefaultColor = Colors.Green;
+                tractorBeam.Width = 2;
+                tractorBeam.GlobalPosition = GlobalPosition;
+            }
 
             resource.isAttaching = true;
+            path.RemoveAt(0);
         }
         else if (GlobalPosition.DistanceTo(resource.GlobalPosition) > PickupRange)
         {
             GD.Print("Resource is out of range: " + resource.Name);
         }
-        else if (resource.isAttached && resource.startPosition == GlobalPosition + offset)
+        else if (resource.GlobalPosition.DistanceTo(resource.startPosition) < 5f)
         {
             resource.isAttached = true;
             resource.isAttaching = false;
+            tractorBeam.QueueFree();
+            tractorBeam = null;
         }
     }
 }

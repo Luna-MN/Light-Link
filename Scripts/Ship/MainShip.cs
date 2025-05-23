@@ -163,7 +163,7 @@ public partial class MainShip : PlayerShips
                 (float)Math.Sin(angle) * 10f
             );
             resource.GlobalPosition = asteroid.GlobalPosition;
-            resource.startPosition = offset + asteroid.Position;
+            resource.startPosition = offset + asteroid.GlobalPosition;
         }
     }
 }
