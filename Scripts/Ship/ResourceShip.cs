@@ -20,7 +20,7 @@ public partial class ResourceShip : Ship
         base._Process(delta);
         // Add any additional processing logic here
         resourceAttachment();
-
+        // Update tractor beam if it exists
         if (tractorBeam != null && IsInstanceValid(closestResource))
         {
             tractorBeam.Points = new Vector2[]
@@ -29,6 +29,7 @@ public partial class ResourceShip : Ship
                 ToLocal(closestResource.GlobalPosition)
             };
         }
+        MoveToResourceProcessing();
     }
     public void resourceAttachment()
     {
@@ -49,6 +50,27 @@ public partial class ResourceShip : Ship
         {
             closestResource = null;
         }
+    }
+    public void MoveToResourceProcessing()
+    {
+        Vector2 closestProcessor = FindClosestProcessor();
+        if (closestProcessor != Vector2.Zero)
+        {
+            path.Add(closestProcessor);
+            GD.Print("Moving to processor: " + closestProcessor);
+        }
+        else
+        {
+            GD.Print("No processor found.");
+        }
+    }
+    public Vector2 FindClosestProcessor()
+    {
+        // Implement logic to find the closest processor
+        // This could be a method that checks for nearby processors and returns the closest one
+        // For now, we'll just print a message
+        GD.Print("Finding closest processor...");
+        return Vector2.Zero; // Placeholder return value
     }
     public Resource FindNearbyResources()
     {
