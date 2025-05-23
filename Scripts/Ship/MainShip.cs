@@ -70,12 +70,17 @@ public partial class MainShip : PlayerShips
             // Move towards asteroid until within mining distance
             while (IsInstanceValid(asteroid) && GlobalPosition.DistanceTo(asteroid.GlobalPosition) > AutoMineDistance)
             {
-                path.Add(asteroid.GlobalPosition);
+                if (path.Count == 0 || path[0].DistanceTo(asteroid.GlobalPosition) > AutoMineDistance)
+                {
+                    path.Add(asteroid.GlobalPosition);
+                }
+
                 await ToSignal(GetTree(), "process_frame");
             }
 
             if (IsInstanceValid(asteroid))
             {
+                path.Clear();
                 await MineAstroid(asteroid);
             }
 
