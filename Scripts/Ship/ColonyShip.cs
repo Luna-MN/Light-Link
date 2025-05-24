@@ -26,6 +26,7 @@ public partial class ColonyShip : PlayerShips
     public override void _Process(double delta)
     {
         base._Process(delta);
+        path.Clear();
         path.Add(planet.GlobalPosition);
         // Additional processing for the colony ship
     }

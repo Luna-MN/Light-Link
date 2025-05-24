@@ -29,7 +29,11 @@ public partial class ResourceShip : Ship
                 ToLocal(closestResource.GlobalPosition)
             };
         }
-        MoveToResourceProcessing();
+        if (closestResource?.isAttached == true)
+        {
+            MoveToResourceProcessing();
+        }
+
     }
     public void resourceAttachment()
     {
