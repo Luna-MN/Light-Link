@@ -7,6 +7,7 @@ public partial class ResourceShip : Ship
     public float PickupRange = 100f;
     public Vector2 offset = new Vector2(0, 0);
     public Resource closestResource = null;
+    public Building closestProcessor = null;
     public Line2D tractorBeam;
     public override void _Ready()
     {
@@ -29,7 +30,7 @@ public partial class ResourceShip : Ship
                 ToLocal(closestResource.GlobalPosition)
             };
         }
-        if (closestResource?.isAttached == true)
+        if (closestResource?.isAttached == true && path[0] != closestProcessor.GlobalPosition)
         {
             MoveToResourceProcessing();
         }
@@ -57,10 +58,10 @@ public partial class ResourceShip : Ship
     }
     public void MoveToResourceProcessing()
     {
-        Vector2 closestProcessor = FindClosestProcessor();
-        if (closestProcessor != Vector2.Zero)
+        closestProcessor = FindClosestProcessor();
+        if (closestProcessor != null)
         {
-            path.Add(closestProcessor);
+            path.Add(closestProcessor.GlobalPosition);
             GD.Print("Moving to processor: " + closestProcessor);
         }
         else
@@ -68,13 +69,24 @@ public partial class ResourceShip : Ship
             GD.Print("No processor found.");
         }
     }
-    public Vector2 FindClosestProcessor()
+    public Building FindClosestProcessor()
     {
         // Implement logic to find the closest processor
         // This could be a method that checks for nearby processors and returns the closest one
         // For now, we'll just print a message
+        Vector2 closestProcessorV2 = Vector2.Inf;
+        Building closestBuilding = null;
+        foreach (Node node in GetTree().GetNodesInGroup("ResourceBuildings"))
+        {
+            float distance = ((Building)node).GlobalPosition.DistanceTo(GlobalPosition);
+            if (distance < closestProcessorV2.DistanceTo(GlobalPosition))
+            {
+                closestProcessorV2 = ((Building)node).GlobalPosition;
+                closestBuilding = (Building)node;
+            }
+        }
         GD.Print("Finding closest processor...");
-        return Vector2.Zero; // Placeholder return value
+        return closestBuilding;
     }
     public Resource FindNearbyResources()
     {
