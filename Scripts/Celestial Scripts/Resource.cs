@@ -38,6 +38,11 @@ public partial class Resource : Node2D
 			Position = resourceShip.GlobalPosition + resourceShip.offset;
 		}
 	}
+	public void ProcessResource()
+	{
+		// Logic to process the resource, e.g., convert it to a different form or send it to a processor
+		GD.Print("Processing resource of type: " + type);
+	}
 	public void SetAstroidType()
 	{
 		switch (type)
