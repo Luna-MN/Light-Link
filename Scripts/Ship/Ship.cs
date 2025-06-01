@@ -232,4 +232,61 @@ public partial class Ship : Node2D
 
         selectionBrackets.AddChild(bracket);
     }
+    public Vector2 FindOrbitInterceptPoint(Planet targetPlanet, float maxPredictionTime = 20.0f)
+    {
+        // Ship parameters
+        Vector2 shipPosition = GlobalPosition;
+
+        // Planet parameters
+        Vector2 planetPosition = targetPlanet.GlobalPosition;
+        Vector2 starPosition = ((Node2D)targetPlanet.GetParent()).GlobalPosition;
+        float orbitRadius = targetPlanet.Properties.OrbitRadius;
+        float orbitPeriod = targetPlanet.Properties.OrbitPeriod;
+
+        // Calculate orbital velocity (radians per time unit)
+        float angularVelocity = 2 * Mathf.Pi / orbitPeriod;
+
+        // Calculate current planet angle in orbit
+        Vector2 relativePos = planetPosition - starPosition;
+        float currentAngle = Mathf.Atan2(relativePos.Y, relativePos.X);
+
+        // Variables to track best intercept
+        float bestTime = 0;
+        float bestDistance = float.MaxValue;
+
+        // Sample time points to find intercept
+        float timeStep = 0.1f;
+        for (float t = 0; t <= maxPredictionTime; t += timeStep)
+        {
+            // Calculate planet position at time t
+            float futureAngle = currentAngle + angularVelocity * t;
+            Vector2 futurePlanetPosition = starPosition + new Vector2(
+                orbitRadius * Mathf.Cos(futureAngle),
+                orbitRadius * Mathf.Sin(futureAngle)
+            );
+
+            // How far the ship can travel in time t
+            float maxShipTravel = speed * t;
+
+            // Actual distance to future planet position
+            float distanceToPlanet = shipPosition.DistanceTo(futurePlanetPosition);
+
+            // Find the closest match between travel time and distance
+            float difference = Mathf.Abs(distanceToPlanet - maxShipTravel);
+            if (difference < bestDistance)
+            {
+                bestDistance = difference;
+                bestTime = t;
+            }
+        }
+
+        // Calculate final intercept position
+        float interceptAngle = currentAngle + angularVelocity * bestTime;
+        Vector2 interceptPosition = starPosition + new Vector2(
+            orbitRadius * Mathf.Cos(interceptAngle),
+            orbitRadius * Mathf.Sin(interceptAngle)
+        );
+
+        return interceptPosition;
+    }
 }
