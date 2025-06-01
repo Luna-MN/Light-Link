@@ -21,12 +21,13 @@ public partial class ColonyShip : PlayerShips
         AddChild(Mesh);
         trailEffect.SetTrailWidth(3);
         area2D.AreaEntered += OnAreaEntered;
+
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        path.Clear();
+        path.Clear(); // Clear the path for the colony ship
         path.Add(planet.GlobalPosition);
         // Additional processing for the colony ship
     }

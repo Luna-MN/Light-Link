@@ -30,11 +30,11 @@ public partial class ResourceShip : Ship
                 ToLocal(closestResource.GlobalPosition)
             };
         }
-        if (closestResource?.isAttached == true && path[0] != closestProcessor.GlobalPosition)
+        if (closestResource?.isAttached == true && ((path.Count > 0 && path[0] != closestProcessor.GlobalPosition) || path.Count == 0))
         {
             MoveToResourceProcessing();
         }
-        else if (closestResource?.isAttached == true && GlobalPosition.DistanceSquaredTo(closestProcessor.GlobalPosition) < 100f)
+        else if (closestProcessor != null && closestResource?.isAttached == true && GlobalPosition.DistanceSquaredTo(closestProcessor.GlobalPosition) < 100f)
         {
             // If the resource is attached and close to the processor, process it
             GD.Print("Processing resource at processor: " + closestProcessor.Name);
