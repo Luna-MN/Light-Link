@@ -38,7 +38,7 @@ public partial class ResourceShip : Ship
         {
             // If the resource is attached and close to the processor, process it
             GD.Print("Processing resource at processor: " + closestProcessor.Name);
-            closestResource.ProcessResource();
+            closestResource.ProcessResource((ResourcePlace)closestProcessor);
             closestResource = null; // Clear the resource after processing
         }
 

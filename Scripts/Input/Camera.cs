@@ -27,7 +27,7 @@ public partial class Camera : Camera2D
     private Vector2 selectionStart;
     private Vector2 selectionEnd;
     private Color selectionRectColor = new Color(0.2f, 0.8f, 1.0f, 0.3f); // Light blue with transparency
-
+    public Dictionary<Properties.Type, int> resourceCounts = new Dictionary<Properties.Type, int>() { { Properties.Type.Rock, 0 }, { Properties.Type.Ice, 1 }, { Properties.Type.Iron, 2 }, { Properties.Type.Carbon, 3 } };
     public override void _Ready()
     {
         targetZoom = Zoom;

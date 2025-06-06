@@ -9,8 +9,8 @@ public partial class Building : Node2D
 
 	private float orbitAngle = 0f; // Angle for orbiting
 	private float orbitSpeed = 0.25f; // Speed of orbiting
-	private Planet orbitingPlanet = null; // The planet the building is orbiting
-	private Planet previewPlanet = null; // Planet for orbit preview during placement
+	private Body orbitingBody = null; // The planet the building is orbiting
+	private Body previewBody = null; // Planet for orbit preview during placement
 	public float orbitRadius = 0f; // Radius of the orbit
 	[Export] private Color orbitPreviewColor = new Color(1.0f, 1f, 1f, 0.4f); // Brighter, more visible color
 
@@ -20,25 +20,33 @@ public partial class Building : Node2D
 
 	public override void _Process(double delta)
 	{
-		if (placed && orbitingPlanet != null)
+		if (placed && orbitingBody != null)
 		{
 			// Update orbit angle
 			orbitAngle += orbitSpeed * (float)delta;
 
 			// Calculate new position along the orbit
 			Vector2 orbitOffset = new Vector2(Mathf.Cos(orbitAngle), Mathf.Sin(orbitAngle)) * orbitRadius;
-			GlobalPosition = orbitingPlanet.GlobalPosition + orbitOffset;
+			GlobalPosition = orbitingBody.GlobalPosition + orbitOffset;
 
 			// Rotate building to face tangent to the orbit
 			Rotation = orbitOffset.Normalized().Angle() + Mathf.Pi / 2;
 		}
 		else
 		{
-			BuildingPlacement();
+			if (this is ResourcePlace)
+			{
+				BuildingPlacement(true); // For ResourcePlace, allow orbiting around the sun
+			}
+			else
+			{
+				BuildingPlacement();
+			}
+
 		}
 	}
 
-	public void BuildingPlacement()
+	public void BuildingPlacement(bool SunOrbit = false)
 	{
 		if (!placed)
 		{
@@ -46,7 +54,14 @@ public partial class Building : Node2D
 			GlobalPosition = GetGlobalMousePosition();
 
 			// Find closest planet for preview
-			previewPlanet = FindClosestPlanet();
+			if (SunOrbit)
+			{
+				previewBody = FindClosestStar();
+			}
+			else
+			{
+				previewBody = FindClosestPlanet();
+			}
 
 			Vector2 orbitOffset = new Vector2(Mathf.Cos(orbitAngle), Mathf.Sin(orbitAngle)) * orbitRadius;
 			Rotation = orbitOffset.Normalized().Angle() + Mathf.Pi / 2;
@@ -57,19 +72,27 @@ public partial class Building : Node2D
 		else
 		{
 			Modulate = new Color(color.R, color.G, color.B, 1f);
-			if (orbitingPlanet == null)
+			if (orbitingBody == null)
 			{
-				orbitingPlanet = FindClosestPlanet();
-				if (orbitingPlanet != null)
+				if (SunOrbit)
+				{
+					orbitingBody = FindClosestStar();
+				}
+				else
+				{
+					// Find the closest planet to orbit around
+					orbitingBody = FindClosestPlanet();
+				}
+				if (orbitingBody != null)
 				{
 					// Set initial orbit angle based on current position
-					Vector2 direction = GlobalPosition - orbitingPlanet.GlobalPosition;
+					Vector2 direction = GlobalPosition - orbitingBody.GlobalPosition;
 					orbitAngle = Mathf.Atan2(direction.Y, direction.X);
 
 					// Store the orbit radius
 					if (orbitRadius == 0f)
 					{
-						orbitRadius = GlobalPosition.DistanceTo(orbitingPlanet.GlobalPosition);
+						orbitRadius = GlobalPosition.DistanceTo(orbitingBody.GlobalPosition);
 					}
 				}
 			}
@@ -78,9 +101,9 @@ public partial class Building : Node2D
 
 	public override void _Draw()
 	{
-		if (!placed && previewPlanet != null)
+		if (!placed && previewBody != null)
 		{
-			Vector2 localPlanetPos = ToLocal(previewPlanet.GlobalPosition);
+			Vector2 localPlanetPos = ToLocal(previewBody.GlobalPosition);
 
 			// Calculate preview radius using local coordinates
 			float previewRadius = localPlanetPos.Length();
@@ -98,14 +121,22 @@ public partial class Building : Node2D
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left && mouseButtonEvent.Pressed)
 			{
 				placed = true;
-				previewPlanet = null; // Clear preview planet
+				previewBody = null; // Clear preview planet
 				QueueRedraw(); // Clear the preview circle
 
 				// Set the actual orbit radius and angle when placed
-				orbitingPlanet = FindClosestPlanet();
-				if (orbitingPlanet != null)
+				if (this is ResourcePlace)
 				{
-					Vector2 direction = GlobalPosition - orbitingPlanet.GlobalPosition;
+					orbitingBody = FindClosestStar();
+				}
+				else
+				{
+					// Find the closest planet to orbit around
+					orbitingBody = FindClosestPlanet();
+				}
+				if (orbitingBody != null)
+				{
+					Vector2 direction = GlobalPosition - orbitingBody.GlobalPosition;
 					if (orbitRadius == 0f)
 					{
 						// Set the orbit radius based on the distance to the planet
@@ -137,5 +168,26 @@ public partial class Building : Node2D
 		// Debug output
 		GD.Print("Found planet: " + (closestPlanet != null ? "Yes" : "No"));
 		return closestPlanet;
+	}
+	public Star FindClosestStar()
+	{
+		Star closestStar = null;
+		float closestDistance = float.MaxValue;
+		foreach (var star in GetTree().GetNodesInGroup("stars"))
+		{
+			if (star is Star s)
+			{
+				float distance = GlobalPosition.DistanceTo(s.GlobalPosition);
+				if (distance < closestDistance)
+				{
+					closestDistance = distance;
+					closestStar = s;
+				}
+			}
+		}
+
+		// Debug output
+		GD.Print("Found star: " + (closestStar != null ? "Yes" : "No"));
+		return closestStar;
 	}
 }
