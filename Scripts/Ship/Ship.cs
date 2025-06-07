@@ -20,6 +20,10 @@ public partial class Ship : Node2D
     private Line2D pathLine;
     private Node2D waypointMarkers;
 
+    // Component properties
+    public List<AttachmentPoint> attachmentPoints = new List<AttachmentPoint>();
+    public List<Component> attachedComponents = new List<Component>();
+
     public override void _Ready()
     {
         AddToGroup("Ships");
