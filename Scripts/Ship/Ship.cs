@@ -294,4 +294,18 @@ public partial class Ship : Node2D
 
         return interceptPosition;
     }
+    public void AddAttachmentPoint(Vector3 attachmentPoint)
+    {
+        // Create a new AttachmentPoint at the specified position
+        AttachmentPoint newAttachmentPoint = new AttachmentPoint(this);
+        newAttachmentPoint.Position = new Vector2(attachmentPoint.X, attachmentPoint.Y);
+        newAttachmentPoint.Name = "AttachmentPoint_" + attachmentPoints.Count;
+    }
+    public void CreateShipAttachmentPoints()
+    {
+        foreach (Vector3 pos in Mesh.DefineVertices())
+        {
+            AddAttachmentPoint(pos);
+        }
+    }
 }

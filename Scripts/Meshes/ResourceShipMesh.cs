@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public partial class ResourceShipMesh : ShipMesh
 {
-    protected override List<Vector3> DefineVertices()
+    public override List<Vector3> DefineVertices()
     {
         return new List<Vector3>
         {

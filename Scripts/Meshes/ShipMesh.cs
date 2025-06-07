@@ -126,7 +126,7 @@ public partial class ShipMesh : MeshInstance2D
     }
 
     // Virtual methods to be overridden by derived classes
-    protected virtual List<Vector3> DefineVertices()
+    public virtual List<Vector3> DefineVertices()
     {
         // Base implementation returns an empty list
         return new List<Vector3>();
