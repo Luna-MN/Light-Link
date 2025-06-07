@@ -7,7 +7,7 @@ public partial class GasSkimmerMesh : ShipMesh
     [Export] public float ProbeLengthFactor = 1.0f; // Controls how long the bottom probe is
     [Export] public float BevelSize = 0.3f; // Controls the size of the bevel transition
 
-    protected override List<Vector3> DefineVertices()
+    public override List<Vector3> DefineVertices()
     {
         float probeLength = 2.0f * ProbeLengthFactor;
 
