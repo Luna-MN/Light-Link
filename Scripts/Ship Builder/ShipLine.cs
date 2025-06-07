@@ -22,5 +22,7 @@ public class ShipLine
         line.DefaultColor = Colors.White;
         ShipBuilder.AddChild(line);
         StartNode.Modulate = new Color(1, 1, 1);
+        EndNode.connectedNodes.Add(StartNode);
+        StartNode.connectedNodes.Add(EndNode);
     }
 }

@@ -1,11 +1,13 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class ShipNode : Node2D
 {
 	public MeshInstance2D shipMesh;
 	public Area2D area;
 	public CollisionShape2D collisionShape;
+	public List<ShipNode> connectedNodes = new List<ShipNode>();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{

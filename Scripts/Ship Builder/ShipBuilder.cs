@@ -14,6 +14,7 @@ public partial class ShipBuilder : Node2D
 	public Modes mode = Modes.Nodes;
 	public ShipLine currentLine;
 	public List<ShipLine> lines = new List<ShipLine>();
+	public List<ShipTriangle> triangles = new List<ShipTriangle>();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -91,6 +92,7 @@ public partial class ShipBuilder : Node2D
 			{
 				// Update the end point of the current line
 				currentLine.SetEndNode(clickedShipNode);
+				TriangleCheck(currentLine); // Check for triangles
 				currentLine = null; // Reset for the next line
 			}
 		}
@@ -135,4 +137,20 @@ public partial class ShipBuilder : Node2D
 		}
 		return null;
 	}
+	public void TriangleCheck(ShipLine line)
+	{
+		foreach (ShipNode node in line.StartNode.connectedNodes)
+		{
+			if (line.EndNode.connectedNodes.Contains(node))
+			{
+				// We have a triangle, so we need to remove the line
+				GD.Print("Triangle detected");
+				ShipTriangle triangle = new ShipTriangle(line.StartNode, line.EndNode, node, this);
+				triangles.Add(triangle);
+				return;
+
+			}
+		}
+	}
+
 }
