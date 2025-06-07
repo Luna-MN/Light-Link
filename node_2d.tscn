@@ -24,8 +24,8 @@ script = ExtResource("4_5lsw7")
 [node name="BuildingUI" type="CanvasLayer" parent="."]
 script = ExtResource("5_n26vg")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Rship" type="Node2D" parent="."]
 script = ExtResource("6_8yfe5")
 
-[node name="Node2D2" type="Node2D" parent="."]
+[node name="Rplace" type="Node2D" parent="."]
 script = ExtResource("7_du31x")

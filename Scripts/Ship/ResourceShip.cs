@@ -34,11 +34,14 @@ public partial class ResourceShip : Ship
         {
             MoveToResourceProcessing();
         }
-        else if (closestProcessor != null && closestResource?.isAttached == true && GlobalPosition.DistanceSquaredTo(closestProcessor.GlobalPosition) < 100f)
+        if (closestProcessor != null && closestResource?.isAttached == true && GlobalPosition.DistanceSquaredTo(closestProcessor.GlobalPosition) < 100f)
         {
             // If the resource is attached and close to the processor, process it
             GD.Print("Processing resource at processor: " + closestProcessor.Name);
             closestResource.ProcessResource((ResourcePlace)closestProcessor);
+            closestResource.RemoveFromGroup("AttachedResources");
+            closestResource.startPosition = closestProcessor.GlobalPosition;
+            path.Clear();
             closestResource = null; // Clear the resource after processing
         }
 
@@ -68,6 +71,7 @@ public partial class ResourceShip : Ship
         closestProcessor = FindClosestProcessor();
         if (closestProcessor != null)
         {
+            path.Clear();
             path.Add(closestProcessor.GlobalPosition);
             GD.Print("Moving to processor: " + closestProcessor);
         }
@@ -92,7 +96,6 @@ public partial class ResourceShip : Ship
                 closestBuilding = (Building)node;
             }
         }
-        GD.Print("Finding closest processor...");
         return closestBuilding;
     }
     public Resource FindNearbyResources()

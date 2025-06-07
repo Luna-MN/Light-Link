@@ -8,7 +8,7 @@ public partial class Building : Node2D
 	public Color color = new Color(1, 1, 1);
 
 	private float orbitAngle = 0f; // Angle for orbiting
-	private float orbitSpeed = 0.25f; // Speed of orbiting
+	private float orbitSpeed = 0.05f; // Speed of orbiting
 	private Body orbitingBody = null; // The planet the building is orbiting
 	private Body previewBody = null; // Planet for orbit preview during placement
 	public float orbitRadius = 0f; // Radius of the orbit
@@ -173,7 +173,7 @@ public partial class Building : Node2D
 	{
 		Star closestStar = null;
 		float closestDistance = float.MaxValue;
-		foreach (var star in GetTree().GetNodesInGroup("stars"))
+		foreach (var star in GetTree().GetNodesInGroup("Stars"))
 		{
 			if (star is Star s)
 			{
@@ -186,8 +186,6 @@ public partial class Building : Node2D
 			}
 		}
 
-		// Debug output
-		GD.Print("Found star: " + (closestStar != null ? "Yes" : "No"));
 		return closestStar;
 	}
 }
