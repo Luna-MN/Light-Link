@@ -23,6 +23,7 @@ public partial class Ship : Node2D
     // Component properties
     public List<AttachmentPoint> attachmentPoints = new List<AttachmentPoint>();
     public List<Component> attachedComponents = new List<Component>();
+    public int powerLeft = 0;
 
     public override void _Ready()
     {
