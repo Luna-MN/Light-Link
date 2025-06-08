@@ -96,7 +96,9 @@ public partial class ShipBuilder : Node2D
 					// Handle right-click on lines
 					else if (clickedObject is Line2D line2D)
 					{
+						GD.Print("Clicked on Line2D: " + line2D.Name);
 						ShipLine shipLine = lines.Find(l => l.Line == line2D);
+						GD.Print("Found ShipLine: " + shipLine?.StartNode?.Name + " to " + shipLine?.EndNode?.Name);
 						if (shipLine != null)
 						{
 							lines.Remove(shipLine);
@@ -107,7 +109,6 @@ public partial class ShipBuilder : Node2D
 							var trianglesWithLine = triangles.Where(t => t.lines.Contains(shipLine)).ToList();
 							foreach (var t in trianglesWithLine)
 							{
-								t.lines.Remove(shipLine);
 								triangles.Remove(t);
 								t.TriangleNode.QueueFree(); // Remove the triangle from the scene
 							}
@@ -144,6 +145,7 @@ public partial class ShipBuilder : Node2D
 			{
 				if (currentLine == null) return;
 				currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+				lines.Remove(currentLine); // Remove the current line from the list
 				currentLine = null; // Reset current line on Escape key
 			}
 		}
@@ -196,9 +198,11 @@ public partial class ShipBuilder : Node2D
 				if (Input.IsKeyPressed(Key.Ctrl))
 				{
 					currentLine = new ShipLine(clickedShipNode, this); // Reset for the next line
+					lines.Add(currentLine);
 				}
 			}
 		}
+		GD.Print("Lines count: " + lines.Count);
 	}
 	private Node2D DetectClickedObject(int buttonIndex = 1)
 	{
