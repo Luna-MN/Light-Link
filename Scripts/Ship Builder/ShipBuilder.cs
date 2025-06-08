@@ -15,6 +15,8 @@ public partial class ShipBuilder : Node2D
 	public ShipLine currentLine;
 	public List<ShipLine> lines = new List<ShipLine>();
 	public List<ShipTriangle> triangles = new List<ShipTriangle>();
+	public ColorPicker colorPicker;
+	public Node2D selectedTriangle;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -23,6 +25,14 @@ public partial class ShipBuilder : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (colorPicker != null)
+		{
+			selectedTriangle.Modulate = colorPicker.Color;
+			triangles.Find(t => t.TriangleNode == selectedTriangle)?.lines.ForEach(line =>
+			{
+				line.Line.DefaultColor = colorPicker.Color;
+			});
+		}
 	}
 	public override void _Input(InputEvent @event)
 	{
@@ -44,6 +54,7 @@ public partial class ShipBuilder : Node2D
 				else if (mode == Modes.Colors)
 				{
 					GD.Print("Colors mode selected, but no action defined yet.");
+					PickColor();
 				}
 				// Add your ship building logic here
 			}
@@ -64,6 +75,12 @@ public partial class ShipBuilder : Node2D
 			{
 				mode = Modes.Colors;
 				GD.Print("Switched to Colors mode");
+			}
+			else if (keyEvent.Keycode == Key.Escape)
+			{
+				if (currentLine == null) return;
+				currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+				currentLine = null; // Reset current line on Escape key
 			}
 		}
 	}
@@ -90,10 +107,30 @@ public partial class ShipBuilder : Node2D
 			}
 			else
 			{
+				lines.ForEach(line =>
+				{
+					if (line.StartNode == clickedShipNode && line.EndNode == currentLine.StartNode ||
+						line.EndNode == clickedShipNode && line.StartNode == currentLine.StartNode)
+					{
+						// If a line already exists between the clicked node and the current line's start node
+						GD.Print("Line already exists with this node, resetting current line.");
+						currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+						currentLine = null; // Reset current line
+						return;
+					}
+				});
+				if (clickedShipNode == currentLine.StartNode)
+				{
+					GD.Print("Clicked on the start node, resetting current line.");
+					currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+					currentLine = null; // Reset current line
+					return;
+				}
 				// Update the end point of the current line
 				currentLine.SetEndNode(clickedShipNode);
 				TriangleCheck(currentLine); // Check for triangles
-				currentLine = null; // Reset for the next line
+				currentLine = new ShipLine(clickedShipNode, this); // Reset for the next line
+
 			}
 		}
 	}
@@ -145,12 +182,39 @@ public partial class ShipBuilder : Node2D
 			{
 				// We have a triangle, so we need to remove the line
 				GD.Print("Triangle detected");
-				ShipTriangle triangle = new ShipTriangle(line.StartNode, line.EndNode, node, this);
+				List<ShipLine> triangleLines = new List<ShipLine>
+				{
+					line,
+					lines.Find(l =>
+						(l.StartNode == line.StartNode && l.EndNode == node) ||
+						(l.StartNode == node && l.EndNode == line.StartNode)
+					),
+					lines.Find(l =>
+						(l.StartNode == node && l.EndNode == line.EndNode) ||
+						(l.StartNode == line.EndNode && l.EndNode == node)
+					)
+				};
+				ShipTriangle triangle = new ShipTriangle(line.StartNode, line.EndNode, node, this, triangleLines);
 				triangles.Add(triangle);
 				return;
 
 			}
 		}
 	}
-
+	public void PickColor()
+	{
+		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+		if (clickedObject is not ShipNode)
+		{
+			if (clickedObject != selectedTriangle)
+			{
+				GD.Print("Picked color for ShipNode: " + clickedObject.Name);
+				colorPicker?.QueueFree(); // Remove previous color picker if it exists
+				colorPicker = new ColorPicker();
+				selectedTriangle = clickedObject;
+				AddChild(colorPicker);
+				// Implement color picking logic here
+			}
+		}
+	}
 }

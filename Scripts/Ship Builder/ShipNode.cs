@@ -11,6 +11,7 @@ public partial class ShipNode : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		ZIndex = 1000; // Ensure the ship node is drawn above other nodes
 		AddToGroup("ShipNodes");
 		shipMesh = new MeshInstance2D();
 		shipMesh.Mesh = new SphereMesh(); // Example mesh, replace with your ship mesh

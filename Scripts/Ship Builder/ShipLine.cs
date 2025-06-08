@@ -5,6 +5,7 @@ public class ShipLine
     public ShipNode StartNode { get; set; }
     public ShipNode EndNode { get; set; }
     public ShipBuilder ShipBuilder { get; set; }
+    public Line2D Line { get; set; }
 
     public ShipLine(ShipNode start, ShipBuilder shipBuilder)
     {
@@ -16,11 +17,11 @@ public class ShipLine
     public void SetEndNode(ShipNode end)
     {
         EndNode = end;
-        Line2D line = new Line2D();
-        line.Points = new Vector2[] { StartNode.GlobalPosition, EndNode.GlobalPosition };
-        line.Width = 2;
-        line.DefaultColor = Colors.White;
-        ShipBuilder.AddChild(line);
+        Line = new Line2D();
+        Line.Points = new Vector2[] { StartNode.GlobalPosition, EndNode.GlobalPosition };
+        Line.Width = 2;
+        Line.DefaultColor = Colors.White;
+        ShipBuilder.AddChild(Line);
         StartNode.Modulate = new Color(1, 1, 1);
         EndNode.connectedNodes.Add(StartNode);
         StartNode.connectedNodes.Add(EndNode);
