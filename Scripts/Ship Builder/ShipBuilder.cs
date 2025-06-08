@@ -5,6 +5,10 @@ using System.Linq;
 
 public partial class ShipBuilder : Node2D
 {
+	[Export]
+	public Button Weapon, Shield, Utility, Power;
+	[Export]
+	public Area2D UIArea;
 	public List<ShipNode> shipNodes = new List<ShipNode>();
 	public enum Modes
 	{
@@ -20,6 +24,7 @@ public partial class ShipBuilder : Node2D
 	public Node2D selectedTriangle;
 	public bool isRightMouseHeld = false;
 	public Node2D shadowNode;
+	bool isMouseOverUI = false;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -35,6 +40,16 @@ public partial class ShipBuilder : Node2D
 		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
 		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
 
+		UIArea.MouseEntered += () =>
+		{
+			isMouseOverUI = true; // Set flag when mouse enters UI area
+			GD.Print("Mouse entered UI area, hiding shadow node." + isMouseOverUI);
+		};
+		UIArea.MouseExited += () =>
+		{
+			isMouseOverUI = false; // Reset flag when mouse exits UI area
+			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUI);
+		};
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -60,11 +75,13 @@ public partial class ShipBuilder : Node2D
 			RemoveObject();
 		}
 		MoveShadowNode(); // Update shadow node position based on mouse position
+		UIStop(); // Check if mouse is over UI and update shadow node visibility
 	}
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseButtonEvent && mouseButtonEvent.IsPressed())
 		{
+			if (isMouseOverUI) return;
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
 			{
 				// Handle left mouse button click for ship building
@@ -201,6 +218,17 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 		GD.Print("Lines count: " + lines.Count);
+	}
+	public void UIStop()
+	{
+		if (isMouseOverUI)
+		{
+			shadowNode.Visible = false; // Hide shadow node if mouse is over UI
+		}
+		else
+		{
+			shadowNode.Visible = true; // Show shadow node if mouse is not over UI
+		}
 	}
 	private Node2D DetectClickedObject(int buttonIndex = 1)
 	{

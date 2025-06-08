@@ -1,6 +1,56 @@
-[gd_scene load_steps=2 format=3 uid="uid://6c42xyyau74k"]
+[gd_scene load_steps=3 format=3 uid="uid://6c42xyyau74k"]
 
 [ext_resource type="Script" path="res://Scripts/Ship Builder/ShipBuilder.cs" id="1_6ykhb"]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v5t5c"]
+size = Vector2(174, 140)
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "UIArea")]
 script = ExtResource("1_6ykhb")
+Weapon = NodePath("CanvasLayer/Panel/BoxContainer/Weapon")
+Shield = NodePath("CanvasLayer/Panel/BoxContainer/Shield")
+Utility = NodePath("CanvasLayer/Panel/BoxContainer/Utility")
+Power = NodePath("CanvasLayer/Panel/BoxContainer/Power")
+UIArea = NodePath("CanvasLayer/Panel/Area2D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -69.0
+offset_bottom = 71.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="CanvasLayer/Panel"]
+layout_mode = 0
+offset_right = 175.0
+offset_bottom = 136.0
+vertical = true
+
+[node name="Weapon" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+layout_mode = 2
+text = "Weapon"
+
+[node name="Shield" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+layout_mode = 2
+text = "Shield"
+
+[node name="Utility" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+layout_mode = 2
+text = "Utility"
+
+[node name="Power" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+layout_mode = 2
+text = "Power"
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/Panel"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
+position = Vector2(88, 70)
+shape = SubResource("RectangleShape2D_v5t5c")
