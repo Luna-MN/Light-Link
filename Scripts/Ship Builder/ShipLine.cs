@@ -6,6 +6,8 @@ public class ShipLine
     public ShipNode EndNode { get; set; }
     public ShipBuilder ShipBuilder { get; set; }
     public Line2D Line { get; set; }
+    public Area2D area;
+    public CollisionShape2D collisionShape;
 
     public ShipLine(ShipNode start, ShipBuilder shipBuilder)
     {
@@ -13,6 +15,8 @@ public class ShipLine
         StartNode.Modulate = new Color(0, 1, 0); // Change color to green to indicate selection
         EndNode = null; // Initially, the end node is not set
         ShipBuilder = shipBuilder;
+
+
     }
     public void SetEndNode(ShipNode end)
     {
@@ -25,5 +29,14 @@ public class ShipLine
         StartNode.Modulate = new Color(1, 1, 1);
         EndNode.connectedNodes.Add(StartNode);
         StartNode.connectedNodes.Add(EndNode);
+
+        area = new Area2D();
+        collisionShape = new CollisionShape2D();
+        var segmentShape = new SegmentShape2D();
+        segmentShape.A = StartNode.GlobalPosition;
+        segmentShape.B = EndNode.GlobalPosition;
+        collisionShape.Shape = segmentShape;
+        area.AddChild(collisionShape);
+        Line.AddChild(area);
     }
 }

@@ -58,6 +58,63 @@ public partial class ShipBuilder : Node2D
 				}
 				// Add your ship building logic here
 			}
+			if (mouseButtonEvent.ButtonIndex == MouseButton.Right)
+			{
+				Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+				if (clickedObject != null)
+				{
+					if (clickedObject is ShipNode shipNode)
+					{
+						shipNodes.Remove(shipNode);
+						GD.Print("Removed ShipNode: " + shipNode.Name);
+						lines.ForEach(line =>
+						{
+							if (line.StartNode == shipNode || line.EndNode == shipNode)
+							{
+								lines.Remove(line);
+								GD.Print("Removed ShipLine: " + line.Line.Name);
+								line.Line.QueueFree(); // Remove the line from the scene
+							}
+						});
+						triangles.ForEach(t =>
+						{
+							if (t.point1 == shipNode || t.point2 == shipNode || t.point3 == shipNode)
+							{
+								triangles.Remove(t);
+								GD.Print("Removed ShipTriangle: " + t.TriangleNode.Name);
+								t.TriangleNode.QueueFree(); // Remove the triangle from the scene
+							}
+						});
+						shipNode.QueueFree(); // Remove the node from the scene
+					}
+					else if (clickedObject is Line2D line)
+					{
+						ShipLine shipLine = lines.Find(l => l.Line == line);
+						lines.Remove(shipLine);
+						GD.Print("Removed ShipLine: " + shipLine.Line.Name);
+						shipLine.Line.QueueFree(); // Remove the line from the scene
+						triangles.ForEach(t =>
+						{
+							if (t.lines.Contains(shipLine))
+							{
+								t.lines.Remove(shipLine);
+								GD.Print("Removed ShipLine from ShipTriangle: " + t.TriangleNode.Name);
+								if (t.lines.Count == 0)
+								{
+									triangles.Remove(t);
+									GD.Print("Removed ShipTriangle: " + t.TriangleNode.Name);
+									t.TriangleNode.QueueFree(); // Remove the triangle from the scene
+								}
+							}
+						});
+					}
+					else
+					{
+						GD.Print("Clicked on an unhandled object: " + clickedObject.Name);
+					}
+				}
+			}
+
 		}
 		if (@event is InputEventKey keyEvent && keyEvent.IsPressed())
 		{
@@ -129,8 +186,10 @@ public partial class ShipBuilder : Node2D
 				// Update the end point of the current line
 				currentLine.SetEndNode(clickedShipNode);
 				TriangleCheck(currentLine); // Check for triangles
-				currentLine = new ShipLine(clickedShipNode, this); // Reset for the next line
-
+				if (Input.IsKeyPressed(Key.Ctrl))
+				{
+					currentLine = new ShipLine(clickedShipNode, this); // Reset for the next line
+				}
 			}
 		}
 	}
