@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class ShipBuilder : Node2D
 {
@@ -60,53 +61,59 @@ public partial class ShipBuilder : Node2D
 			}
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Right)
 			{
-				Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+				Node2D clickedObject = (Node2D)DetectClickedObject(2)?.GetParent();
 				if (clickedObject != null)
 				{
+					// Handle right mouse button click for removing nodes or lines
 					if (clickedObject is ShipNode shipNode)
 					{
 						shipNodes.Remove(shipNode);
 						GD.Print("Removed ShipNode: " + shipNode.Name);
-						lines.ForEach(line =>
+
+						// Remove all lines connected to this node
+						var linesToRemove = lines.Where(line => line.StartNode == shipNode || line.EndNode == shipNode).ToList();
+						var removeNodes = shipNodes.Where(n => n.connectedNodes.Contains(shipNode)).ToList();
+						foreach (var n in removeNodes)
 						{
-							if (line.StartNode == shipNode || line.EndNode == shipNode)
-							{
-								lines.Remove(line);
-								GD.Print("Removed ShipLine: " + line.Line.Name);
-								line.Line.QueueFree(); // Remove the line from the scene
-							}
-						});
-						triangles.ForEach(t =>
+							n.connectedNodes.Remove(shipNode);
+						}
+						foreach (var line in linesToRemove)
 						{
-							if (t.point1 == shipNode || t.point2 == shipNode || t.point3 == shipNode)
-							{
-								triangles.Remove(t);
-								GD.Print("Removed ShipTriangle: " + t.TriangleNode.Name);
-								t.TriangleNode.QueueFree(); // Remove the triangle from the scene
-							}
-						});
+							lines.Remove(line);
+							line.Line.QueueFree(); // Remove the line from the scene
+						}
+
+						// Remove all triangles containing this node
+						var trianglesToRemove = triangles.Where(t => t.point1 == shipNode || t.point2 == shipNode || t.point3 == shipNode).ToList();
+						foreach (var t in trianglesToRemove)
+						{
+							triangles.Remove(t);
+							t.TriangleNode.QueueFree(); // Remove the triangle from the scene
+						}
+
 						shipNode.QueueFree(); // Remove the node from the scene
 					}
-					else if (clickedObject is Line2D line)
+					// Handle right-click on lines
+					else if (clickedObject is Line2D line2D)
 					{
-						ShipLine shipLine = lines.Find(l => l.Line == line);
-						lines.Remove(shipLine);
-						GD.Print("Removed ShipLine: " + shipLine.Line.Name);
-						shipLine.Line.QueueFree(); // Remove the line from the scene
-						triangles.ForEach(t =>
+						ShipLine shipLine = lines.Find(l => l.Line == line2D);
+						if (shipLine != null)
 						{
-							if (t.lines.Contains(shipLine))
+							lines.Remove(shipLine);
+							shipLine.Line.QueueFree(); // Remove the line from the scene
+							shipLine.StartNode.connectedNodes.Remove(shipLine.EndNode);
+							shipLine.EndNode.connectedNodes.Remove(shipLine.StartNode);
+
+							var trianglesWithLine = triangles.Where(t => t.lines.Contains(shipLine)).ToList();
+							foreach (var t in trianglesWithLine)
 							{
 								t.lines.Remove(shipLine);
-								GD.Print("Removed ShipLine from ShipTriangle: " + t.TriangleNode.Name);
-								if (t.lines.Count == 0)
-								{
-									triangles.Remove(t);
-									GD.Print("Removed ShipTriangle: " + t.TriangleNode.Name);
-									t.TriangleNode.QueueFree(); // Remove the triangle from the scene
-								}
+								triangles.Remove(t);
+								t.TriangleNode.QueueFree(); // Remove the triangle from the scene
 							}
-						});
+							currentLine = null; // Reset current line if it was the one being edited
+												// Remove the line from any triangles that contain it
+						}
 					}
 					else
 					{
@@ -152,8 +159,7 @@ public partial class ShipBuilder : Node2D
 	public void MakeLines()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		GD.Print("Clicked Object: " + clickedObject?.Name);
-
+		GD.Print("Current Line: " + currentLine?.StartNode?.Name);
 		if (clickedObject is ShipNode clickedShipNode)
 		{
 			if (currentLine == null)
@@ -186,6 +192,7 @@ public partial class ShipBuilder : Node2D
 				// Update the end point of the current line
 				currentLine.SetEndNode(clickedShipNode);
 				TriangleCheck(currentLine); // Check for triangles
+				currentLine = null;
 				if (Input.IsKeyPressed(Key.Ctrl))
 				{
 					currentLine = new ShipLine(clickedShipNode, this); // Reset for the next line
@@ -193,7 +200,7 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	private Node2D DetectClickedObject()
+	private Node2D DetectClickedObject(int buttonIndex = 1)
 	{
 		// Convert to global position
 		Vector2 globalPos = GetGlobalMousePosition();
@@ -227,8 +234,21 @@ public partial class ShipBuilder : Node2D
 			Node2D hitObject = collider as Node2D;
 			if (hitObject != null)
 			{
-				GD.Print("Hit ShipNode: " + hitObject.Name);
-				return hitObject;
+				if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
+				{
+					GD.Print("Hit Node: " + hitObject.Name);
+					return hitObject;
+				}
+				else if (mode != Modes.Lines || buttonIndex == 2)
+				{
+					GD.Print("Hit object: " + hitObject.Name);
+					return hitObject;
+				}
+				else if (buttonIndex == 2 && !hitObject.GetParent().Name.ToString().Contains("ShipTriangle"))
+				{
+					GD.Print("Didn't hit ShipTriangle: " + hitObject.Name);
+					return hitObject;
+				}
 			}
 		}
 		return null;
