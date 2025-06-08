@@ -16,6 +16,14 @@ public partial class ShipBuilder : Node2D
 		Lines,
 		Colors,
 	}
+	public enum ShipNodeTypes
+	{
+		Weapon,
+		Shield,
+		Utility,
+		Power,
+	}
+	public ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
 	public Modes mode = Modes.Nodes;
 	public ShipLine currentLine;
 	public List<ShipLine> lines = new List<ShipLine>();
@@ -50,6 +58,7 @@ public partial class ShipBuilder : Node2D
 			isMouseOverUI = false; // Reset flag when mouse exits UI area
 			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUI);
 		};
+		Buttons(); // Initialize button actions
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -74,8 +83,8 @@ public partial class ShipBuilder : Node2D
 		{
 			RemoveObject();
 		}
-		MoveShadowNode(); // Update shadow node position based on mouse position
 		UIStop(); // Check if mouse is over UI and update shadow node visibility
+		MoveShadowNode(); // Update shadow node position
 	}
 	public override void _Input(InputEvent @event)
 	{
@@ -150,7 +159,7 @@ public partial class ShipBuilder : Node2D
 			{
 				if (currentLine != null)
 				{
-					currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+					currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
 					lines.Remove(currentLine); // Remove the current line from the list
 					currentLine = null; // Reset current line on Escape key
 				}
@@ -164,7 +173,7 @@ public partial class ShipBuilder : Node2D
 	}
 	public void PlaceNode()
 	{
-		ShipNode shipNode = new ShipNode();
+		ShipNode shipNode = new ShipNode(currentNodeType);
 		shipNode.GlobalPosition = new Vector2(
 			Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
 			Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
@@ -194,7 +203,7 @@ public partial class ShipBuilder : Node2D
 					{
 						// If a line already exists between the clicked node and the current line's start node
 						GD.Print("Line already exists with this node, resetting current line.");
-						currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+						currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
 						currentLine = null; // Reset current line
 						return;
 					}
@@ -202,7 +211,7 @@ public partial class ShipBuilder : Node2D
 				if (clickedShipNode == currentLine.StartNode)
 				{
 					GD.Print("Clicked on the start node, resetting current line.");
-					currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+					currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
 					currentLine = null; // Reset current line
 					return;
 				}
@@ -225,9 +234,9 @@ public partial class ShipBuilder : Node2D
 		{
 			shadowNode.Visible = false; // Hide shadow node if mouse is over UI
 		}
-		else
+		else if (mode == Modes.Nodes)
 		{
-			shadowNode.Visible = true; // Show shadow node if mouse is not over UI
+			shadowNode.Visible = true; // Show shadow node if in Nodes mode
 		}
 	}
 	private Node2D DetectClickedObject(int buttonIndex = 1)
@@ -398,10 +407,41 @@ public partial class ShipBuilder : Node2D
 		else
 		{
 			shadowNode.Visible = true; // Show shadow node if in Nodes mode
+			shadowNode.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
 			shadowNode.GlobalPosition = new Vector2(
 				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
 				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
 			); // Snap to grid of 10 pixels
 		}
+	}
+	public void Buttons()
+	{
+		Weapon.ButtonDown += () =>
+		{
+			currentNodeType = ShipNodeTypes.Weapon;
+			GD.Print("Selected Weapon node type");
+		};
+		Shield.ButtonDown += () =>
+		{
+			currentNodeType = ShipNodeTypes.Shield;
+			GD.Print("Selected Shield node type");
+		};
+		Utility.ButtonDown += () =>
+		{
+			currentNodeType = ShipNodeTypes.Utility;
+			GD.Print("Selected Utility node type");
+		};
+		Power.ButtonDown += () =>
+		{
+			currentNodeType = ShipNodeTypes.Power;
+			GD.Print("Selected Power node type");
+		};
 	}
 }

@@ -8,9 +8,37 @@ public partial class ShipNode : Node2D
 	public Area2D area;
 	public CollisionShape2D collisionShape;
 	public List<ShipNode> connectedNodes = new List<ShipNode>();
+	public ShipBuilder.ShipNodeTypes nodeType = ShipBuilder.ShipNodeTypes.Weapon;
+	public Color nodeColor = Colors.White; // Default color for the node
+	public ShipNode(ShipBuilder.ShipNodeTypes type)
+	{
+		nodeType = type;
+		Name = "ShipNode";
+		if (type == ShipBuilder.ShipNodeTypes.Weapon)
+		{
+			nodeColor = new Color(1, 0.5f, 0.5f); // Light Red for weapon nodes
+		}
+		else if (type == ShipBuilder.ShipNodeTypes.Utility)
+		{
+			nodeColor = new Color(0.5f, 1, 0.5f); // Light Green for utility nodes
+		}
+		else if (type == ShipBuilder.ShipNodeTypes.Shield)
+		{
+			nodeColor = new Color(0.5f, 0.5f, 1); // Light Blue for shield nodes
+		}
+		else if (type == ShipBuilder.ShipNodeTypes.Power)
+		{
+			nodeColor = new Color(1, 1, 0); // Light Yellow for power nodes
+		}
+		else
+		{
+			nodeColor = Colors.White; // Default color for other types
+		}
+	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Modulate = nodeColor; // Set the node's color based on its type
 		ZIndex = 1000; // Ensure the ship node is drawn above other nodes
 		AddToGroup("ShipNodes");
 		shipMesh = new MeshInstance2D();

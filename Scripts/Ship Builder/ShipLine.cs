@@ -26,7 +26,7 @@ public class ShipLine
         Line.Width = 2;
         Line.DefaultColor = Colors.White;
         ShipBuilder.AddChild(Line);
-        StartNode.Modulate = new Color(1, 1, 1);
+        StartNode.Modulate = StartNode.nodeColor; // Reset color to original after setting end node
         EndNode.connectedNodes.Add(StartNode);
         StartNode.connectedNodes.Add(EndNode);
 
