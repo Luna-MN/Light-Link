@@ -29,10 +29,17 @@ public partial class ShipBuilder : Node2D
 		if (colorPicker != null)
 		{
 			selectedTriangle.Modulate = colorPicker.Color;
-			triangles.Find(t => t.TriangleNode == selectedTriangle)?.lines.ForEach(line =>
+			var triangle = triangles.Find(t => t.TriangleNode == selectedTriangle);
+			if (triangle != null)
 			{
-				line.Line.DefaultColor = colorPicker.Color;
-			});
+				Color pickedColor = colorPicker.Color;
+				bool isDark = pickedColor.R < 0.2f && pickedColor.G < 0.2f && pickedColor.B < 0.2f;
+				Color lineColor = isDark ? Colors.White : pickedColor;
+				foreach (var line in triangle.lines)
+				{
+					line.Line.DefaultColor = lineColor;
+				}
+			}
 		}
 	}
 	public override void _Input(InputEvent @event)
