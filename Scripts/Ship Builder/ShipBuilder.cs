@@ -19,9 +19,22 @@ public partial class ShipBuilder : Node2D
 	public ColorPicker colorPicker;
 	public Node2D selectedTriangle;
 	public bool isRightMouseHeld = false;
+	public Node2D shadowNode;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		shadowNode = new Node2D();
+		shadowNode.Name = "ShadowNode";
+		shadowNode.GlobalPosition = GetGlobalMousePosition();
+		AddChild(shadowNode);
+
+		MeshInstance2D shadowMesh = new MeshInstance2D();
+		shadowMesh.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
+		shadowMesh.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
+		shadowNode.AddChild(shadowMesh);
+		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
+		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
+
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,6 +59,7 @@ public partial class ShipBuilder : Node2D
 		{
 			RemoveObject();
 		}
+		MoveShadowNode(); // Update shadow node position based on mouse position
 	}
 	public override void _Input(InputEvent @event)
 	{
@@ -92,11 +106,22 @@ public partial class ShipBuilder : Node2D
 			if (keyEvent.Keycode == Key.F1)
 			{
 				mode = Modes.Nodes;
+				if (colorPicker != null)
+				{
+					colorPicker.QueueFree(); // Remove color picker if it exists
+					colorPicker = null; // Reset color picker reference{
+
+				}
 				GD.Print("Switched to Nodes mode");
 			}
 			else if (keyEvent.Keycode == Key.F2)
 			{
 				mode = Modes.Lines;
+				if (colorPicker != null)
+				{
+					colorPicker.QueueFree(); // Remove color picker if it exists
+					colorPicker = null; // Reset color picker reference
+				}
 				GD.Print("Switched to Lines mode");
 			}
 			else if (keyEvent.Keycode == Key.F3)
@@ -106,17 +131,27 @@ public partial class ShipBuilder : Node2D
 			}
 			else if (keyEvent.Keycode == Key.Escape)
 			{
-				if (currentLine == null) return;
-				currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
-				lines.Remove(currentLine); // Remove the current line from the list
-				currentLine = null; // Reset current line on Escape key
+				if (currentLine != null)
+				{
+					currentLine.StartNode.Modulate = new Color(1, 1, 1); // Reset color of the start node
+					lines.Remove(currentLine); // Remove the current line from the list
+					currentLine = null; // Reset current line on Escape key
+				}
+				if (colorPicker != null)
+				{
+					colorPicker.QueueFree(); // Remove color picker if it exists
+					colorPicker = null; // Reset color picker reference
+				}
 			}
 		}
 	}
 	public void PlaceNode()
 	{
 		ShipNode shipNode = new ShipNode();
-		shipNode.GlobalPosition = GetGlobalMousePosition();
+		shipNode.GlobalPosition = new Vector2(
+			Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
+			Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+		); // Snap to grid of 10 pixels
 		shipNode.Name = "ShipNode_" + shipNodes.Count;
 		shipNodes.Add(shipNode);
 		AddChild(shipNode);
@@ -252,7 +287,7 @@ public partial class ShipBuilder : Node2D
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
 		if (clickedObject is not ShipNode)
 		{
-			if (clickedObject != selectedTriangle)
+			if (clickedObject != selectedTriangle || colorPicker == null)
 			{
 				GD.Print("Picked color for ShipNode: " + clickedObject.Name);
 				colorPicker?.QueueFree(); // Remove previous color picker if it exists
@@ -324,6 +359,21 @@ public partial class ShipBuilder : Node2D
 			{
 				GD.Print("Clicked on an unhandled object: " + clickedObject.Name);
 			}
+		}
+	}
+	public void MoveShadowNode()
+	{
+		if (mode != Modes.Nodes)
+		{
+			shadowNode.Visible = false; // Hide shadow node if not in Nodes mode
+		}
+		else
+		{
+			shadowNode.Visible = true; // Show shadow node if in Nodes mode
+			shadowNode.GlobalPosition = new Vector2(
+				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
+				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+			); // Snap to grid of 10 pixels
 		}
 	}
 }

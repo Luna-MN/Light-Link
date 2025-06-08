@@ -17,7 +17,6 @@ public partial class ShipNode : Node2D
 		shipMesh.Mesh = new SphereMesh(); // Example mesh, replace with your ship mesh
 		shipMesh.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
 		AddChild(shipMesh);
-		GlobalPosition = GetGlobalMousePosition(); // Set initial position to mouse position
 
 		area = new Area2D();
 
