@@ -9,6 +9,8 @@ public partial class ShipBuilder : Node2D
 	public Button Weapon, Shield, Utility, Power;
 	[Export]
 	public Area2D UIArea;
+	[Export]
+	public TextEdit modeText;
 	public List<ShipNode> shipNodes = new List<ShipNode>();
 	public enum Modes
 	{
@@ -102,7 +104,6 @@ public partial class ShipBuilder : Node2D
 				{
 					GD.Print("Lines mode selected, creating lines between nodes.");
 					MakeLines();
-
 				}
 				else if (mode == Modes.Colors)
 				{
@@ -132,6 +133,7 @@ public partial class ShipBuilder : Node2D
 			if (keyEvent.Keycode == Key.F1)
 			{
 				mode = Modes.Nodes;
+				modeText.Text = "Mode: Nodes";
 				if (colorPicker != null)
 				{
 					colorPicker.QueueFree(); // Remove color picker if it exists
@@ -143,6 +145,7 @@ public partial class ShipBuilder : Node2D
 			else if (keyEvent.Keycode == Key.F2)
 			{
 				mode = Modes.Lines;
+				modeText.Text = "Mode: Lines";
 				if (colorPicker != null)
 				{
 					colorPicker.QueueFree(); // Remove color picker if it exists
@@ -153,6 +156,7 @@ public partial class ShipBuilder : Node2D
 			else if (keyEvent.Keycode == Key.F3)
 			{
 				mode = Modes.Colors;
+				modeText.Text = "Mode: Colors";
 				GD.Print("Switched to Colors mode");
 			}
 			else if (keyEvent.Keycode == Key.Escape)

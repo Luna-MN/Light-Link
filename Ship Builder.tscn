@@ -5,13 +5,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5t5c"]
 size = Vector2(174, 140)
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "UIArea")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "UIArea", "modeText")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("CanvasLayer/Panel/BoxContainer/Weapon")
 Shield = NodePath("CanvasLayer/Panel/BoxContainer/Shield")
 Utility = NodePath("CanvasLayer/Panel/BoxContainer/Utility")
 Power = NodePath("CanvasLayer/Panel/BoxContainer/Power")
 UIArea = NodePath("CanvasLayer/Panel/Area2D")
+modeText = NodePath("CanvasLayer/ModeText")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -54,3 +55,21 @@ text = "Power"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
 position = Vector2(88, 70)
 shape = SubResource("RectangleShape2D_v5t5c")
+
+[node name="ModeText" type="TextEdit" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -103.5
+offset_right = 103.5
+offset_bottom = 40.0
+grow_horizontal = 2
+text = "Mode: Nodes"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
