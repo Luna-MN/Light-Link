@@ -92,6 +92,37 @@ public partial class ShipBuilder : Node2D
 		}
 		UIStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
+		CheckForOverlappingNodes();
+	}
+	public void CheckForOverlappingNodes()
+	{
+		// Create a list to track which nodes we've already checked
+		HashSet<ShipNode> checkedNodes = new HashSet<ShipNode>();
+
+		for (int i = 0; i < shipNodes.Count; i++)
+		{
+			ShipNode node1 = shipNodes[i];
+			if (checkedNodes.Contains(node1)) continue;
+
+			for (int j = i + 1; j < shipNodes.Count; j++)
+			{
+				ShipNode node2 = shipNodes[j];
+				if (checkedNodes.Contains(node2)) continue;
+
+				// Check if the two nodes have the same position
+				if (node1.GlobalPosition == node2.GlobalPosition)
+				{
+					// Mark node2 as checked so we don't process it again
+					checkedNodes.Add(node2);
+
+					// Call CheckNodeLocation to merge node2 into node1
+					CheckNodeLocation(node2);
+
+					// Since we modified the list, we need to adjust our loop index
+					j--;
+				}
+			}
+		}
 	}
 	public override void _Input(InputEvent @event)
 	{
@@ -199,6 +230,7 @@ public partial class ShipBuilder : Node2D
 				if (DraggingNode != null)
 				{
 					GD.Print("Released ShipNode: " + DraggingNode.Name);
+					CheckNodeLocation(DraggingNode);
 					DraggingNode = null; // Stop dragging if the mouse button is released
 				}
 				dragging = false; // Stop dragging if the mouse button is released
@@ -235,6 +267,123 @@ public partial class ShipBuilder : Node2D
 				DraggingNode = shipNode; // Set the newly created node as the dragging node
 				dragging = true; // Start dragging the newly created node
 			}
+		}
+	}
+	public void CheckNodeLocation(ShipNode node)
+	{
+		ShipNode overlappingNode = shipNodes.FirstOrDefault(n => n != node && n.GlobalPosition == node.GlobalPosition);
+
+		if (overlappingNode != null)
+		{
+			GD.Print($"Node {node.Name} overlaps with {overlappingNode.Name}. Merging nodes...");
+
+			// Update all lines that connect to the node being removed
+			foreach (var line in lines.Where(l => l.StartNode == node || l.EndNode == node).ToList())
+			{
+				// Check if we already have a line between overlappingNode and the other node
+				ShipNode otherNode = line.StartNode == node ? line.EndNode : line.StartNode;
+
+				// Skip if trying to create a line from a node to itself
+				if (otherNode == overlappingNode)
+				{
+					lines.Remove(line);
+					line.Line.QueueFree();
+					continue;
+				}
+
+				// Check if a line already exists between overlappingNode and otherNode
+				bool lineExists = lines.Any(l =>
+					(l.StartNode == overlappingNode && l.EndNode == otherNode) ||
+					(l.StartNode == otherNode && l.EndNode == overlappingNode)
+				);
+
+				if (!lineExists)
+				{
+					// Update the line to connect to the overlapping node instead
+					if (line.StartNode == node)
+					{
+						line.StartNode = overlappingNode;
+					}
+					else
+					{
+						line.EndNode = overlappingNode;
+					}
+
+					// Update the line's visual representation
+					var points = new Vector2[2];
+					points[0] = line.StartNode.GlobalPosition;
+					points[1] = line.EndNode.GlobalPosition;
+					line.Line.Points = points;
+					line.UpdateCollisionShape();
+				}
+				else
+				{
+					// Remove duplicate line
+					lines.Remove(line);
+					line.Line.QueueFree();
+				}
+				TriangleCheck(line); // Check for triangles after updating the line
+			}
+
+			// Update all triangles that contain the node being removed
+			foreach (var triangle in triangles.Where(t => t.point1 == node || t.point2 == node || t.point3 == node).ToList())
+			{
+				// Check if replacing the node would create a degenerate triangle (same node used twice)
+				bool wouldBeDegenerate = false;
+				if (triangle.point1 == node && (triangle.point2 == overlappingNode || triangle.point3 == overlappingNode))
+					wouldBeDegenerate = true;
+				else if (triangle.point2 == node && (triangle.point1 == overlappingNode || triangle.point3 == overlappingNode))
+					wouldBeDegenerate = true;
+				else if (triangle.point3 == node && (triangle.point1 == overlappingNode || triangle.point2 == overlappingNode))
+					wouldBeDegenerate = true;
+
+				if (wouldBeDegenerate)
+				{
+					// Remove the triangle as it would become degenerate
+					triangles.Remove(triangle);
+					triangle.TriangleNode.QueueFree();
+				}
+				else
+				{
+					// Update the triangle to use the overlapping node
+					if (triangle.point1 == node)
+						triangle.point1 = overlappingNode;
+					else if (triangle.point2 == node)
+						triangle.point2 = overlappingNode;
+					else if (triangle.point3 == node)
+						triangle.point3 = overlappingNode;
+
+					// Update the triangle's visual representation
+					triangle.UpdateTriangle();
+				}
+			}
+
+			// Update connected nodes lists
+			foreach (var connectedNode in node.connectedNodes)
+			{
+				if (connectedNode != overlappingNode)
+				{
+					// Remove the old node from connected nodes
+					connectedNode.connectedNodes.Remove(node);
+
+					// Add the overlapping node if not already connected
+					if (!connectedNode.connectedNodes.Contains(overlappingNode))
+					{
+						connectedNode.connectedNodes.Add(overlappingNode);
+					}
+
+					// Add this node to overlapping node's connections if not already there
+					if (!overlappingNode.connectedNodes.Contains(connectedNode))
+					{
+						overlappingNode.connectedNodes.Add(connectedNode);
+					}
+				}
+			}
+
+			// Remove the node from the scene and from the list
+			shipNodes.Remove(node);
+			node.QueueFree();
+			GD.Print($"Node {node.Name} has been merged into {overlappingNode.Name}");
 		}
 	}
 	public void DragNode()
