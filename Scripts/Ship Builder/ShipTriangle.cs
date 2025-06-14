@@ -62,5 +62,27 @@ public partial class ShipTriangle
         TriangleNode.AddChild(area);
 
     }
-
+    public void UpdateTriangle()
+    {
+        if (meshInstance != null && mesh != null)
+        {
+            var surfaceArray = new Godot.Collections.Array();
+            surfaceArray.Resize((int)Mesh.ArrayType.Max);
+            surfaceArray[(int)Mesh.ArrayType.Vertex] = new Vector2[]
+            {
+                point1.GlobalPosition,
+                point2.GlobalPosition,
+                point3.GlobalPosition
+            };
+            surfaceArray[(int)Mesh.ArrayType.Index] = new int[] { 0, 1, 2 };
+            surfaceArray[(int)Mesh.ArrayType.Color] = new Color[]
+            {
+                Colors.White,
+                Colors.White,
+                Colors.White
+            };
+            mesh.ClearSurfaces();
+            mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
+        }
+    }
 }

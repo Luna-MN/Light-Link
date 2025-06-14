@@ -35,6 +35,7 @@ public partial class ShipBuilder : Node2D
 	public bool isRightMouseHeld = false, dragging = false;
 	public Node2D shadowNode;
 	bool isMouseOverUI = false;
+	ShipNode DraggingNode = null;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -190,15 +191,27 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
 			{
+				DraggingNode = (ShipNode)clickedObject;
 				dragging = true; // Start dragging if the node is clicked
 			}
 			else
 			{
-				dragging = false; // Stop dragging if the mouse button is released			}
+				if (DraggingNode != null)
+				{
+					GD.Print("Released ShipNode: " + DraggingNode.Name);
+					DraggingNode = null; // Stop dragging if the mouse button is released
+				}
+				dragging = false; // Stop dragging if the mouse button is released
 			}
 		}
 		else if (pressed)
 		{
+			bool nodeExists = shipNodes.Any(node => node.GlobalPosition == GetGlobalMousePosition());
+			if (nodeExists)
+			{
+				GD.Print("Node already exists at this position, not placing a new one.");
+				return; // Don't place a new node if one already exists at the position
+			}
 			ShipNode shipNode = new ShipNode(currentNodeType);
 			shipNode.GlobalPosition = new Vector2(
 				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
@@ -211,36 +224,33 @@ public partial class ShipBuilder : Node2D
 	}
 	public void DragNode()
 	{
-		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is ShipNode shipNode)
+		if (DraggingNode != null)
 		{
 			Vector2 newPosition = new Vector2(
 				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
 				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
 			); // Snap to grid of 10 pixels
-			shipNode.GlobalPosition = newPosition;
-			GD.Print("Dragging ShipNode: " + shipNode.Name + " to position: " + newPosition);
+			DraggingNode.GlobalPosition = newPosition;
+			GD.Print("Dragging ShipNode: " + DraggingNode.Name + " to position: " + newPosition);
+
 			lines.ForEach(line =>
 			{
-				if (line.StartNode == shipNode)
+				if (line.StartNode == DraggingNode || line.EndNode == DraggingNode)
 				{
-					line.Line.Points[0] = newPosition; // Update start point of the line
-				}
-				else if (line.EndNode == shipNode)
-				{
-					line.Line.Points[1] = newPosition; // Update end point of the line
+					// Create a new points array and reassign it
+					var points = new Vector2[2];
+					points[0] = line.StartNode.GlobalPosition;
+					points[1] = line.EndNode.GlobalPosition;
+					line.Line.Points = points;
 				}
 			});
+
 			triangles.ForEach(triangle =>
 			{
-				if (triangle.point1 == shipNode || triangle.point2 == shipNode || triangle.point3 == shipNode)
+				if (triangle.point1 == DraggingNode || triangle.point2 == DraggingNode || triangle.point3 == DraggingNode)
 				{
-					triangle.mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new Godot.Collections.Array
-					{
-						triangle.point1.GlobalPosition,
-						triangle.point2.GlobalPosition,
-						triangle.point3.GlobalPosition
-					}); // Update triangle mesh with new position
+					// Update triangle position
+					triangle.UpdateTriangle();
 				}
 			});
 		}
@@ -336,6 +346,11 @@ public partial class ShipBuilder : Node2D
 			Node2D hitObject = collider as Node2D;
 			if (hitObject != null)
 			{
+				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is ShipNode)
+				{
+					GD.Print("Hit Node: " + hitObject.Name);
+					return hitObject;
+				}
 				if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
 				{
 					GD.Print("Hit Node: " + hitObject.Name);
