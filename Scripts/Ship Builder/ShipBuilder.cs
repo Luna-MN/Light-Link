@@ -32,7 +32,7 @@ public partial class ShipBuilder : Node2D
 	public List<ShipTriangle> triangles = new List<ShipTriangle>();
 	public ColorPicker colorPicker;
 	public Node2D selectedTriangle;
-	public bool isRightMouseHeld = false;
+	public bool isRightMouseHeld = false, dragging = false;
 	public Node2D shadowNode;
 	bool isMouseOverUI = false;
 	// Called when the node enters the scene tree for the first time.
@@ -85,12 +85,16 @@ public partial class ShipBuilder : Node2D
 		{
 			RemoveObject();
 		}
+		if (dragging)
+		{
+			DragNode(); // Drag the node if dragging is enabled
+		}
 		UIStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
 	}
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton mouseButtonEvent && mouseButtonEvent.IsPressed())
+		if (@event is InputEventMouseButton mouseButtonEvent)
 		{
 			if (isMouseOverUI) return;
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
@@ -98,14 +102,14 @@ public partial class ShipBuilder : Node2D
 				// Handle left mouse button click for ship building
 				if (mode == Modes.Nodes)
 				{
-					PlaceNode();
+					PlaceNode(mouseButtonEvent.IsPressed());
 				}
-				else if (mode == Modes.Lines)
+				else if (mode == Modes.Lines && mouseButtonEvent.IsPressed())
 				{
 					GD.Print("Lines mode selected, creating lines between nodes.");
 					MakeLines();
 				}
-				else if (mode == Modes.Colors)
+				else if (mode == Modes.Colors && mouseButtonEvent.IsPressed())
 				{
 					GD.Print("Colors mode selected, but no action defined yet.");
 					PickColor();
@@ -152,12 +156,14 @@ public partial class ShipBuilder : Node2D
 					colorPicker = null; // Reset color picker reference
 				}
 				GD.Print("Switched to Lines mode");
+				dragging = false; // Reset dragging state when switching modes
 			}
 			else if (keyEvent.Keycode == Key.F3)
 			{
 				mode = Modes.Colors;
 				modeText.Text = "Mode: Colors";
 				GD.Print("Switched to Colors mode");
+				dragging = false; // Reset dragging state when switching modes
 			}
 			else if (keyEvent.Keycode == Key.Escape)
 			{
@@ -172,19 +178,72 @@ public partial class ShipBuilder : Node2D
 					colorPicker.QueueFree(); // Remove color picker if it exists
 					colorPicker = null; // Reset color picker reference
 				}
+				dragging = false; // Reset dragging state on Escape key
 			}
 		}
 	}
-	public void PlaceNode()
+	public void PlaceNode(bool pressed)
 	{
-		ShipNode shipNode = new ShipNode(currentNodeType);
-		shipNode.GlobalPosition = new Vector2(
-			Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
-			Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
-		); // Snap to grid of 10 pixels
-		shipNode.Name = "ShipNode_" + shipNodes.Count;
-		shipNodes.Add(shipNode);
-		AddChild(shipNode);
+		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+		if (clickedObject is ShipNode)
+		{
+			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
+			if (pressed)
+			{
+				dragging = true; // Start dragging if the node is clicked
+			}
+			else
+			{
+				dragging = false; // Stop dragging if the mouse button is released			}
+			}
+		}
+		else if (pressed)
+		{
+			ShipNode shipNode = new ShipNode(currentNodeType);
+			shipNode.GlobalPosition = new Vector2(
+				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
+				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+			); // Snap to grid of 10 pixels
+			shipNode.Name = "ShipNode_" + shipNodes.Count;
+			shipNodes.Add(shipNode);
+			AddChild(shipNode);
+		}
+	}
+	public void DragNode()
+	{
+		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+		if (clickedObject is ShipNode shipNode)
+		{
+			Vector2 newPosition = new Vector2(
+				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
+				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+			); // Snap to grid of 10 pixels
+			shipNode.GlobalPosition = newPosition;
+			GD.Print("Dragging ShipNode: " + shipNode.Name + " to position: " + newPosition);
+			lines.ForEach(line =>
+			{
+				if (line.StartNode == shipNode)
+				{
+					line.Line.Points[0] = newPosition; // Update start point of the line
+				}
+				else if (line.EndNode == shipNode)
+				{
+					line.Line.Points[1] = newPosition; // Update end point of the line
+				}
+			});
+			triangles.ForEach(triangle =>
+			{
+				if (triangle.point1 == shipNode || triangle.point2 == shipNode || triangle.point3 == shipNode)
+				{
+					triangle.mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, new Godot.Collections.Array
+					{
+						triangle.point1.GlobalPosition,
+						triangle.point2.GlobalPosition,
+						triangle.point3.GlobalPosition
+					}); // Update triangle mesh with new position
+				}
+			});
+		}
 	}
 	public void MakeLines()
 	{
