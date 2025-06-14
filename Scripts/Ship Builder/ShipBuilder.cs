@@ -186,7 +186,7 @@ public partial class ShipBuilder : Node2D
 	public void PlaceNode(bool pressed)
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is ShipNode)
+		if (clickedObject is ShipNode || dragging)
 		{
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
@@ -220,6 +220,21 @@ public partial class ShipBuilder : Node2D
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
 			AddChild(shipNode);
+			if (clickedObject is Line2D)
+			{
+				ShipLine shipLine = lines.Find(line => line.Line == clickedObject);
+				ShipLine newLine = new ShipLine(shipNode, this);
+				newLine.SetEndNode(shipLine.StartNode);
+				lines.Add(newLine);
+
+				newLine = new ShipLine(shipNode, this);
+				newLine.SetEndNode(shipLine.EndNode);
+				lines.Add(newLine);
+				TriangleCheck(newLine); // Check for triangles
+
+				DraggingNode = shipNode; // Set the newly created node as the dragging node
+				dragging = true; // Start dragging the newly created node
+			}
 		}
 	}
 	public void DragNode()
@@ -242,6 +257,7 @@ public partial class ShipBuilder : Node2D
 					points[0] = line.StartNode.GlobalPosition;
 					points[1] = line.EndNode.GlobalPosition;
 					line.Line.Points = points;
+					line.UpdateCollisionShape();
 				}
 			});
 
@@ -351,7 +367,12 @@ public partial class ShipBuilder : Node2D
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
+				else if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is Line2D)
+				{
+					GD.Print("Hit Line: " + hitObject.Name);
+					return hitObject;
+				}
+				else if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
 				{
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
