@@ -41,7 +41,7 @@ public class ShipLine
 
         // Create a capsule shape
         var capsuleShape = new CapsuleShape2D();
-        capsuleShape.Radius = 5; // 10 pixels wide total (5 radius on each side)
+        capsuleShape.Radius = 10; // 10 pixels wide total (5 radius on each side)
         capsuleShape.Height = length;
 
         // Position and rotate the collision shape

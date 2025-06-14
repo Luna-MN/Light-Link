@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Godot;
 
@@ -66,6 +65,7 @@ public partial class ShipTriangle
     {
         if (meshInstance != null && mesh != null)
         {
+            // Update the visual mesh
             var surfaceArray = new Godot.Collections.Array();
             surfaceArray.Resize((int)Mesh.ArrayType.Max);
             surfaceArray[(int)Mesh.ArrayType.Vertex] = new Vector2[]
@@ -83,6 +83,17 @@ public partial class ShipTriangle
             };
             mesh.ClearSurfaces();
             mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
+        }
+
+        // Update the collision shape
+        if (shape != null && shape.Shape is ConvexPolygonShape2D polygonShape)
+        {
+            polygonShape.Points = new Vector2[]
+            {
+                point1.GlobalPosition,
+                point2.GlobalPosition,
+                point3.GlobalPosition
+            };
         }
     }
 }

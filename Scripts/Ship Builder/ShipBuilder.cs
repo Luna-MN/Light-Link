@@ -369,6 +369,11 @@ public partial class ShipBuilder : Node2D
 				}
 				else if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is Line2D)
 				{
+					if (shapeResults.Any(s => s["collider"] is ShipNode))
+					{
+						GD.Print("Hit Line but also hit ShipNode, ignoring Line2D: " + hitObject.Name);
+						continue;
+					}
 					GD.Print("Hit Line: " + hitObject.Name);
 					return hitObject;
 				}
