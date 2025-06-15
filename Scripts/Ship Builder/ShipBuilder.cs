@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 public partial class ShipBuilder : Node2D
 {
@@ -696,5 +697,30 @@ public partial class ShipBuilder : Node2D
 			currentNodeType = ShipNodeTypes.Power;
 			GD.Print("Selected Power node type");
 		};
+	}
+	public void SaveShip(string Name)
+	{
+		ShipSave shipSave = new ShipSave();
+		shipSave.NodePositions = new Godot.Collections.Array<Vector2>();
+		shipSave.NodeTypes = new Godot.Collections.Array<int>();
+		shipSave.DefineTriangles = new Godot.Collections.Array<int>();
+		shipSave.TriangleColors = new Godot.Collections.Array<Color>();
+
+		foreach (var node in shipNodes)
+		{
+			shipSave.NodePositions.Add(node.GlobalPosition);
+			shipSave.NodeTypes.Add((int)node.nodeType);
+		}
+
+		foreach (var triangle in triangles)
+		{
+			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point1));
+			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point2));
+			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point3));
+			shipSave.TriangleColors.Add(triangle.TriangleNode.Modulate);
+		}
+
+		ResourceSaver.Save(shipSave, $"res://{Name}.tres");
+		GD.Print("Ship saved successfully.");
 	}
 }
