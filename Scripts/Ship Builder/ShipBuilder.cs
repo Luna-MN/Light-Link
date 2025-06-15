@@ -723,4 +723,72 @@ public partial class ShipBuilder : Node2D
 		ResourceSaver.Save(shipSave, $"res://{Name}.tres");
 		GD.Print("Ship saved successfully.");
 	}
+	public void LoadShip(string Name)
+	{
+		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{Name}.tres");
+		if (shipSave == null)
+		{
+			GD.Print("Failed to load ship save.");
+			return;
+		}
+
+		// Clear existing nodes and lines
+		foreach (var node in shipNodes)
+		{
+			node.QueueFree();
+		}
+		shipNodes.Clear();
+
+		foreach (var line in lines)
+		{
+			line.Line.QueueFree();
+		}
+		lines.Clear();
+
+		foreach (var triangle in triangles)
+		{
+			triangle.TriangleNode.QueueFree();
+		}
+		triangles.Clear();
+
+		for (int i = 0; i < shipSave.NodePositions.Count; i++)
+		{
+			var node = new ShipNode((ShipNodeTypes)shipSave.NodeTypes[i]);
+			node.GlobalPosition = shipSave.NodePositions[i];
+			node.Name = "ShipNode_" + i;
+			AddChild(node);
+			shipNodes.Add(node);
+			GD.Print("Loaded ShipNode: " + node.Name + " at position: " + node.GlobalPosition);
+		}
+
+		for (int i = 0; i < shipSave.DefineTriangles.Count; i += 3)
+		{
+			var point1 = shipNodes[shipSave.DefineTriangles[i]];
+			var point2 = shipNodes[shipSave.DefineTriangles[i + 1]];
+			var point3 = shipNodes[shipSave.DefineTriangles[i + 2]];
+
+			List<ShipLine> lines = new List<ShipLine>();
+			ShipLine line1 = new ShipLine(point1, this);
+			line1.SetEndNode(point2);
+			lines.Add(line1);
+			ShipLine line2 = new ShipLine(point2, this);
+			line2.SetEndNode(point3);
+			lines.Add(line2);
+			ShipLine line3 = new ShipLine(point3, this);
+			line3.SetEndNode(point1);
+			lines.Add(line3);
+
+			var triangle = new ShipTriangle(point1, point2, point3, this, lines);
+			triangles.Add(triangle);
+
+			GD.Print("Loaded ShipTriangle with points: " + point1.Name + ", " + point2.Name + ", " + point3.Name);
+			TriangleCheck(line1); // Check for triangles after loading
+			foreach (var line in triangle.lines)
+			{
+				lines.Add(line);
+				line.UpdateCollisionShape();
+				GD.Print("Loaded ShipLine from: " + line.StartNode.Name + " to " + line.EndNode.Name);
+			}
+		}
+	}
 }
