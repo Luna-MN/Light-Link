@@ -11,7 +11,7 @@ public partial class ShipBuilder : Node2D
 	public Area2D UIArea;
 	[Export]
 	public TextEdit modeText;
-	public List<ShipNode> shipNodes = new List<ShipNode>();
+	public List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	public enum Modes
 	{
 		Nodes,
@@ -28,8 +28,8 @@ public partial class ShipBuilder : Node2D
 	public ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
 	public Modes mode = Modes.Nodes;
 	public ShipLine currentLine;
-	public List<ShipLine> lines = new List<ShipLine>();
-	public List<ShipTriangle> triangles = new List<ShipTriangle>();
+	public List<ShipLine> lines = new List<ShipLine>(); // export this to json to save ship nodes
+	public List<ShipTriangle> triangles = new List<ShipTriangle>(); // export this to json to save ship nodes
 	public ColorPicker colorPicker;
 	public Node2D selectedTriangle;
 	public bool isRightMouseHeld = false, dragging = false;
