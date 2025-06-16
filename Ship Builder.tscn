@@ -7,10 +7,10 @@ size = Vector2(174, 140)
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "UIArea", "modeText")]
 script = ExtResource("1_6ykhb")
-Weapon = NodePath("CanvasLayer/Panel/BoxContainer/Weapon")
-Shield = NodePath("CanvasLayer/Panel/BoxContainer/Shield")
-Utility = NodePath("CanvasLayer/Panel/BoxContainer/Utility")
-Power = NodePath("CanvasLayer/Panel/BoxContainer/Power")
+Weapon = NodePath("CanvasLayer/Panel/NodeSelect/Weapon")
+Shield = NodePath("CanvasLayer/Panel/NodeSelect/Shield")
+Utility = NodePath("CanvasLayer/Panel/NodeSelect/Utility")
+Power = NodePath("CanvasLayer/Panel/NodeSelect/Power")
 UIArea = NodePath("CanvasLayer/Panel/Area2D")
 modeText = NodePath("CanvasLayer/ModeText")
 
@@ -28,25 +28,25 @@ offset_bottom = 71.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="BoxContainer" type="BoxContainer" parent="CanvasLayer/Panel"]
+[node name="NodeSelect" type="BoxContainer" parent="CanvasLayer/Panel"]
 layout_mode = 0
 offset_right = 175.0
 offset_bottom = 136.0
 vertical = true
 
-[node name="Weapon" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+[node name="Weapon" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Weapon"
 
-[node name="Shield" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+[node name="Shield" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Shield"
 
-[node name="Utility" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+[node name="Utility" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Utility"
 
-[node name="Power" type="Button" parent="CanvasLayer/Panel/BoxContainer"]
+[node name="Power" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Power"
 
@@ -61,7 +61,7 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -103.5
-offset_right = 103.5
+offset_right = 96.5
 offset_bottom = 40.0
 grow_horizontal = 2
 text = "Mode: Nodes"
@@ -73,3 +73,83 @@ deselect_on_focus_loss_enabled = false
 drag_and_drop_selection_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
+
+[node name="Save_Load" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -98.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Save To File" type="Button" parent="CanvasLayer/Save_Load"]
+layout_mode = 2
+text = "Save To File"
+
+[node name="Button" type="Button" parent="CanvasLayer/Save_Load"]
+layout_mode = 2
+text = "Load From File"
+
+[node name="Resource Panel" type="Panel" parent="CanvasLayer"]
+offset_right = 206.0
+offset_bottom = 155.0
+
+[node name="BoxContainer" type="BoxContainer" parent="CanvasLayer/Resource Panel"]
+custom_minimum_size = Vector2(0, 8.885)
+layout_mode = 0
+offset_right = 206.0
+offset_bottom = 154.0
+alignment = 1
+vertical = true
+
+[node name="Metal" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+layout_mode = 2
+text = "Metal:"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+scroll_fit_content_height = true
+
+[node name="Ice" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+layout_mode = 2
+text = "Ice:"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+scroll_fit_content_height = true
+
+[node name="Carbon" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+layout_mode = 2
+text = "Carbon:"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+scroll_fit_content_height = true
+
+[node name="Gas" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+layout_mode = 2
+text = "Gas:"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+scroll_fit_content_height = true
