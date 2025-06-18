@@ -5,12 +5,14 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5t5c"]
 size = Vector2(174, 140)
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "UIArea", "modeText")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "UIArea", "modeText")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("CanvasLayer/Panel/NodeSelect/Shield")
 Utility = NodePath("CanvasLayer/Panel/NodeSelect/Utility")
 Power = NodePath("CanvasLayer/Panel/NodeSelect/Power")
+SaveButton = NodePath("CanvasLayer/Save_Load/Save To File")
+LoadButton = NodePath("CanvasLayer/Save_Load/Load From File")
 UIArea = NodePath("CanvasLayer/Panel/Area2D")
 modeText = NodePath("CanvasLayer/ModeText")
 
@@ -86,7 +88,7 @@ grow_horizontal = 0
 layout_mode = 2
 text = "Save To File"
 
-[node name="Button" type="Button" parent="CanvasLayer/Save_Load"]
+[node name="Load From File" type="Button" parent="CanvasLayer/Save_Load"]
 layout_mode = 2
 text = "Load From File"
 

@@ -9,6 +9,8 @@ public partial class ShipBuilder : Node2D
 	[Export]
 	public Button Weapon, Shield, Utility, Power;
 	[Export]
+	public Button SaveButton, LoadButton;
+	[Export]
 	public Area2D UIArea;
 	[Export]
 	public TextEdit modeText;
@@ -63,6 +65,7 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUI);
 		};
 		Buttons(); // Initialize button actions
+		LoadButtons(); // Load button actions
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -696,6 +699,19 @@ public partial class ShipBuilder : Node2D
 		{
 			currentNodeType = ShipNodeTypes.Power;
 			GD.Print("Selected Power node type");
+		};
+	}
+	public void LoadButtons()
+	{
+		SaveButton.ButtonDown += () =>
+		{
+			GD.Print("Save button pressed");
+			SaveShip("MyShip"); // Replace with your desired ship name
+		};
+		LoadButton.ButtonDown += () =>
+		{
+			GD.Print("Load button pressed");
+			LoadShip("MyShip"); // Replace with your desired ship name
 		};
 	}
 	public void SaveShip(string Name)
