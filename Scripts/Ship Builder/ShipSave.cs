@@ -10,4 +10,5 @@ public partial class ShipSave : Godot.Resource
     // Store triangle data
     [Export] public Godot.Collections.Array<int> DefineTriangles { get; set; } = new();
     [Export] public Godot.Collections.Array<Color> TriangleColors { get; set; } = new();
+    [Export] public Godot.Collections.Array<Vector2I> Lines { get; set; } = new();
 }

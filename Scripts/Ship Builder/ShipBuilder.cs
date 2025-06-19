@@ -735,7 +735,13 @@ public partial class ShipBuilder : Node2D
 			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point3));
 			shipSave.TriangleColors.Add(triangle.TriangleNode.Modulate);
 		}
-
+		shipSave.Lines = new Godot.Collections.Array<Vector2I>();
+		foreach (var line in lines)
+		{
+			int startIdx = shipNodes.IndexOf(line.StartNode);
+			int endIdx = shipNodes.IndexOf(line.EndNode);
+			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
+		}
 		ResourceSaver.Save(shipSave, $"res://{Name}.tres");
 		GD.Print("Ship saved successfully.");
 	}
@@ -767,6 +773,7 @@ public partial class ShipBuilder : Node2D
 		}
 		triangles.Clear();
 
+		// Load nodes
 		for (int i = 0; i < shipSave.NodePositions.Count; i++)
 		{
 			var node = new ShipNode((ShipNodeTypes)shipSave.NodeTypes[i]);
@@ -777,33 +784,83 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Loaded ShipNode: " + node.Name + " at position: " + node.GlobalPosition);
 		}
 
-		for (int i = 0; i < shipSave.DefineTriangles.Count; i += 3)
+		// Load lines
+		foreach (var linePair in shipSave.Lines)
 		{
-			var point1 = shipNodes[shipSave.DefineTriangles[i]];
-			var point2 = shipNodes[shipSave.DefineTriangles[i + 1]];
-			var point3 = shipNodes[shipSave.DefineTriangles[i + 2]];
+			var startNode = shipNodes[linePair.X];
+			var endNode = shipNodes[linePair.Y];
+			var line = new ShipLine(startNode, this);
+			line.SetEndNode(endNode);
+			lines.Add(line);
+		}
 
-			List<ShipLine> lines = new List<ShipLine>();
-			ShipLine line1 = new ShipLine(point1, this);
-			line1.SetEndNode(point2);
-			lines.Add(line1);
-			ShipLine line2 = new ShipLine(point2, this);
-			line2.SetEndNode(point3);
-			lines.Add(line2);
-			ShipLine line3 = new ShipLine(point3, this);
-			line3.SetEndNode(point1);
-			lines.Add(line3);
+		// Now rebuild all triangles based on the lines
+		RebuildAllTriangles();
 
-			var triangle = new ShipTriangle(point1, point2, point3, this, lines);
-			triangles.Add(triangle);
-
-			GD.Print("Loaded ShipTriangle with points: " + point1.Name + ", " + point2.Name + ", " + point3.Name);
-			TriangleCheck(line1); // Check for triangles after loading
-			foreach (var line in triangle.lines)
+		// Optionally, restore triangle colors if you saved them
+		int colorIndex = 0;
+		foreach (var triangle in triangles)
+		{
+			if (shipSave.TriangleColors.Count > colorIndex)
 			{
-				lines.Add(line);
-				line.UpdateCollisionShape();
-				GD.Print("Loaded ShipLine from: " + line.StartNode.Name + " to " + line.EndNode.Name);
+				triangle.TriangleNode.Modulate = shipSave.TriangleColors[colorIndex];
+				colorIndex++;
+			}
+		}
+	}
+	public void RebuildAllTriangles()
+	{
+		// Remove all existing triangles
+		foreach (var triangle in triangles)
+		{
+			triangle.TriangleNode.QueueFree();
+		}
+
+		triangles.Clear();
+
+		// Check all combinations of three nodes
+		for (int i = 0; i < shipNodes.Count; i++)
+		{
+			for (int j = i + 1; j < shipNodes.Count; j++)
+			{
+				for (int k = j + 1; k < shipNodes.Count; k++)
+				{
+					ShipNode a = shipNodes[i];
+					ShipNode b = shipNodes[j];
+					ShipNode c = shipNodes[k];
+
+					// Check if all three lines exist between these nodes
+					bool ab = lines.Any(l =>
+						(l.StartNode == a && l.EndNode == b) || (l.StartNode == b && l.EndNode == a));
+					bool bc = lines.Any(l =>
+						(l.StartNode == b && l.EndNode == c) || (l.StartNode == c && l.EndNode == b));
+					bool ca = lines.Any(l =>
+						(l.StartNode == c && l.EndNode == a) || (l.StartNode == a && l.EndNode == c));
+
+					if (ab && bc && ca)
+					{
+						// Avoid duplicate triangles
+						bool triangleExists = triangles.Any(t =>
+							(t.point1 == a || t.point2 == a || t.point3 == a) &&
+							(t.point1 == b || t.point2 == b || t.point3 == b) &&
+							(t.point1 == c || t.point2 == c || t.point3 == c)
+						);
+						if (!triangleExists)
+						{
+							List<ShipLine> triangleLines = new List<ShipLine>
+							{
+								lines.Find(l =>
+									(l.StartNode == a && l.EndNode == b) || (l.StartNode == b && l.EndNode == a)),
+								lines.Find(l =>
+									(l.StartNode == b && l.EndNode == c) || (l.StartNode == c && l.EndNode == b)),
+								lines.Find(l =>
+									(l.StartNode == c && l.EndNode == a) || (l.StartNode == a && l.EndNode == c))
+							};
+							ShipTriangle triangle = new ShipTriangle(a, b, c, this, triangleLines);
+							triangles.Add(triangle);
+						}
+					}
+				}
 			}
 		}
 	}
