@@ -2,7 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 public partial class ShipBuilder : Node2D
 {
@@ -11,10 +10,10 @@ public partial class ShipBuilder : Node2D
 	[Export]
 	public Button SaveButton, LoadButton;
 	[Export]
-	public Area2D UIArea;
+	private Area2D uiArea;
 	[Export]
-	public TextEdit modeText;
-	public List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
+	private TextEdit modeText;
+	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	public enum Modes
 	{
 		Nodes,
@@ -28,17 +27,17 @@ public partial class ShipBuilder : Node2D
 		Utility,
 		Power,
 	}
-	public ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
-	public Modes mode = Modes.Nodes;
-	public ShipLine currentLine;
-	public List<ShipLine> lines = new List<ShipLine>(); // export this to json to save ship nodes
-	public List<ShipTriangle> triangles = new List<ShipTriangle>(); // export this to json to save ship nodes
-	public ColorPicker colorPicker;
-	public Node2D selectedTriangle;
-	public bool isRightMouseHeld = false, dragging = false;
-	public Node2D shadowNode;
-	bool isMouseOverUI = false;
-	ShipNode DraggingNode = null;
+	private ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
+	private Modes mode = Modes.Nodes;
+	private ShipLine currentLine;
+	private List<ShipLine> lines = new List<ShipLine>(); // export this to json to save ship nodes
+	private List<ShipTriangle> triangles = new List<ShipTriangle>(); // export this to json to save ship nodes
+	private ColorPicker colorPicker;
+	private Node2D selectedTriangle;
+	private bool isRightMouseHeld = false, dragging = false;
+	private Node2D shadowNode;
+	private bool isMouseOverUi = false;
+	private ShipNode draggingNode = null;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -54,15 +53,15 @@ public partial class ShipBuilder : Node2D
 		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
 		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
 
-		UIArea.MouseEntered += () =>
+		uiArea.MouseEntered += () =>
 		{
-			isMouseOverUI = true; // Set flag when mouse enters UI area
-			GD.Print("Mouse entered UI area, hiding shadow node." + isMouseOverUI);
+			isMouseOverUi = true; // Set flag when mouse enters UI area
+			GD.Print("Mouse entered UI area, hiding shadow node." + isMouseOverUi);
 		};
-		UIArea.MouseExited += () =>
+		uiArea.MouseExited += () =>
 		{
-			isMouseOverUI = false; // Reset flag when mouse exits UI area
-			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUI);
+			isMouseOverUi = false; // Reset flag when mouse exits UI area
+			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUi);
 		};
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
@@ -94,11 +93,11 @@ public partial class ShipBuilder : Node2D
 		{
 			DragNode(); // Drag the node if dragging is enabled
 		}
-		UIStop(); // Check if mouse is over UI and update shadow node visibility
+		UiStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
 	}
-	public void CheckForOverlappingNodes()
+	private void CheckForOverlappingNodes()
 	{
 		// Create a list to track which nodes we've already checked
 		HashSet<ShipNode> checkedNodes = new HashSet<ShipNode>();
@@ -130,9 +129,9 @@ public partial class ShipBuilder : Node2D
 	}
 	public override void _Input(InputEvent @event)
 	{
+		if (isMouseOverUi) return;
 		if (@event is InputEventMouseButton mouseButtonEvent)
 		{
-			if (isMouseOverUI) return;
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
 			{
 				// Handle left mouse button click for ship building
@@ -205,7 +204,7 @@ public partial class ShipBuilder : Node2D
 			{
 				if (currentLine != null)
 				{
-					currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
+					currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 					lines.Remove(currentLine); // Remove the current line from the list
 					currentLine = null; // Reset current line on Escape key
 				}
@@ -220,22 +219,23 @@ public partial class ShipBuilder : Node2D
 	}
 	public void PlaceNode(bool pressed)
 	{
+		if (isMouseOverUi) return;
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
 		if (clickedObject is ShipNode || dragging)
 		{
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
 			{
-				DraggingNode = (ShipNode)clickedObject;
+				draggingNode = (ShipNode)clickedObject;
 				dragging = true; // Start dragging if the node is clicked
 			}
 			else
 			{
-				if (DraggingNode != null)
+				if (draggingNode != null)
 				{
-					GD.Print("Released ShipNode: " + DraggingNode.Name);
-					CheckNodeLocation(DraggingNode);
-					DraggingNode = null; // Stop dragging if the mouse button is released
+					GD.Print("Released ShipNode: " + draggingNode.Name);
+					CheckNodeLocation(draggingNode);
+					draggingNode = null; // Stop dragging if the mouse button is released
 				}
 				dragging = false; // Stop dragging if the mouse button is released
 			}
@@ -268,7 +268,7 @@ public partial class ShipBuilder : Node2D
 				lines.Add(newLine);
 				TriangleCheck(newLine); // Check for triangles
 
-				DraggingNode = shipNode; // Set the newly created node as the dragging node
+				draggingNode = shipNode; // Set the newly created node as the dragging node
 				dragging = true; // Start dragging the newly created node
 			}
 		}
@@ -363,23 +363,23 @@ public partial class ShipBuilder : Node2D
 			}
 
 			// Update connected nodes lists
-			foreach (var connectedNode in node.connectedNodes)
+			foreach (var connectedNode in node.ConnectedNodes)
 			{
 				if (connectedNode != overlappingNode)
 				{
 					// Remove the old node from connected nodes
-					connectedNode.connectedNodes.Remove(node);
+					connectedNode.ConnectedNodes.Remove(node);
 
 					// Add the overlapping node if not already connected
-					if (!connectedNode.connectedNodes.Contains(overlappingNode))
+					if (!connectedNode.ConnectedNodes.Contains(overlappingNode))
 					{
-						connectedNode.connectedNodes.Add(overlappingNode);
+						connectedNode.ConnectedNodes.Add(overlappingNode);
 					}
 
 					// Add this node to overlapping node's connections if not already there
-					if (!overlappingNode.connectedNodes.Contains(connectedNode))
+					if (!overlappingNode.ConnectedNodes.Contains(connectedNode))
 					{
-						overlappingNode.connectedNodes.Add(connectedNode);
+						overlappingNode.ConnectedNodes.Add(connectedNode);
 					}
 				}
 			}
@@ -390,20 +390,20 @@ public partial class ShipBuilder : Node2D
 			GD.Print($"Node {node.Name} has been merged into {overlappingNode.Name}");
 		}
 	}
-	public void DragNode()
+	private void DragNode()
 	{
-		if (DraggingNode != null)
+		if (draggingNode != null)
 		{
 			Vector2 newPosition = new Vector2(
 				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
 				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
 			); // Snap to grid of 10 pixels
-			DraggingNode.GlobalPosition = newPosition;
-			GD.Print("Dragging ShipNode: " + DraggingNode.Name + " to position: " + newPosition);
+			draggingNode.GlobalPosition = newPosition;
+			GD.Print("Dragging ShipNode: " + draggingNode.Name + " to position: " + newPosition);
 
 			lines.ForEach(line =>
 			{
-				if (line.StartNode == DraggingNode || line.EndNode == DraggingNode)
+				if (line.StartNode == draggingNode || line.EndNode == draggingNode)
 				{
 					// Create a new points array and reassign it
 					var points = new Vector2[2];
@@ -416,7 +416,7 @@ public partial class ShipBuilder : Node2D
 
 			triangles.ForEach(triangle =>
 			{
-				if (triangle.point1 == DraggingNode || triangle.point2 == DraggingNode || triangle.point3 == DraggingNode)
+				if (triangle.point1 == draggingNode || triangle.point2 == draggingNode || triangle.point3 == draggingNode)
 				{
 					// Update triangle position
 					triangle.UpdateTriangle();
@@ -424,7 +424,7 @@ public partial class ShipBuilder : Node2D
 			});
 		}
 	}
-	public void MakeLines()
+	private void MakeLines()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
 		GD.Print("Current Line: " + currentLine?.StartNode?.Name);
@@ -445,7 +445,7 @@ public partial class ShipBuilder : Node2D
 					{
 						// If a line already exists between the clicked node and the current line's start node
 						GD.Print("Line already exists with this node, resetting current line.");
-						currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
+						currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 						currentLine = null; // Reset current line
 						return;
 					}
@@ -453,7 +453,7 @@ public partial class ShipBuilder : Node2D
 				if (clickedShipNode == currentLine.StartNode)
 				{
 					GD.Print("Clicked on the start node, resetting current line.");
-					currentLine.StartNode.Modulate = currentLine.StartNode.nodeColor; // Reset color of the start node
+					currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 					currentLine = null; // Reset current line
 					return;
 				}
@@ -470,9 +470,9 @@ public partial class ShipBuilder : Node2D
 		}
 		GD.Print("Lines count: " + lines.Count);
 	}
-	public void UIStop()
+	private void UiStop()
 	{
-		if (isMouseOverUI)
+		if (isMouseOverUi)
 		{
 			shadowNode.Visible = false; // Hide shadow node if mouse is over UI
 		}
@@ -512,8 +512,7 @@ public partial class ShipBuilder : Node2D
 
 			GodotObject collider = result["collider"].As<GodotObject>();
 
-			Node2D hitObject = collider as Node2D;
-			if (hitObject != null)
+			if (collider is Node2D hitObject)
 			{
 				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is ShipNode)
 				{
@@ -549,11 +548,11 @@ public partial class ShipBuilder : Node2D
 		}
 		return null;
 	}
-	public void TriangleCheck(ShipLine line)
+	private void TriangleCheck(ShipLine line)
 	{
-		foreach (ShipNode node in line.StartNode.connectedNodes)
+		foreach (ShipNode node in line.StartNode.ConnectedNodes)
 		{
-			if (line.EndNode.connectedNodes.Contains(node))
+			if (line.EndNode.ConnectedNodes.Contains(node))
 			{
 				// We have a triangle, so we need to remove the line
 				GD.Print("Triangle detected");
@@ -576,7 +575,7 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public void PickColor()
+	private void PickColor()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
 		if (clickedObject is not ShipNode)
@@ -584,7 +583,7 @@ public partial class ShipBuilder : Node2D
 			if (clickedObject != selectedTriangle || colorPicker == null)
 			{
 				GD.Print("Picked color for ShipNode: " + clickedObject.Name);
-				colorPicker?.QueueFree(); // Remove previous color picker if it exists
+				colorPicker?.QueueFree(); // Remove the previous color picker if it exists
 				colorPicker = new ColorPicker();
 				selectedTriangle = clickedObject;
 				AddChild(colorPicker);
@@ -592,7 +591,7 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public void RemoveObject()
+	private void RemoveObject()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject(2)?.GetParent();
 		if (clickedObject != null)
@@ -605,10 +604,10 @@ public partial class ShipBuilder : Node2D
 
 				// Remove all lines connected to this node
 				var linesToRemove = lines.Where(line => line.StartNode == shipNode || line.EndNode == shipNode).ToList();
-				var removeNodes = shipNodes.Where(n => n.connectedNodes.Contains(shipNode)).ToList();
+				var removeNodes = shipNodes.Where(n => n.ConnectedNodes.Contains(shipNode)).ToList();
 				foreach (var n in removeNodes)
 				{
-					n.connectedNodes.Remove(shipNode);
+					n.ConnectedNodes.Remove(shipNode);
 				}
 				foreach (var line in linesToRemove)
 				{
@@ -636,8 +635,8 @@ public partial class ShipBuilder : Node2D
 				{
 					lines.Remove(shipLine);
 					shipLine.Line.QueueFree(); // Remove the line from the scene
-					shipLine.StartNode.connectedNodes.Remove(shipLine.EndNode);
-					shipLine.EndNode.connectedNodes.Remove(shipLine.StartNode);
+					shipLine.StartNode.ConnectedNodes.Remove(shipLine.EndNode);
+					shipLine.EndNode.ConnectedNodes.Remove(shipLine.StartNode);
 
 					var trianglesWithLine = triangles.Where(t => t.lines.Contains(shipLine)).ToList();
 					foreach (var t in trianglesWithLine)
@@ -645,7 +644,7 @@ public partial class ShipBuilder : Node2D
 						triangles.Remove(t);
 						t.TriangleNode.QueueFree(); // Remove the triangle from the scene
 					}
-					currentLine = null; // Reset current line if it was the one being edited
+					currentLine = null; // Reset the current line if it was the one being edited
 										// Remove the line from any triangles that contain it
 				}
 			}
@@ -655,7 +654,7 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public void MoveShadowNode()
+	private void MoveShadowNode()
 	{
 		if (mode != Modes.Nodes)
 		{
@@ -678,7 +677,7 @@ public partial class ShipBuilder : Node2D
 			); // Snap to grid of 10 pixels
 		}
 	}
-	public void Buttons()
+	private void Buttons()
 	{
 		Weapon.ButtonDown += () =>
 		{
@@ -701,20 +700,20 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Selected Power node type");
 		};
 	}
-	public void LoadButtons()
+	private void LoadButtons()
 	{
 		SaveButton.ButtonDown += () =>
 		{
 			GD.Print("Save button pressed");
-			SaveShip("MyShip"); // Replace with your desired ship name
+			SaveShip("MyShip"); // Replace it with your desired ship name
 		};
 		LoadButton.ButtonDown += () =>
 		{
 			GD.Print("Load button pressed");
-			LoadShip("MyShip"); // Replace with your desired ship name
+			LoadShip("MyShip"); // Replace it with your desired ship name
 		};
 	}
-	public void SaveShip(string Name)
+	private void SaveShip(string name)
 	{
 		ShipSave shipSave = new ShipSave();
 		shipSave.NodePositions = new Godot.Collections.Array<Vector2>();
@@ -725,7 +724,7 @@ public partial class ShipBuilder : Node2D
 		foreach (var node in shipNodes)
 		{
 			shipSave.NodePositions.Add(node.GlobalPosition);
-			shipSave.NodeTypes.Add((int)node.nodeType);
+			shipSave.NodeTypes.Add((int)node.NodeType);
 		}
 
 		foreach (var triangle in triangles)
@@ -742,12 +741,12 @@ public partial class ShipBuilder : Node2D
 			int endIdx = shipNodes.IndexOf(line.EndNode);
 			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
 		}
-		ResourceSaver.Save(shipSave, $"res://{Name}.tres");
+		ResourceSaver.Save(shipSave, $"res://{name}.tres");
 		GD.Print("Ship saved successfully.");
 	}
-	public void LoadShip(string Name)
+	private void LoadShip(string name)
 	{
-		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{Name}.tres");
+		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{name}.tres");
 		if (shipSave == null)
 		{
 			GD.Print("Failed to load ship save.");
@@ -808,7 +807,7 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public void RebuildAllTriangles()
+	private void RebuildAllTriangles()
 	{
 		// Remove all existing triangles
 		foreach (var triangle in triangles)
@@ -837,29 +836,26 @@ public partial class ShipBuilder : Node2D
 					bool ca = lines.Any(l =>
 						(l.StartNode == c && l.EndNode == a) || (l.StartNode == a && l.EndNode == c));
 
-					if (ab && bc && ca)
+					if (!ab || !bc || !ca) continue;
+					
+					// Avoid duplicate triangles
+					bool triangleExists = triangles.Any(t =>
+						(t.point1 == a || t.point2 == a || t.point3 == a) &&
+						(t.point1 == b || t.point2 == b || t.point3 == b) &&
+						(t.point1 == c || t.point2 == c || t.point3 == c)
+					);
+					if (triangleExists) continue;
+					var triangleLines = new List<ShipLine>
 					{
-						// Avoid duplicate triangles
-						bool triangleExists = triangles.Any(t =>
-							(t.point1 == a || t.point2 == a || t.point3 == a) &&
-							(t.point1 == b || t.point2 == b || t.point3 == b) &&
-							(t.point1 == c || t.point2 == c || t.point3 == c)
-						);
-						if (!triangleExists)
-						{
-							List<ShipLine> triangleLines = new List<ShipLine>
-							{
-								lines.Find(l =>
-									(l.StartNode == a && l.EndNode == b) || (l.StartNode == b && l.EndNode == a)),
-								lines.Find(l =>
-									(l.StartNode == b && l.EndNode == c) || (l.StartNode == c && l.EndNode == b)),
-								lines.Find(l =>
-									(l.StartNode == c && l.EndNode == a) || (l.StartNode == a && l.EndNode == c))
-							};
-							ShipTriangle triangle = new ShipTriangle(a, b, c, this, triangleLines);
-							triangles.Add(triangle);
-						}
-					}
+						lines.Find(l =>
+							(l.StartNode == a && l.EndNode == b) || (l.StartNode == b && l.EndNode == a)),
+						lines.Find(l =>
+							(l.StartNode == b && l.EndNode == c) || (l.StartNode == c && l.EndNode == b)),
+						lines.Find(l =>
+							(l.StartNode == c && l.EndNode == a) || (l.StartNode == a && l.EndNode == c))
+					};
+					ShipTriangle triangle = new ShipTriangle(a, b, c, this, triangleLines);
+					triangles.Add(triangle);
 				}
 			}
 		}
