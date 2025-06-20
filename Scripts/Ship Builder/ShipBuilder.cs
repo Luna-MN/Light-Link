@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 public partial class ShipBuilder : Node2D
@@ -13,6 +14,8 @@ public partial class ShipBuilder : Node2D
 	private Area2D uiArea;
 	[Export]
 	private TextEdit modeText;
+	[Export] 
+	public PackedScene FileSelectScene;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	public enum Modes
 	{
@@ -705,16 +708,45 @@ public partial class ShipBuilder : Node2D
 		SaveButton.ButtonDown += () =>
 		{
 			GD.Print("Save button pressed");
-			SaveShip("MyShip"); // Replace it with your desired ship name
+			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
+			sf.Position = Vector2.Zero;
+			AddChild(sf);
+			sf.Save = true;
+			isMouseOverUi = true;
+			sf.Select.ButtonDown += () =>
+			{
+				SaveShip(sf.SavePath.Text);
+				isMouseOverUi = false;
+				sf.QueueFree();
+			};
+
 		};
 		LoadButton.ButtonDown += () =>
 		{
 			GD.Print("Load button pressed");
-			LoadShip("MyShip"); // Replace it with your desired ship name
+			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
+			sf.Position = Vector2.Zero;
+			AddChild(sf);
+			sf.Save = false;
+			isMouseOverUi = true;
+			sf.Select.ButtonDown += () =>
+			{
+				LoadShip(sf.SelectedFilePath);
+				isMouseOverUi = false;
+				sf.QueueFree();
+			};
+
 		};
 	}
-	private void SaveShip(string name)
+	private void SaveShip(string path)
 	{
+		var directory = path.Split("\\");
+		foreach (var dir in directory)
+		{
+			if(dir == directory[^1]) continue;
+			Directory.CreateDirectory(dir);
+		}
+		path = directory[^1];
 		ShipSave shipSave = new ShipSave();
 		shipSave.NodePositions = new Godot.Collections.Array<Vector2>();
 		shipSave.NodeTypes = new Godot.Collections.Array<int>();
@@ -741,12 +773,12 @@ public partial class ShipBuilder : Node2D
 			int endIdx = shipNodes.IndexOf(line.EndNode);
 			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
 		}
-		ResourceSaver.Save(shipSave, $"res://{name}.tres");
+		ResourceSaver.Save(shipSave, $"res://{path}.tres");
 		GD.Print("Ship saved successfully.");
 	}
-	private void LoadShip(string name)
+	private void LoadShip(string path)
 	{
-		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{name}.tres");
+		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{path}.tres");
 		if (shipSave == null)
 		{
 			GD.Print("Failed to load ship save.");

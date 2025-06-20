@@ -9,8 +9,11 @@ public partial class SelectFile : Control
 	[Export] public GridContainer FileList;
 	[Export] public Button Browse, Select;
 	[Export] public PackedScene FileItem;
+	[Export] public TextEdit SavePath;
 	private List<ShipPreview> fileItems = new List<ShipPreview>();
-	private string selectedFilePath;
+	
+	public string SelectedFilePath;
+	public bool Save;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -51,7 +54,7 @@ public partial class SelectFile : Control
 				fileItemInstance.Name = fileName;
 				fileItemInstance.Select.ButtonDown += () =>
 				{
-					selectedFilePath = fileItemInstance.FilePath;
+					SelectedFilePath = fileItemInstance.FilePath;
 				};
 				fileItems.Add(fileItemInstance);
 			}

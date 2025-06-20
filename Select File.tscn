@@ -1,15 +1,19 @@
 [gd_scene load_steps=2 format=3 uid="uid://cd8x33jwldoc4"]
 
-[ext_resource type="Script" path="res://Scripts/Ship Builder/SelecFile.cs" id="1_2m2d0"]
+[ext_resource type="Script" path="res://Scripts/Ship Builder/SelectFile.cs" id="1_wqt7y"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" node_paths=PackedStringArray("FileList", "Browse", "Select", "SavePath")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_2m2d0")
+script = ExtResource("1_wqt7y")
+FileList = NodePath("Panel/GridContainer")
+Browse = NodePath("Panel/Browse")
+Select = NodePath("Panel/Button2")
+SavePath = NodePath("Panel/TextEdit")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
