@@ -16,12 +16,13 @@ layout_mode = 0
 offset_right = 1151.0
 offset_bottom = 648.0
 
-[node name="BoxContainer" type="BoxContainer" parent="Panel"]
+[node name="GridContainer" type="GridContainer" parent="Panel"]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 78.0
 offset_right = 1122.0
 offset_bottom = 528.0
+columns = 5
 
 [node name="TextEdit" type="TextEdit" parent="Panel"]
 layout_mode = 0

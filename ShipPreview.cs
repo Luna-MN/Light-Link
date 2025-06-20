@@ -4,6 +4,8 @@ using System;
 public partial class ShipPreview : Control
 {
 	[Export] public TextEdit Text;
+	[Export] public string FilePath;
+	[Export] public Button Select;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{

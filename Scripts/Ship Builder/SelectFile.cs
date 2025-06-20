@@ -1,19 +1,24 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 public partial class SelectFile : Control
 {
-	[Export] public BoxContainer FileList;
+	[Export] public GridContainer FileList;
 	[Export] public Button Browse, Select;
 	[Export] public PackedScene FileItem;
 	private List<ShipPreview> fileItems = new List<ShipPreview>();
-
+	private string selectedFilePath;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
+		if (!Directory.Exists("MyShips"))
+		{
+			Directory.CreateDirectory("MyShips");
+		}
+		FindFiles("MyShips");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -42,9 +47,13 @@ public partial class SelectFile : Control
 				ShipPreview fileItemInstance = (ShipPreview)FileItem.Instantiate();
 				FileList.AddChild(fileItemInstance);
 				fileItemInstance.Text.Text = fileName;
+				fileItemInstance.FilePath = path + "/" + fileName;
 				fileItemInstance.Name = fileName;
+				fileItemInstance.Select.ButtonDown += () =>
+				{
+					selectedFilePath = fileItemInstance.FilePath;
+				};
 				fileItems.Add(fileItemInstance);
-				
 			}
 
 			fileName = dir.GetNext();
