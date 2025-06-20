@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd8x33jwldoc4"]
+
+[ext_resource type="Script" path="res://Scripts/Ship Builder/SelecFile.cs" id="1_2m2d0"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2m2d0")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1151.0
+offset_bottom = 648.0
+
+[node name="BoxContainer" type="BoxContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 78.0
+offset_right = 1122.0
+offset_bottom = 528.0
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 9.0
+offset_right = 122.0
+offset_bottom = 55.0
+text = "Select A File"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+
+[node name="Browse" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 592.0
+offset_right = 141.0
+offset_bottom = 630.0
+text = "Browse"
+
+[node name="Button2" type="Button" parent="Panel"]
+offset_left = 1019.0
+offset_top = 593.0
+offset_right = 1139.0
+offset_bottom = 631.0
+text = "Select"
+
+[node name="TextEdit2" type="TextEdit" parent="Panel"]
+offset_left = 342.0
+offset_top = 594.0
+offset_right = 802.0
+offset_bottom = 640.0
+text = "Name File"
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
