@@ -10,8 +10,8 @@ public partial class SelectFile : Control
 	[Export] public Button Browse, Select;
 	[Export] public PackedScene FileItem;
 	[Export] public TextEdit SavePath;
-	private List<ShipPreview> fileItems = new List<ShipPreview>();
-	
+	private Color defaultButtonColor;
+	public ShipPreview SelectedPreview;
 	public string SelectedFilePath;
 	public bool Save;
 	// Called when the node enters the scene tree for the first time.
@@ -58,16 +58,20 @@ public partial class SelectFile : Control
 				ShipPreview fileItemInstance = (ShipPreview)FileItem.Instantiate();
 				FileList.AddChild(fileItemInstance);
 				fileItemInstance.Text.Text = fileName;
+				defaultButtonColor = fileItemInstance.Select.Modulate;
 				fileItemInstance.FilePath = path + "/" + fileName;
 				fileItemInstance.Name = fileName;
 				fileItemInstance.Select.ButtonDown += () =>
 				{
 					SelectedFilePath = fileItemInstance.FilePath;
+					SelectedPreview ??= fileItemInstance;
+					SelectedPreview.Select.Modulate = defaultButtonColor;
+					SelectedPreview = fileItemInstance;
+					SelectedPreview.Select.Modulate = Colors.Cyan;
 				};
-				fileItemInstance.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-				fileItemInstance.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+				fileItemInstance.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+				fileItemInstance.SizeFlagsVertical = SizeFlags.ExpandFill;
 				fileItemInstance.CustomMinimumSize = new Vector2(150, 100);
-				fileItems.Add(fileItemInstance);
 			}
 
 			fileName = dir.GetNext();
