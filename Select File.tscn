@@ -17,15 +17,17 @@ SavePath = NodePath("Panel/TextEdit")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_right = 1151.0
-offset_bottom = 648.0
+offset_left = 59.0
+offset_top = 49.0
+offset_right = 1074.0
+offset_bottom = 600.0
 
 [node name="GridContainer" type="GridContainer" parent="Panel"]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 78.0
-offset_right = 1122.0
-offset_bottom = 528.0
+offset_right = 970.0
+offset_bottom = 484.0
 columns = 5
 
 [node name="TextEdit" type="TextEdit" parent="Panel"]
@@ -47,25 +49,25 @@ middle_mouse_paste_enabled = false
 [node name="Browse" type="Button" parent="Panel"]
 layout_mode = 0
 offset_left = 21.0
-offset_top = 592.0
+offset_top = 497.0
 offset_right = 141.0
-offset_bottom = 630.0
+offset_bottom = 535.0
 text = "Browse"
 
 [node name="Button2" type="Button" parent="Panel"]
 layout_mode = 0
-offset_left = 1019.0
-offset_top = 593.0
-offset_right = 1139.0
-offset_bottom = 631.0
+offset_left = 881.0
+offset_top = 504.0
+offset_right = 1001.0
+offset_bottom = 542.0
 text = "Select"
 
 [node name="TextEdit2" type="TextEdit" parent="Panel"]
 layout_mode = 0
 offset_left = 342.0
-offset_top = 594.0
+offset_top = 496.0
 offset_right = 802.0
-offset_bottom = 640.0
+offset_bottom = 542.0
 placeholder_text = "Name File"
 context_menu_enabled = false
 shortcut_keys_enabled = false

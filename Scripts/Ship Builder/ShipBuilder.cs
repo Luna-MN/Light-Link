@@ -719,6 +719,8 @@ public partial class ShipBuilder : Node2D
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
 			AddChild(sf);
+			sf.ZIndex = 1000000;
+			sf.TopLevel = true;
 			sf.Save = true;
 			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>
@@ -734,7 +736,11 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Load button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
-			AddChild(sf);
+			CanvasLayer topLayer = new CanvasLayer();
+			topLayer.Layer = 100;  // High layer value
+			AddChild(topLayer);
+			topLayer.AddChild(sf);
+
 			sf.Save = false;
 			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>

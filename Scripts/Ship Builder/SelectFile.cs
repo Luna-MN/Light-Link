@@ -47,6 +47,7 @@ public partial class SelectFile : Control
 			if (!dir.CurrentIsDir() && !fileName.StartsWith("."))
 			{
 				// Create file item
+				GD.Print("Adding file: " + fileName);
 				ShipPreview fileItemInstance = (ShipPreview)FileItem.Instantiate();
 				FileList.AddChild(fileItemInstance);
 				fileItemInstance.Text.Text = fileName;
