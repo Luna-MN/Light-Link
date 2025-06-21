@@ -851,6 +851,19 @@ public partial class ShipBuilder : Node2D
 			if (shipSave.TriangleColors.Count > colorIndex)
 			{
 				triangle.TriangleNode.Modulate = shipSave.TriangleColors[colorIndex];
+				foreach (var line in triangle.lines)
+				{
+					var pickedColor = shipSave.TriangleColors[colorIndex];
+					bool isDark = pickedColor is { R: < 0.2f, G: < 0.2f, B: < 0.2f };
+					if (!isDark)
+					{
+						line.Line.Modulate = pickedColor;
+					}
+					else
+					{
+						line.Line.Modulate = new Color(0.5f, 0.5f, 0.5f, 1);
+					}
+				}
 				colorIndex++;
 			}
 		}
