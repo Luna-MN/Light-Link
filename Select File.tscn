@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cd8x33jwldoc4"]
+[gd_scene load_steps=3 format=3 uid="uid://cd8x33jwldoc4"]
 
 [ext_resource type="Script" path="res://Scripts/Ship Builder/SelectFile.cs" id="1_wqt7y"]
+[ext_resource type="PackedScene" uid="uid://2k7lpufka3x0" path="res://Ship Preview.tscn" id="2_hucrc"]
 
 [node name="Control" type="Control" node_paths=PackedStringArray("FileList", "Browse", "Select", "SavePath")]
 layout_mode = 3
@@ -13,6 +14,7 @@ script = ExtResource("1_wqt7y")
 FileList = NodePath("Panel/GridContainer")
 Browse = NodePath("Panel/Browse")
 Select = NodePath("Panel/Button2")
+FileItem = ExtResource("2_hucrc")
 SavePath = NodePath("Panel/TextEdit")
 
 [node name="Panel" type="Panel" parent="."]

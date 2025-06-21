@@ -19,9 +19,9 @@ public partial class SelectFile : Control
 	{
 		if (!Directory.Exists("MyShips"))
 		{
-			Directory.CreateDirectory("MyShips");
+			Directory.CreateDirectory("res://MyShips");
 		}
-		FindFiles("MyShips");
+		FindFiles("res://MyShips");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,6 +31,9 @@ public partial class SelectFile : Control
 
 	public void FindFiles(string path)
 	{
+		GD.Print($"Looking for files in: {path}");
+		GD.Print($"Absolute path: {ProjectSettings.GlobalizePath(path)}");
+
 		DirAccess dir = DirAccess.Open(path);
 		if (dir == null)
 		{

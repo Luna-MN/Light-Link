@@ -718,9 +718,10 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Save button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
-			AddChild(sf);
-			sf.ZIndex = 1000000;
-			sf.TopLevel = true;
+			CanvasLayer topLayer = new CanvasLayer();
+			topLayer.Layer = 100;  // High layer value
+			AddChild(topLayer);
+			topLayer.AddChild(sf);
 			sf.Save = true;
 			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>
@@ -754,6 +755,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void SaveShip(string path)
 	{
+		if (path == "") return;
 		var directory = path.Split("\\");
 		foreach (var dir in directory)
 		{
@@ -787,12 +789,12 @@ public partial class ShipBuilder : Node2D
 			int endIdx = shipNodes.IndexOf(line.EndNode);
 			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
 		}
-		ResourceSaver.Save(shipSave, $"res://{path}.tres");
+		ResourceSaver.Save(shipSave, $"{path}");
 		GD.Print("Ship saved successfully.");
 	}
 	private void LoadShip(string path)
 	{
-		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"res://{path}.tres");
+		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"{path}");
 		if (shipSave == null)
 		{
 			GD.Print("Failed to load ship save.");
