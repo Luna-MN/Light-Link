@@ -615,7 +615,19 @@ public partial class ShipBuilder : Node2D
 			{
 				GD.Print("Picked color for ShipNode: " + clickedObject.Name);
 				colorPicker?.QueueFree(); // Remove the previous color picker if it exists
-				colorPicker = new ColorPicker();
+				colorPicker = new ColorPicker()
+				{
+					SamplerVisible = false,
+					ColorModesVisible = false,
+					SlidersVisible = false,
+					HexVisible = false,
+					PresetsVisible = false,
+				};
+				colorPicker.Position = new Vector2(0, GetViewportRect().Size.Y - 300);
+				colorPicker.CustomMinimumSize = new Vector2(300, 300);
+				colorPicker.AnchorBottom = 1;
+				colorPicker.AnchorLeft = 0;
+				
 				selectedTriangle = clickedObject;
 				AddChild(colorPicker);
 				// Implement color picking logic here
@@ -757,6 +769,7 @@ public partial class ShipBuilder : Node2D
 					.OfType<CanvasLayer>() 
 					.ToList()
 					.ForEach(canvasLayer => canvasLayer.Visible = true);
+				topLayer.QueueFree();
 			};
 
 		};
@@ -785,6 +798,7 @@ public partial class ShipBuilder : Node2D
 					.OfType<CanvasLayer>() 
 					.ToList()
 					.ForEach(canvasLayer => canvasLayer.Visible = true);
+				topLayer.QueueFree();
 			};
 		};
 	}
@@ -818,7 +832,9 @@ public partial class ShipBuilder : Node2D
 			int endIdx = shipNodes.IndexOf(line.EndNode);
 			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
 		}
-
+		var rc = new Godot.Collections.Array<int>();
+		rc.AddRange(ResourceCount);
+		shipSave.ResourceCounts = rc;
 		if (!path.Contains('\\'))
 		{
 			path = $"MyShips\\{path}.tres";

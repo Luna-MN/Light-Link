@@ -14,4 +14,5 @@ public partial class ShipSave : Godot.Resource
     
     // Node Types
     [Export] public Godot.Collections.Array<int> NodeType { get; set; } = new();
+    [Export] public Godot.Collections.Array<int> ResourceCounts { get; set; } = new();
 }
