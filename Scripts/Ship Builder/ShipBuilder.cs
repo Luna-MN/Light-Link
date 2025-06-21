@@ -772,13 +772,7 @@ public partial class ShipBuilder : Node2D
 	private void SaveShip(string path)
 	{
 		if (path == "") return;
-		var directory = path.Split("\\");
-		foreach (var dir in directory)
-		{
-			if(dir == directory[^1]) continue;
-			Directory.CreateDirectory(dir);
-		}
-		path = directory[^1];
+		
 		ShipSave shipSave = new ShipSave();
 		shipSave.NodePositions = new Godot.Collections.Array<Vector2>();
 		shipSave.NodeTypes = new Godot.Collections.Array<int>();
@@ -805,7 +799,12 @@ public partial class ShipBuilder : Node2D
 			int endIdx = shipNodes.IndexOf(line.EndNode);
 			shipSave.Lines.Add(new Vector2I(startIdx, endIdx));
 		}
-		ResourceSaver.Save(shipSave, $"{path}");
+
+		if (!path.Contains('\\'))
+		{
+			path = $"MyShips\\{path}.tres";
+		}
+		ResourceSaver.Save(shipSave, $"{path}.tres");
 		GD.Print("Ship saved successfully.");
 	}
 	private void LoadShip(string path)

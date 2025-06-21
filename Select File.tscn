@@ -15,7 +15,7 @@ FileList = NodePath("Panel/GridContainer")
 Browse = NodePath("Panel/Browse")
 Select = NodePath("Panel/Button2")
 FileItem = ExtResource("2_hucrc")
-SavePath = NodePath("Panel/TextEdit")
+SavePath = NodePath("Panel/TextEdit2")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
