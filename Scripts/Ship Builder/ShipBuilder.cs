@@ -843,28 +843,17 @@ public partial class ShipBuilder : Node2D
 
 		// Now rebuild all triangles based on the lines
 		RebuildAllTriangles();
-
-		// Optionally, restore triangle colors if you saved them
-		int colorIndex = 0;
-		foreach (var triangle in triangles)
+		
+		for (var index = 0; index < triangles.Count; index++)
 		{
-			if (shipSave.TriangleColors.Count > colorIndex)
+			var triangle = triangles[index];
+			if (shipSave.TriangleColors.Count <= index) continue;
+			triangle.TriangleNode.Modulate = shipSave.TriangleColors[index];
+			foreach (var line in triangle.lines)
 			{
-				triangle.TriangleNode.Modulate = shipSave.TriangleColors[colorIndex];
-				foreach (var line in triangle.lines)
-				{
-					var pickedColor = shipSave.TriangleColors[colorIndex];
-					bool isDark = pickedColor is { R: < 0.2f, G: < 0.2f, B: < 0.2f };
-					if (!isDark)
-					{
-						line.Line.Modulate = pickedColor;
-					}
-					else
-					{
-						line.Line.Modulate = new Color(0.5f, 0.5f, 0.5f, 1);
-					}
-				}
-				colorIndex++;
+				var pickedColor = shipSave.TriangleColors[index];
+				bool isDark = pickedColor is { R: < 0.2f, G: < 0.2f, B: < 0.2f };
+				line.Line.Modulate = !isDark ? pickedColor : new Color(0.5f, 0.5f, 0.5f, 1);
 			}
 		}
 	}
