@@ -53,6 +53,7 @@ offset_bottom = 630.0
 text = "Browse"
 
 [node name="Button2" type="Button" parent="Panel"]
+layout_mode = 0
 offset_left = 1019.0
 offset_top = 593.0
 offset_right = 1139.0
@@ -60,12 +61,12 @@ offset_bottom = 631.0
 text = "Select"
 
 [node name="TextEdit2" type="TextEdit" parent="Panel"]
+layout_mode = 0
 offset_left = 342.0
 offset_top = 594.0
 offset_right = 802.0
 offset_bottom = 640.0
-text = "Name File"
-editable = false
+placeholder_text = "Name File"
 context_menu_enabled = false
 shortcut_keys_enabled = false
 selecting_enabled = false

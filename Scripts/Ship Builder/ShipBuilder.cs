@@ -37,9 +37,9 @@ public partial class ShipBuilder : Node2D
 	private List<ShipTriangle> triangles = new List<ShipTriangle>(); // export this to json to save ship nodes
 	private ColorPicker colorPicker;
 	private Node2D selectedTriangle;
-	private bool isRightMouseHeld = false, dragging = false;
+	private bool isRightMouseHeld, dragging;
 	private Node2D shadowNode;
-	private bool isMouseOverUi = false;
+	private bool isMouseOverUi, fileSelectMenu, uiElement;
 	private ShipNode draggingNode = null;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -73,6 +73,14 @@ public partial class ShipBuilder : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (isMouseOverUi || fileSelectMenu)
+		{
+			uiElement = true;
+		}
+		else if (!isMouseOverUi && !fileSelectMenu)
+		{
+			uiElement = false;
+		}
 		if (colorPicker != null)
 		{
 			selectedTriangle.Modulate = colorPicker.Color;
@@ -132,7 +140,7 @@ public partial class ShipBuilder : Node2D
 	}
 	public override void _Input(InputEvent @event)
 	{
-		if (isMouseOverUi) return;
+		if (uiElement) return;
 		if (@event is InputEventMouseButton mouseButtonEvent)
 		{
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
@@ -222,7 +230,7 @@ public partial class ShipBuilder : Node2D
 	}
 	public void PlaceNode(bool pressed)
 	{
-		if (isMouseOverUi) return;
+		if (uiElement) return;
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
 		if (clickedObject is ShipNode || dragging)
 		{
@@ -475,7 +483,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void UiStop()
 	{
-		if (isMouseOverUi)
+		if (uiElement)
 		{
 			shadowNode.Visible = false; // Hide shadow node if mouse is over UI
 		}
@@ -659,7 +667,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void MoveShadowNode()
 	{
-		if (mode != Modes.Nodes)
+		if (mode != Modes.Nodes || uiElement)
 		{
 			shadowNode.Visible = false; // Hide shadow node if not in Nodes mode
 		}
@@ -712,11 +720,11 @@ public partial class ShipBuilder : Node2D
 			sf.Position = Vector2.Zero;
 			AddChild(sf);
 			sf.Save = true;
-			isMouseOverUi = true;
+			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>
 			{
 				SaveShip(sf.SavePath.Text);
-				isMouseOverUi = false;
+				fileSelectMenu = true;
 				sf.QueueFree();
 			};
 
@@ -728,11 +736,11 @@ public partial class ShipBuilder : Node2D
 			sf.Position = Vector2.Zero;
 			AddChild(sf);
 			sf.Save = false;
-			isMouseOverUi = true;
+			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>
 			{
 				LoadShip(sf.SelectedFilePath);
-				isMouseOverUi = false;
+				fileSelectMenu = true;
 				sf.QueueFree();
 			};
 
