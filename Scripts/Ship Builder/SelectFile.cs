@@ -21,6 +21,10 @@ public partial class SelectFile : Control
 		{
 			Directory.CreateDirectory("res://MyShips");
 		}
+		FileList.CustomMinimumSize = new Vector2(600, 400); 
+		FileList.AddThemeConstantOverride("h_separation", 10);
+		FileList.AddThemeConstantOverride("v_separation", 10);
+		
 		FindFiles("res://MyShips");
 	}
 
@@ -60,6 +64,9 @@ public partial class SelectFile : Control
 				{
 					SelectedFilePath = fileItemInstance.FilePath;
 				};
+				fileItemInstance.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+				fileItemInstance.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+				fileItemInstance.CustomMinimumSize = new Vector2(150, 100);
 				fileItems.Add(fileItemInstance);
 			}
 
