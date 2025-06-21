@@ -9,7 +9,7 @@ size = Vector2(174, 140)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_37mrm"]
 size = Vector2(113, 64)
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "modeText")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "modeText", "WeaponText", "ShieldText", "UtilityText", "PowerText")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("CanvasLayer/Panel/NodeSelect/Shield")
@@ -20,6 +20,10 @@ LoadButton = NodePath("CanvasLayer/Save_Load/Load From File")
 uiArea = NodePath("CanvasLayer/Panel/Area2D")
 modeText = NodePath("CanvasLayer/ModeText")
 FileSelectScene = ExtResource("2_3af54")
+WeaponText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Metal")
+ShieldText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Ice")
+UtilityText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Carbon")
+PowerText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Gas")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

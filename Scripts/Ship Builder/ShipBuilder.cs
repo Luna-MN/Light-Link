@@ -16,6 +16,8 @@ public partial class ShipBuilder : Node2D
 	private TextEdit modeText;
 	[Export] 
 	public PackedScene FileSelectScene;
+	[Export] 
+	public TextEdit WeaponText, ShieldText, UtilityText, PowerText;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	public enum Modes
 	{
@@ -41,6 +43,7 @@ public partial class ShipBuilder : Node2D
 	private Node2D shadowNode;
 	private bool isMouseOverUi, fileSelectMenu, uiElement;
 	private ShipNode draggingNode = null;
+	public int[] ResourceCount; // Resources for Weapon, Shield, Utility, Power nodes
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -107,6 +110,23 @@ public partial class ShipBuilder : Node2D
 		UiStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
+
+		SetResourceCount();
+	}
+
+	private void SetResourceCount()
+	{		
+		ResourceCount = new[]
+		{
+			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Weapon),
+			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Shield),
+			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Utility),
+			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Power),
+		};
+		WeaponText.Text = "Metal: " + ResourceCount[0] * 10;
+		ShieldText.Text = "Ice: " + ResourceCount[1] * 10;
+		UtilityText.Text = "Carbon: " + ResourceCount[2] * 10;
+		PowerText.Text = "Gas: " + ResourceCount[3] * 10;
 	}
 	private void CheckForOverlappingNodes()
 	{

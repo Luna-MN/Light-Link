@@ -24,8 +24,8 @@ public partial class SelectFile : Control
 			Directory.CreateDirectory("res://MyShips");
 		}
 		FileList.CustomMinimumSize = new Vector2(600, 400); 
-		FileList.AddThemeConstantOverride("h_separation", 10);
-		FileList.AddThemeConstantOverride("v_separation", 10);
+		FileList.AddThemeConstantOverride("h_separation", 5);
+		FileList.AddThemeConstantOverride("v_separation", 5);
 		
 		FindFiles("res://MyShips");
 	}
