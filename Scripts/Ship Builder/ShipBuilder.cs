@@ -718,6 +718,10 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Save button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
+			GetChildren()
+				.OfType<CanvasLayer>()
+				.ToList()
+				.ForEach(canvasLayer => canvasLayer.Visible = false);
 			CanvasLayer topLayer = new CanvasLayer();
 			topLayer.Layer = 100;  // High layer value
 			AddChild(topLayer);
@@ -729,6 +733,10 @@ public partial class ShipBuilder : Node2D
 				SaveShip(sf.SavePath.Text);
 				fileSelectMenu = true;
 				sf.QueueFree();
+				GetChildren()
+					.OfType<CanvasLayer>() 
+					.ToList()
+					.ForEach(canvasLayer => canvasLayer.Visible = true);
 			};
 
 		};
@@ -737,6 +745,10 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Load button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
+			GetChildren()
+				.OfType<CanvasLayer>() 
+				.ToList()
+				.ForEach(canvasLayer => canvasLayer.Visible = false);
 			CanvasLayer topLayer = new CanvasLayer();
 			topLayer.Layer = 100;  // High layer value
 			AddChild(topLayer);
@@ -749,6 +761,10 @@ public partial class ShipBuilder : Node2D
 				LoadShip(sf.SelectedFilePath);
 				fileSelectMenu = true;
 				sf.QueueFree();
+				GetChildren()
+					.OfType<CanvasLayer>() 
+					.ToList()
+					.ForEach(canvasLayer => canvasLayer.Visible = true);
 			};
 
 		};
