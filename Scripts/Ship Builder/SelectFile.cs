@@ -14,6 +14,8 @@ public partial class SelectFile : Control
 	public ShipPreview SelectedPreview;
 	public string SelectedFilePath;
 	public bool Save;
+	private int myShipCount = 0;
+	public string MyShipPath;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -50,10 +52,14 @@ public partial class SelectFile : Control
 
 		while (!string.IsNullOrEmpty(fileName))
 		{
+			if (fileName.Contains("MyShip"))
+			{
+				myShipCount++;
+			}
 			// Skip directories and hidden files
 			if (!dir.CurrentIsDir() && !fileName.StartsWith("."))
 			{
-				// Create file item
+				// Create a file item
 				GD.Print("Adding file: " + fileName);
 				ShipPreview fileItemInstance = (ShipPreview)FileItem.Instantiate();
 				FileList.AddChild(fileItemInstance);
@@ -78,5 +84,6 @@ public partial class SelectFile : Control
 		}
 
 		dir.ListDirEnd();
+		MyShipPath = myShipCount != 0 ? $"MyShip_{myShipCount}" : "MyShip";
 	}
 }

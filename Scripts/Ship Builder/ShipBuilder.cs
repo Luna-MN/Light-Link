@@ -730,7 +730,7 @@ public partial class ShipBuilder : Node2D
 			fileSelectMenu = true;
 			sf.Select.ButtonDown += () =>
 			{
-				SaveShip(sf.SavePath.Text);
+				SaveShip(sf.SavePath.Text == "" ? sf.MyShipPath : sf.SavePath.Text);
 				fileSelectMenu = true;
 				sf.QueueFree();
 				GetChildren()
@@ -746,7 +746,7 @@ public partial class ShipBuilder : Node2D
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
 			GetChildren()
-				.OfType<CanvasLayer>() 
+				.OfType<CanvasLayer>()
 				.ToList()
 				.ForEach(canvasLayer => canvasLayer.Visible = false);
 			CanvasLayer topLayer = new CanvasLayer();
@@ -766,7 +766,6 @@ public partial class ShipBuilder : Node2D
 					.ToList()
 					.ForEach(canvasLayer => canvasLayer.Visible = true);
 			};
-
 		};
 	}
 	private void SaveShip(string path)
