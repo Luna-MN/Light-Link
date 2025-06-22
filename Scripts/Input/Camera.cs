@@ -9,8 +9,8 @@ public partial class Camera : Camera2D
     public float MinZoom = 0.1f;
     public float MaxZoom = 5.0f;
     public bool SmoothZoom = true;
-    public bool SmoothFocus = false; // New variable to control smooth focus
-    private bool isDragging = false;
+    public bool SmoothFocus; // New variable to control smooth focus
+    private bool isDragging;
     private Vector2 dragOrigin;
     private Vector2 targetZoom = new Vector2(1, 1);
     private float zoomDamping = 10.0f;

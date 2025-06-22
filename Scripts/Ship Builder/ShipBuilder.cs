@@ -281,8 +281,8 @@ public partial class ShipBuilder : Node2D
 			}
 			ShipNode shipNode = new ShipNode(currentNodeType);
 			shipNode.GlobalPosition = new Vector2(
-				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
-				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
 			); // Snap to grid of 10 pixels
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
@@ -426,8 +426,8 @@ public partial class ShipBuilder : Node2D
 		if (draggingNode != null)
 		{
 			Vector2 newPosition = new Vector2(
-				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
-				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
 			); // Snap to grid of 10 pixels
 			draggingNode.GlobalPosition = newPosition;
 			GD.Print("Dragging ShipNode: " + draggingNode.Name + " to position: " + newPosition);
@@ -715,8 +715,8 @@ public partial class ShipBuilder : Node2D
 				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
 			};
 			shadowNode.GlobalPosition = new Vector2(
-				Mathf.Round(GetGlobalMousePosition().X / 10) * 10,
-				Mathf.Round(GetGlobalMousePosition().Y / 10) * 10
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
 			); // Snap to grid of 10 pixels
 		}
 	}

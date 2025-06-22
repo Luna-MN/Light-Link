@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://6c42xyyau74k"]
+[gd_scene load_steps=7 format=3 uid="uid://6c42xyyau74k"]
 
 [ext_resource type="Script" path="res://Scripts/Ship Builder/ShipBuilder.cs" id="1_6ykhb"]
 [ext_resource type="PackedScene" uid="uid://cd8x33jwldoc4" path="res://Select File.tscn" id="2_3af54"]
+[ext_resource type="Script" path="res://Scripts/Ship Builder/ShipBuilderCamera.cs" id="3_ncxx8"]
+[ext_resource type="Script" path="res://Scripts/Ship Builder/DrawLines.cs" id="4_4ngq5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v5t5c"]
 size = Vector2(174, 140)
@@ -171,3 +173,7 @@ scroll_fit_content_height = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 323)
+script = ExtResource("3_ncxx8")
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource("4_4ngq5")
