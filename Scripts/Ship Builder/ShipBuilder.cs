@@ -107,10 +107,14 @@ public partial class ShipBuilder : Node2D
 		{
 			DragNode(); // Drag the node if dragging is enabled
 		}
+
+		if (!Input.IsMouseButtonPressed(MouseButton.Left))
+		{
+			dragging = false;
+		}
 		UiStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
-
 		SetResourceCount();
 	}
 
@@ -252,7 +256,8 @@ public partial class ShipBuilder : Node2D
 	{
 		if (uiElement) return;
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is ShipNode || dragging)
+		if (clickedObject is Line2D) return;
+		if (clickedObject is ShipNode || dragging )
 		{
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
@@ -550,9 +555,9 @@ public partial class ShipBuilder : Node2D
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				else if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is Line2D)
+				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is Line2D)
 				{
-					if (shapeResults.Any(s => s["collider"] is ShipNode))
+					if (shapeResults.Any(s => ((Node2D)s["collider"]).GetParent() is ShipNode))
 					{
 						GD.Print("Hit Line but also hit ShipNode, ignoring Line2D: " + hitObject.Name);
 						continue;
@@ -560,17 +565,17 @@ public partial class ShipBuilder : Node2D
 					GD.Print("Hit Line: " + hitObject.Name);
 					return hitObject;
 				}
-				else if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
+				if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
 				{
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				else if (mode != Modes.Lines || buttonIndex == 2)
+				if (mode != Modes.Lines || buttonIndex == 2)
 				{
 					GD.Print("Hit object: " + hitObject.Name);
 					return hitObject;
 				}
-				else if (buttonIndex == 2 && !hitObject.GetParent().Name.ToString().Contains("ShipTriangle"))
+				if (buttonIndex == 2 && !hitObject.GetParent().Name.ToString().Contains("ShipTriangle"))
 				{
 					GD.Print("Didn't hit ShipTriangle: " + hitObject.Name);
 					return hitObject;
@@ -835,6 +840,7 @@ public partial class ShipBuilder : Node2D
 		var rc = new Godot.Collections.Array<int>();
 		rc.AddRange(ResourceCount);
 		shipSave.ResourceCounts = rc;
+		shipSave.MeanNode = GetShipMeanNode();
 		if (!path.Contains('\\'))
 		{
 			path = $"MyShips\\{path}.tres";
@@ -959,5 +965,25 @@ public partial class ShipBuilder : Node2D
 				}
 			}
 		}
+	}
+
+	private Node2D GetShipMeanNode()
+	{
+		List<Vector2> positions = new List<Vector2>();
+		positions.AddRange(shipNodes.Select(n => n.GlobalPosition));
+		Vector2 mean = new Vector2();
+		foreach (var position in positions)
+		{
+			mean += position;
+		}
+		mean /= positions.Count;
+		var meanNode = new Node2D
+		{
+			Name = "MeanNode",
+			Visible = false,
+			Position = mean
+		};
+		AddChild(meanNode);
+		return meanNode;
 	}
 }
