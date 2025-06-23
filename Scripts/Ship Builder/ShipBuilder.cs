@@ -696,6 +696,20 @@ public partial class ShipBuilder : Node2D
 										// Remove the line from any triangles that contain it
 				}
 			}
+			else if (clickedObject is Node2D triangleNode && clickedObject is not ShipNode)
+			{
+				var triangle = triangles.Find(t => t.TriangleNode == triangleNode);
+				if (triangle != null)
+				{
+					foreach (var triangleLine in triangle.lines)
+					{
+						lines.Remove(triangleLine);
+						triangleLine.Line.QueueFree();
+					}
+					triangles.Remove(triangle);
+					triangle.TriangleNode.QueueFree();
+				}
+			}
 			else
 			{
 				GD.Print("Clicked on an unhandled object: " + clickedObject.Name);
