@@ -116,6 +116,10 @@ public partial class ShipBuilder : Node2D
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
 		SetResourceCount();
+		if (currentLine != null)
+		{
+			currentLine.LineFollowMouse();
+		}
 	}
 
 	private void SetResourceCount()
@@ -241,6 +245,7 @@ public partial class ShipBuilder : Node2D
 				{
 					currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 					lines.Remove(currentLine); // Remove the current line from the list
+					currentLine.Line.QueueFree();
 					currentLine = null; // Reset current line on Escape key
 				}
 				if (colorPicker != null)
@@ -709,10 +714,6 @@ public partial class ShipBuilder : Node2D
 					triangles.Remove(triangle);
 					triangle.TriangleNode.QueueFree();
 				}
-			}
-			else
-			{
-				GD.Print("Clicked on an unhandled object: " + clickedObject.Name);
 			}
 		}
 	}

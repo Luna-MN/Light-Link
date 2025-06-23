@@ -59,7 +59,6 @@ public partial class ShipTriangle
         };
         area.AddChild(shape);
         TriangleNode.AddChild(area);
-
     }
     public void UpdateTriangle()
     {

@@ -77,4 +77,16 @@ public class ShipLine
             }
         }
     }
+
+    public void LineFollowMouse()
+    {
+        if (Line == null)
+        {
+            Line = new Line2D();
+            Line.Width = 2;
+            Line.DefaultColor = Colors.White;
+            shipBuilder.AddChild(Line);
+        }
+        Line.Points = new Vector2[] { StartNode.GlobalPosition, shipBuilder.GetGlobalMousePosition() };
+    }
 }
