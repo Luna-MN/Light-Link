@@ -277,11 +277,11 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public void PlaceNode(bool pressed)
+	private void PlaceNode(bool pressed)
 	{
 		if (uiElement) return;
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is Line2D) return;
+		// if (clickedObject is Line2D) return;
 		if (clickedObject is ShipNode || dragging )
 		{
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
@@ -341,19 +341,18 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 
-		if (!pressed)
+		if (pressed) return;
+		if (dragging) return;
+		isMouseDown = false;
+		dragging = false;
+		draggingNode = null; // Stop dragging if the mouse button is released
+		if (!isMouseDown && !createdLast && mouseDownTime < dragStartDelay)
 		{
-			isMouseDown = false;
-			dragging = false;
-			draggingNode = null; // Stop dragging if the mouse button is released
-			if (!isMouseDown && !createdLast && mouseDownTime < dragStartDelay)
-			{
-				MakeLines();
-			}
-			mouseDownTime = 0f;
-			isPressed = false;
-			createdLast = false;
+			MakeLines();
 		}
+		mouseDownTime = 0f;
+		isPressed = false;
+		createdLast = false;
 	}
 	public void CheckNodeLocation(ShipNode node)
 	{

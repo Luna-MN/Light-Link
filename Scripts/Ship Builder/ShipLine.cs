@@ -21,7 +21,11 @@ public class ShipLine
     }
     public void SetEndNode(ShipNode end)
     {
-        Line.QueueFree();
+        if (EndNode != null)
+        {
+            Line.QueueFree();
+        }
+
         EndNode = end;
         Line = new Line2D();
         Line.Points = new Vector2[] { StartNode.GlobalPosition, EndNode.GlobalPosition };
