@@ -20,6 +20,8 @@ public partial class ShipBuilder : Node2D
 	public TextEdit WeaponText, ShieldText, UtilityText, PowerText;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
+	private bool isMouseDown, isPressed, createdLast;
+	private float mouseDownTime, dragStartDelay = 0.3f;
 	public enum Modes
 	{
 		Nodes,
@@ -120,6 +122,23 @@ public partial class ShipBuilder : Node2D
 		if (currentLine != null)
 		{
 			currentLine.LineFollowMouse();
+		}
+
+		if (isMouseDown)
+		{
+			mouseDownTime += (float)delta;
+
+			if (mouseDownTime > 0.5f)
+			{
+				isPressed = true;
+				if (isPressed)
+				{
+					Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
+					draggingNode = (ShipNode)clickedObject;
+					dragging = true; // Start dragging if the node is clicked
+				}
+
+			}
 		}
 	}
 
@@ -268,10 +287,16 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
 			{
-				draggingNode = (ShipNode)clickedObject;
-				dragging = true; // Start dragging if the node is clicked
+				isMouseDown = true;
+				mouseDownTime = 0f;
 			}
 			else
+			{
+				isMouseDown = false;
+				dragging = false;
+			}
+
+			if(!isMouseDown)
 			{
 				if (draggingNode != null)
 				{
@@ -298,6 +323,7 @@ public partial class ShipBuilder : Node2D
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
 			AddChild(shipNode);
+			createdLast = true;
 			if (clickedObject is Line2D)
 			{
 				ShipLine shipLine = lines.Find(line => line.Line == clickedObject);
@@ -313,6 +339,20 @@ public partial class ShipBuilder : Node2D
 				draggingNode = shipNode; // Set the newly created node as the dragging node
 				dragging = true; // Start dragging the newly created node
 			}
+		}
+
+		if (!pressed)
+		{
+			isMouseDown = false;
+			dragging = false;
+			draggingNode = null; // Stop dragging if the mouse button is released
+			if (!isMouseDown && !createdLast && mouseDownTime < dragStartDelay)
+			{
+				MakeLines();
+			}
+			mouseDownTime = 0f;
+			isPressed = false;
+			createdLast = false;
 		}
 	}
 	public void CheckNodeLocation(ShipNode node)
