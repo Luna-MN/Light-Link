@@ -5,7 +5,7 @@ public partial class DrawLines : Node2D
 {
     [Export] public int MaxSize = 2000;
     [Export] public float VisibleRadius = 100.0f; // Radius of the visibility circle around the mouse
-    [Export] public float GridSpacing = 10.0f; // Space between grid lines
+    [Export] public float GridSpacing = 20.0f; // Space between grid lines
     [Export] public float LineWidth = 0.25f; // Width of the grid lines
     [Export] public float FadeStartRadius = 0.1f; // Percentage of the radius where fading starts (0.0-1.0)
     

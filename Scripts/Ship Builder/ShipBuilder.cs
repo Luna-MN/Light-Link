@@ -18,6 +18,7 @@ public partial class ShipBuilder : Node2D
 	public PackedScene FileSelectScene;
 	[Export] 
 	public TextEdit WeaponText, ShieldText, UtilityText, PowerText;
+	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	public enum Modes
 	{
@@ -291,8 +292,8 @@ public partial class ShipBuilder : Node2D
 			}
 			ShipNode shipNode = new ShipNode(currentNodeType);
 			shipNode.GlobalPosition = new Vector2(
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
 			); // Snap to grid of 10 pixels
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
@@ -436,8 +437,8 @@ public partial class ShipBuilder : Node2D
 		if (draggingNode != null)
 		{
 			Vector2 newPosition = new Vector2(
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
 			); // Snap to grid of 10 pixels
 			draggingNode.GlobalPosition = newPosition;
 			GD.Print("Dragging ShipNode: " + draggingNode.Name + " to position: " + newPosition);
@@ -735,8 +736,8 @@ public partial class ShipBuilder : Node2D
 				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
 			};
 			shadowNode.GlobalPosition = new Vector2(
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / 10) * 10, 0, 2000),
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / 10) * 10, 0, 2000)
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
 			); // Snap to grid of 10 pixels
 		}
 	}
