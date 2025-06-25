@@ -22,6 +22,7 @@ public partial class ShipBuilder : Node2D
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	private bool isMouseDown, isPressed, createdLast;
 	private float mouseDownTime, dragStartDelay = 0.3f;
+	private bool placing = true; 
 	public enum Modes
 	{
 		Nodes,
@@ -198,16 +199,6 @@ public partial class ShipBuilder : Node2D
 				{
 					PlaceNode(mouseButtonEvent.IsPressed());
 				}
-				else if (mode == Modes.Lines && mouseButtonEvent.IsPressed())
-				{
-					GD.Print("Lines mode selected, creating lines between nodes.");
-					MakeLines();
-				}
-				else if (mode == Modes.Colors && mouseButtonEvent.IsPressed())
-				{
-					GD.Print("Colors mode selected, but no action defined yet.");
-					PickColor();
-				}
 				// Add your ship building logic here
 			}
 
@@ -240,18 +231,6 @@ public partial class ShipBuilder : Node2D
 				}
 				GD.Print("Switched to Nodes mode");
 			}
-			else if (keyEvent.Keycode == Key.F2)
-			{
-				mode = Modes.Lines;
-				modeText.Text = "Mode: Lines";
-				if (colorPicker != null)
-				{
-					colorPicker.QueueFree(); // Remove color picker if it exists
-					colorPicker = null; // Reset color picker reference
-				}
-				GD.Print("Switched to Lines mode");
-				dragging = false; // Reset dragging state when switching modes
-			}
 			else if (keyEvent.Keycode == Key.F3)
 			{
 				mode = Modes.Colors;
@@ -274,6 +253,7 @@ public partial class ShipBuilder : Node2D
 					colorPicker = null; // Reset color picker reference
 				}
 				dragging = false; // Reset dragging state on Escape key
+				placing = true;
 			}
 		}
 	}
@@ -307,7 +287,12 @@ public partial class ShipBuilder : Node2D
 				dragging = false; // Stop dragging if the mouse button is released
 			}
 		}
-		else if (pressed)
+		else if (clickedObject != null && clickedObject is not Line2D)
+		{
+			PickColor();
+			placing = false;
+		}
+		else if (pressed && placing)
 		{
 			bool nodeExists = shipNodes.Any(node => node.GlobalPosition == GetGlobalMousePosition());
 			if (nodeExists)
@@ -759,7 +744,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void MoveShadowNode()
 	{
-		if (mode != Modes.Nodes || uiElement)
+		if (mode != Modes.Nodes || uiElement || !placing)
 		{
 			shadowNode.Visible = false; // Hide shadow node if not in Nodes mode
 		}

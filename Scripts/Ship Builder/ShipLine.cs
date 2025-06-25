@@ -21,7 +21,7 @@ public class ShipLine
     }
     public void SetEndNode(ShipNode end)
     {
-        if (EndNode != null)
+        if (EndNode != null || Line != null)
         {
             Line.QueueFree();
         }
