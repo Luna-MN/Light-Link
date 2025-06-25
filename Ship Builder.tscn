@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://6c42xyyau74k"]
+[gd_scene load_steps=8 format=3 uid="uid://6c42xyyau74k"]
 
 [ext_resource type="Script" path="res://Scripts/Ship Builder/ShipBuilder.cs" id="1_6ykhb"]
 [ext_resource type="PackedScene" uid="uid://cd8x33jwldoc4" path="res://Select File.tscn" id="2_3af54"]
@@ -11,7 +11,10 @@ size = Vector2(174, 140)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_37mrm"]
 size = Vector2(113, 64)
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "modeText", "WeaponText", "ShieldText", "UtilityText", "PowerText")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kcor4"]
+size = Vector2(188, 37)
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("CanvasLayer/Panel/NodeSelect/Shield")
@@ -20,12 +23,14 @@ Power = NodePath("CanvasLayer/Panel/NodeSelect/Power")
 SaveButton = NodePath("CanvasLayer/Save_Load/Save To File")
 LoadButton = NodePath("CanvasLayer/Save_Load/Load From File")
 uiArea = NodePath("CanvasLayer/Panel/Area2D")
-modeText = NodePath("CanvasLayer/ModeText")
 FileSelectScene = ExtResource("2_3af54")
 WeaponText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Metal")
 ShieldText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Ice")
 UtilityText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Carbon")
 PowerText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Gas")
+NodeButton = NodePath("CanvasLayer/HBoxContainer/Nodes")
+LineButton = NodePath("CanvasLayer/HBoxContainer/Lines")
+TriangleButton = NodePath("CanvasLayer/HBoxContainer/Triangles")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -73,23 +78,9 @@ shape = SubResource("RectangleShape2D_v5t5c")
 position = Vector2(109.5, -219)
 shape = SubResource("RectangleShape2D_37mrm")
 
-[node name="ModeText" type="TextEdit" parent="CanvasLayer"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -103.5
-offset_right = 96.5
-offset_bottom = 40.0
-grow_horizontal = 2
-text = "Mode: Nodes"
-editable = false
-context_menu_enabled = false
-shortcut_keys_enabled = false
-selecting_enabled = false
-deselect_on_focus_loss_enabled = false
-drag_and_drop_selection_enabled = false
-virtual_keyboard_enabled = false
-middle_mouse_paste_enabled = false
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
+position = Vector2(-398, -233.5)
+shape = SubResource("RectangleShape2D_kcor4")
 
 [node name="Save_Load" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 1
@@ -170,6 +161,27 @@ drag_and_drop_selection_enabled = false
 virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 scroll_fit_content_height = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Nodes" type="Button" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Nodes"
+
+[node name="Lines" type="Button" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Lines"
+
+[node name="Triangles" type="Button" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Triangles"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 323)

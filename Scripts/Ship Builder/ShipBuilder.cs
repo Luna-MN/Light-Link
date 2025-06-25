@@ -12,12 +12,13 @@ public partial class ShipBuilder : Node2D
 	public Button SaveButton, LoadButton;
 	[Export]
 	private Area2D uiArea;
-	[Export]
-	private TextEdit modeText;
 	[Export] 
 	public PackedScene FileSelectScene;
 	[Export] 
 	public TextEdit WeaponText, ShieldText, UtilityText, PowerText;
+	[Export]
+	public Button NodeButton, LineButton, TriangleButton;
+	private bool nodeVis = true, lineVis = true, triangleVis = true;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	private bool isMouseDown, isPressed, createdLast;
@@ -75,6 +76,7 @@ public partial class ShipBuilder : Node2D
 		};
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
+		VisibilityButtons();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -141,6 +143,9 @@ public partial class ShipBuilder : Node2D
 
 			}
 		}
+		shipNodes.ForEach(n => n.Visible = nodeVis);
+		lines.ForEach(l => l.Line.Visible = lineVis);
+		triangles.ForEach(t => t.TriangleNode.Visible = triangleVis);
 	}
 
 	private void SetResourceCount()
@@ -219,26 +224,7 @@ public partial class ShipBuilder : Node2D
 		}
 		if (@event is InputEventKey keyEvent && keyEvent.IsPressed())
 		{
-			if (keyEvent.Keycode == Key.F1)
-			{
-				mode = Modes.Nodes;
-				modeText.Text = "Mode: Nodes";
-				if (colorPicker != null)
-				{
-					colorPicker.QueueFree(); // Remove color picker if it exists
-					colorPicker = null; // Reset color picker reference{
-
-				}
-				GD.Print("Switched to Nodes mode");
-			}
-			else if (keyEvent.Keycode == Key.F3)
-			{
-				mode = Modes.Colors;
-				modeText.Text = "Mode: Colors";
-				GD.Print("Switched to Colors mode");
-				dragging = false; // Reset dragging state when switching modes
-			}
-			else if (keyEvent.Keycode == Key.Escape)
+			if (keyEvent.Keycode == Key.Escape)
 			{
 				if (currentLine != null)
 				{
@@ -788,6 +774,42 @@ public partial class ShipBuilder : Node2D
 			GD.Print("Selected Power node type");
 		};
 	}
+
+	private void VisibilityButtons()
+	{
+		NodeButton.Modulate = Colors.LightBlue;
+		LineButton.Modulate = Colors.LightBlue;
+		TriangleButton.Modulate = Colors.LightBlue;
+    
+		NodeButton.Pressed += () =>
+		{
+			nodeVis = ChangeVisibility(NodeButton, nodeVis);
+		};
+		LineButton.Pressed += () =>
+		{
+			lineVis = ChangeVisibility(LineButton, lineVis);
+		};
+		TriangleButton.Pressed += () =>
+		{
+			triangleVis = ChangeVisibility(TriangleButton, triangleVis);
+		};
+	}
+
+
+	private bool ChangeVisibility(Button button, bool vis)
+	{
+		if (button.Modulate == Colors.LightBlue)
+		{
+			button.Modulate = Colors.White;
+		}
+		else
+		{
+			button.Modulate = Colors.LightBlue;
+		}
+
+		return !vis;
+	}
+
 	private void LoadButtons()
 	{
 		SaveButton.ButtonDown += () =>
