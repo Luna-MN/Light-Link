@@ -93,7 +93,7 @@ public partial class ShipBuilder : Node2D
 		if (colorPicker != null)
 		{
 			selectedTriangle.Modulate = colorPicker.Color;
-			var triangle = triangles.Find(t => t.TriangleNode == selectedTriangle);
+			var triangle = triangles.Find(t => t == selectedTriangle);
 			if (triangle != null)
 			{
 				Color pickedColor = colorPicker.Color;
@@ -101,7 +101,7 @@ public partial class ShipBuilder : Node2D
 				Color lineColor = isDark ? Colors.White : pickedColor;
 				foreach (var line in triangle.lines)
 				{
-					line.Line.DefaultColor = lineColor;
+					line.DefaultColor = lineColor;
 				}
 			}
 		}
@@ -122,9 +122,13 @@ public partial class ShipBuilder : Node2D
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
 		SetResourceCount();
-		if (currentLine != null)
+		if (currentLine != null && currentLine.Points.Length != 2)
 		{
 			currentLine.LineFollowMouse();
+		}
+		else if (currentLine != null && currentLine.Points.Length == 2)
+		{
+			currentLine.LineToMose();
 		}
 
 		if (isMouseDown)
@@ -144,8 +148,8 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 		shipNodes.ForEach(n => n.Visible = nodeVis);
-		lines.ForEach(l => l.Line.Visible = lineVis);
-		triangles.ForEach(t => t.TriangleNode.Visible = triangleVis);
+		lines.ForEach(l => l.Visible = lineVis);
+		triangles.ForEach(t => t.Visible = triangleVis);
 	}
 
 	private void SetResourceCount()
@@ -230,7 +234,7 @@ public partial class ShipBuilder : Node2D
 				{
 					currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 					lines.Remove(currentLine); // Remove the current line from the list
-					currentLine.Line.QueueFree();
+					currentLine.QueueFree();
 					currentLine = null; // Reset current line on Escape key
 				}
 				if (colorPicker != null)
@@ -273,7 +277,7 @@ public partial class ShipBuilder : Node2D
 				dragging = false; // Stop dragging if the mouse button is released
 			}
 		}
-		else if (clickedObject != null && clickedObject is not Line2D)
+		else if (clickedObject != null && clickedObject is not ShipLine)
 		{
 			PickColor();
 			placing = false;
@@ -295,12 +299,12 @@ public partial class ShipBuilder : Node2D
 			shipNodes.Add(shipNode);
 			AddChild(shipNode);
 			createdLast = true;
-			if (clickedObject is Line2D)
+			if (clickedObject is ShipLine)
 			{
-				ShipLine shipLine = lines.Find(line => line.Line == clickedObject);
+				ShipLine shipLine = lines.Find(line => line == clickedObject);
 				ShipLine newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.StartNode);
-				lines.Add(newLine);
+				lines.Add(newLine);//
 
 				newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.EndNode);
@@ -343,7 +347,7 @@ public partial class ShipBuilder : Node2D
 				if (otherNode == overlappingNode)
 				{
 					lines.Remove(line);
-					line.Line.QueueFree();
+					line.QueueFree();
 					continue;
 				}
 
@@ -369,14 +373,14 @@ public partial class ShipBuilder : Node2D
 					var points = new Vector2[2];
 					points[0] = line.StartNode.GlobalPosition;
 					points[1] = line.EndNode.GlobalPosition;
-					line.Line.Points = points;
+					line.Points = points;
 					line.UpdateCollisionShape();
 				}
 				else
 				{
 					// Remove duplicate line
 					lines.Remove(line);
-					line.Line.QueueFree();
+					line.QueueFree();
 				}
 				TriangleCheck(line); // Check for triangles after updating the line
 			}
@@ -397,7 +401,7 @@ public partial class ShipBuilder : Node2D
 				{
 					// Remove the triangle as it would become degenerate
 					triangles.Remove(triangle);
-					triangle.TriangleNode.QueueFree();
+					triangle.QueueFree();
 				}
 				else
 				{
@@ -461,7 +465,7 @@ public partial class ShipBuilder : Node2D
 					var points = new Vector2[2];
 					points[0] = line.StartNode.GlobalPosition;
 					points[1] = line.EndNode.GlobalPosition;
-					line.Line.Points = points;
+					line.Points = points;
 					line.UpdateCollisionShape();
 				}
 			});
@@ -571,7 +575,7 @@ public partial class ShipBuilder : Node2D
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is Line2D)
+				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is ShipLine)
 				{
 					if (shapeResults.Any(s => ((Node2D)s["collider"]).GetParent() is ShipNode))
 					{
@@ -676,7 +680,7 @@ public partial class ShipBuilder : Node2D
 				foreach (var line in linesToRemove)
 				{
 					lines.Remove(line);
-					line.Line.QueueFree(); // Remove the line from the scene
+					line.QueueFree(); // Remove the line from the scene
 				}
 
 				// Remove all triangles containing this node
@@ -684,21 +688,21 @@ public partial class ShipBuilder : Node2D
 				foreach (var t in trianglesToRemove)
 				{
 					triangles.Remove(t);
-					t.TriangleNode.QueueFree(); // Remove the triangle from the scene
+					t.QueueFree(); // Remove the triangle from the scene
 				}
 
 				shipNode.QueueFree(); // Remove the node from the scene
 			}
 			// Handle right-click on lines
-			else if (clickedObject is Line2D line2D)
+			else if (clickedObject is ShipLine clickedLine)
 			{
-				GD.Print("Clicked on Line2D: " + line2D.Name);
-				ShipLine shipLine = lines.Find(l => l.Line == line2D);
+				GD.Print("Clicked on Line2D: " + clickedLine.Name);
+				ShipLine shipLine = lines.Find(l => l == clickedLine);
 				GD.Print("Found ShipLine: " + shipLine?.StartNode?.Name + " to " + shipLine?.EndNode?.Name);
 				if (shipLine != null)
 				{
 					lines.Remove(shipLine);
-					shipLine.Line.QueueFree(); // Remove the line from the scene
+					shipLine.QueueFree(); // Remove the line from the scene
 					shipLine.StartNode.ConnectedNodes.Remove(shipLine.EndNode);
 					shipLine.EndNode.ConnectedNodes.Remove(shipLine.StartNode);
 
@@ -706,24 +710,24 @@ public partial class ShipBuilder : Node2D
 					foreach (var t in trianglesWithLine)
 					{
 						triangles.Remove(t);
-						t.TriangleNode.QueueFree(); // Remove the triangle from the scene
+						t.QueueFree(); // Remove the triangle from the scene
 					}
 					currentLine = null; // Reset the current line if it was the one being edited
 										// Remove the line from any triangles that contain it
 				}
 			}
-			else if (clickedObject is Node2D triangleNode && clickedObject is not ShipNode)
+			else if (clickedObject is ShipTriangle triangleNode && clickedObject is not ShipNode)
 			{
-				var triangle = triangles.Find(t => t.TriangleNode == triangleNode);
+				var triangle = triangles.Find(t => t == triangleNode);
 				if (triangle != null)
 				{
 					foreach (var triangleLine in triangle.lines)
 					{
 						lines.Remove(triangleLine);
-						triangleLine.Line.QueueFree();
+						triangleLine.QueueFree();
 					}
 					triangles.Remove(triangle);
-					triangle.TriangleNode.QueueFree();
+					triangle.QueueFree();
 				}
 			}
 		}
@@ -890,7 +894,7 @@ public partial class ShipBuilder : Node2D
 			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point1));
 			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point2));
 			shipSave.DefineTriangles.Add(shipNodes.IndexOf(triangle.point3));
-			shipSave.TriangleColors.Add(triangle.TriangleNode.Modulate);
+			shipSave.TriangleColors.Add(triangle.Modulate);
 		}
 		shipSave.Lines = new Godot.Collections.Array<Vector2I>();
 		foreach (var line in lines)
@@ -928,13 +932,13 @@ public partial class ShipBuilder : Node2D
 
 		foreach (var line in lines)
 		{
-			line.Line.QueueFree();
+			line.QueueFree();
 		}
 		lines.Clear();
 
 		foreach (var triangle in triangles)
 		{
-			triangle.TriangleNode.QueueFree();
+			triangle.QueueFree();
 		}
 		triangles.Clear();
 
@@ -966,12 +970,12 @@ public partial class ShipBuilder : Node2D
 		{
 			var triangle = triangles[index];
 			if (shipSave.TriangleColors.Count <= index) continue;
-			triangle.TriangleNode.Modulate = shipSave.TriangleColors[index];
+			triangle.Modulate = shipSave.TriangleColors[index];
 			foreach (var line in triangle.lines)
 			{
 				var pickedColor = shipSave.TriangleColors[index];
 				bool isDark = pickedColor is { R: < 0.2f, G: < 0.2f, B: < 0.2f };
-				line.Line.Modulate = !isDark ? pickedColor : new Color(0.5f, 0.5f, 0.5f, 1);
+				line.Modulate = !isDark ? pickedColor : new Color(0.5f, 0.5f, 0.5f, 1);
 			}
 		}
 	}
@@ -980,7 +984,7 @@ public partial class ShipBuilder : Node2D
 		// Remove all existing triangles
 		foreach (var triangle in triangles)
 		{
-			triangle.TriangleNode.QueueFree();
+			triangle.QueueFree();
 		}
 
 		triangles.Clear();

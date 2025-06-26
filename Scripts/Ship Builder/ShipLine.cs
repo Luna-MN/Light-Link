@@ -1,12 +1,11 @@
 using Godot;
 
-public class ShipLine
+public partial class ShipLine : Line2D
 {
     private readonly ShipBuilder shipBuilder;
     public ShipNode StartNode { get; set; }
     public ShipNode EndNode { get; set; }
-
-    public Line2D Line { get; private set; }
+    
     private Area2D area;
     private CollisionShape2D collisionShape;
 
@@ -21,17 +20,15 @@ public class ShipLine
     }
     public void SetEndNode(ShipNode end)
     {
-        if (EndNode != null || Line != null)
+        if (EndNode != null)
         {
-            Line.QueueFree();
+            QueueFree();
         }
 
         EndNode = end;
-        Line = new Line2D();
-        Line.Points = new Vector2[] { StartNode.GlobalPosition, EndNode.GlobalPosition };
-        Line.Width = 2;
-        Line.DefaultColor = Colors.White;
-        shipBuilder.AddChild(Line);
+        Points = new[] { StartNode.GlobalPosition, EndNode.GlobalPosition };
+        Width = 2;
+        DefaultColor = Colors.White;
         StartNode.Modulate = StartNode.NodeColor; // Reset color to original after setting end node
         EndNode.ConnectedNodes.Add(StartNode);
         StartNode.ConnectedNodes.Add(EndNode);
@@ -52,11 +49,11 @@ public class ShipLine
 
         // Position and rotate the collision shape
         collisionShape.Shape = capsuleShape;
-        collisionShape.Position = (startPos + endPos) / 2 - Line.GlobalPosition; // Center between points
+        collisionShape.Position = (startPos + endPos) / 2 - GlobalPosition; // Center between points
         collisionShape.Rotation = direction.Angle() + Mathf.Pi / 2; // Rotate to align with the line (capsules are vertical by default)
 
         area.AddChild(collisionShape);
-        Line.AddChild(area);
+        AddChild(area);
     }
 
     public void UpdateCollisionShape()
@@ -71,13 +68,13 @@ public class ShipLine
             if (collisionShape.Shape is RectangleShape2D rectShape)
             {
                 rectShape.Size = new Vector2(length, 10);
-                collisionShape.Position = (startPos + endPos) / 2 - Line.GlobalPosition;
+                collisionShape.Position = (startPos + endPos) / 2 - GlobalPosition;
                 collisionShape.Rotation = direction.Angle();
             }
             else if (collisionShape.Shape is CapsuleShape2D capsuleShape)
             {
                 capsuleShape.Height = length;
-                collisionShape.Position = (startPos + endPos) / 2 - Line.GlobalPosition;
+                collisionShape.Position = (startPos + endPos) / 2 - GlobalPosition;
                 collisionShape.Rotation = direction.Angle() + Mathf.Pi / 2;
             }
         }
@@ -85,13 +82,14 @@ public class ShipLine
 
     public void LineFollowMouse()
     {
-        if (Line == null)
-        {
-            Line = new Line2D();
-            Line.Width = 2;
-            Line.DefaultColor = Colors.White;
-            shipBuilder.AddChild(Line);
-        }
-        Line.Points = new Vector2[] { StartNode.GlobalPosition, shipBuilder.GetGlobalMousePosition() };
+        Width = 2;
+        shipBuilder.AddChild(this);
+        DefaultColor = Colors.White;
+        Points = new Vector2[] { StartNode.GlobalPosition, shipBuilder.GetGlobalMousePosition() };
+    }
+
+    public void LineToMose()
+    {
+        Points = new Vector2[] { StartNode.GlobalPosition, shipBuilder.GetGlobalMousePosition() };
     }
 }

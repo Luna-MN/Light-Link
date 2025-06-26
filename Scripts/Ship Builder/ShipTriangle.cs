@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using Godot;
 
-public partial class ShipTriangle
+public partial class ShipTriangle : Node2D
 {
     public ShipNode point1;
     public ShipNode point2;
     public ShipNode point3;
     public ArrayMesh mesh;
-    public Node2D TriangleNode;
     public MeshInstance2D meshInstance;
     public Area2D area;
     public CollisionShape2D shape;
@@ -16,10 +15,9 @@ public partial class ShipTriangle
     public ShipTriangle(ShipNode p1, ShipNode p2, ShipNode p3, ShipBuilder shipBuilder, List<ShipLine> lines)
     {
         this.lines = lines;
-
-        TriangleNode = new Node2D();
-        TriangleNode.Name = "ShipTriangle";
-        shipBuilder.AddChild(TriangleNode);
+        
+        Name = "ShipTriangle";
+        shipBuilder.AddChild(this);
 
         point1 = p1;
         point2 = p2;
@@ -44,7 +42,7 @@ public partial class ShipTriangle
         mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
         meshInstance = new MeshInstance2D();
         meshInstance.Mesh = mesh;
-        TriangleNode.AddChild(meshInstance);
+        AddChild(meshInstance);
 
         area = new Area2D();
         shape = new CollisionShape2D();
@@ -58,7 +56,7 @@ public partial class ShipTriangle
             }
         };
         area.AddChild(shape);
-        TriangleNode.AddChild(area);
+        AddChild(area);
     }
     public void UpdateTriangle()
     {
