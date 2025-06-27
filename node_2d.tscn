@@ -36,5 +36,6 @@ visible = false
 script = ExtResource("7_du31x")
 
 [node name="Node2D" type="Node2D" parent="."]
+position = Vector2(211, 182)
 script = ExtResource("8_id0ui")
 shipSave = ExtResource("9_xlbah")

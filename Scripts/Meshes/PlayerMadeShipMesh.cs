@@ -24,8 +24,10 @@ public partial class PlayerMadeShipMesh :ShipMesh
     }
     protected override List<int> DefineTriangles()
     {
+        var triangles =shipSave.DefineTriangles.ToList();
+        GD.Print($"Triangles count: {triangles.Count}");
         
-        return shipSave.DefineTriangles.ToList();
+        return triangles;
     }
     protected override List<Color> DefineColors()
     {
