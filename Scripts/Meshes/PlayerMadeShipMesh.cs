@@ -11,13 +11,20 @@ public partial class PlayerMadeShipMesh :ShipMesh
     {
         this.shipSave = shipSave;
     }
+    public PlayerMadeShipMesh(string saveName)
+    {
+        shipSave = (ShipSave)ResourceLoader.Load(saveName);
+    }
     public override List<Vector3> DefineVertices()
     {
-        
+        var vertices = shipSave.NodePositions.ToList();
+        GD.Print($"Vertices count: {vertices.Count}");
+
         return shipSave.NodePositions.ToList();
     }
     protected override List<int> DefineTriangles()
     {
+        
         return shipSave.DefineTriangles.ToList();
     }
     protected override List<Color> DefineColors()
