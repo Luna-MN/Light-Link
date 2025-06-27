@@ -19,8 +19,8 @@ public partial class PlayerMadeShipMesh :ShipMesh
     {
         var vertices = shipSave.NodePositions.ToList();
         GD.Print($"Vertices count: {vertices.Count}");
-
-        return shipSave.NodePositions.ToList();
+        vertices = UseMean(vertices);
+        return vertices;
     }
     protected override List<int> DefineTriangles()
     {
@@ -33,5 +33,15 @@ public partial class PlayerMadeShipMesh :ShipMesh
     {
         return shipSave.TriangleColors.ToList();
     }
-    
+
+    private List<Vector3> UseMean(List<Vector3> vertices)
+    {
+        var meanVertices = new List<Vector3>();
+        var meanLoc = new Vector3(shipSave.MeanNode.GlobalPosition.X, shipSave.MeanNode.GlobalPosition.Y, 0);
+        foreach (var node in vertices)
+        {
+            meanVertices.Add(node - meanLoc);
+        }
+        return meanVertices;
+    }
 }
