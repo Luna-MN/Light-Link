@@ -878,14 +878,14 @@ public partial class ShipBuilder : Node2D
 		if (path == "") return;
 		
 		ShipSave shipSave = new ShipSave();
-		shipSave.NodePositions = new Godot.Collections.Array<Vector2>();
+		shipSave.NodePositions = new Godot.Collections.Array<Vector3>();
 		shipSave.NodeTypes = new Godot.Collections.Array<int>();
 		shipSave.DefineTriangles = new Godot.Collections.Array<int>();
 		shipSave.TriangleColors = new Godot.Collections.Array<Color>();
 
 		foreach (var node in shipNodes)
 		{
-			shipSave.NodePositions.Add(node.GlobalPosition);
+			shipSave.NodePositions.Add(new Vector3(node.GlobalPosition.X, node.GlobalPosition.Y, 0));
 			shipSave.NodeTypes.Add((int)node.NodeType);
 		}
 
@@ -946,7 +946,7 @@ public partial class ShipBuilder : Node2D
 		for (int i = 0; i < shipSave.NodePositions.Count; i++)
 		{
 			var node = new ShipNode((ShipNodeTypes)shipSave.NodeTypes[i]);
-			node.GlobalPosition = shipSave.NodePositions[i];
+			node.GlobalPosition = new Vector2(shipSave.NodePositions[i].X, shipSave.NodePositions[i].Y);
 			node.Name = "ShipNode_" + i;
 			AddChild(node);
 			shipNodes.Add(node);
