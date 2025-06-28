@@ -36,12 +36,22 @@ public partial class PlayerMadeShipMesh :ShipMesh
 
     private List<Vector3> UseMean(List<Vector3> vertices)
     {
-        var meanVertices = new List<Vector3>();
-        var meanLoc = new Vector3(shipSave.MeanNode.GlobalPosition.X, shipSave.MeanNode.GlobalPosition.Y, 0);
-        foreach (var node in vertices)
+        // Calculate the actual geometric center of all vertices
+        Vector3 geometricCenter = Vector3.Zero;
+        foreach (var vertex in vertices)
         {
-            meanVertices.Add(node - meanLoc);
+            geometricCenter += vertex;
         }
-        return meanVertices;
+        geometricCenter /= vertices.Count;
+    
+        // Subtract the geometric center from each vertex to center around (0,0,0)
+        var centeredVertices = new List<Vector3>();
+        foreach (var vertex in vertices)
+        {
+            centeredVertices.Add(vertex - geometricCenter);
+        }
+    
+        return centeredVertices;
     }
+
 }
