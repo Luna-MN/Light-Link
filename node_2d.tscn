@@ -5,8 +5,8 @@
 [ext_resource type="Script" path="res://Scripts/UI/UI.cs" id="3_kumu2"]
 [ext_resource type="Script" path="res://Scripts/UI/BuildingPlacementUI.cs" id="5_n26vg"]
 [ext_resource type="Script" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
+[ext_resource type="Resource" path="res://MyShips/MyShip.tres" id="7_l7nki"]
 [ext_resource type="Script" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
-[ext_resource type="Resource" path="res://MyShips/New Ship.tres.tres" id="9_xlbah"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jk2el")
@@ -28,4 +28,4 @@ script = ExtResource("7_du31x")
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(157, 142)
 script = ExtResource("8_id0ui")
-shipSave = ExtResource("9_xlbah")
+shipSave = ExtResource("7_l7nki")

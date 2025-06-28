@@ -906,7 +906,6 @@ public partial class ShipBuilder : Node2D
 		var rc = new Godot.Collections.Array<int>();
 		rc.AddRange(ResourceCount);
 		shipSave.ResourceCounts = rc;
-		shipSave.MeanNode = GetShipMeanNode();
 		if (!path.Contains('\\'))
 		{
 			path = $"MyShips\\{path}.tres";
@@ -1031,25 +1030,5 @@ public partial class ShipBuilder : Node2D
 				}
 			}
 		}
-	}
-
-	private Node2D GetShipMeanNode()
-	{
-		List<Vector2> positions = new List<Vector2>();
-		positions.AddRange(shipNodes.Select(n => n.GlobalPosition));
-		Vector2 mean = new Vector2();
-		foreach (var position in positions)
-		{
-			mean += position;
-		}
-		mean /= positions.Count;
-		var meanNode = new Node2D
-		{
-			Name = "MeanNode",
-			Visible = false,
-			Position = mean
-		};
-		AddChild(meanNode);
-		return meanNode;
 	}
 }
