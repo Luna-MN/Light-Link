@@ -16,6 +16,8 @@ public partial class SelectFile : Control
 	public bool Save;
 	private int myShipCount = 0;
 	public string MyShipPath;
+	private FileDialog fileDialog;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -27,7 +29,49 @@ public partial class SelectFile : Control
 		FileList.AddThemeConstantOverride("h_separation", 5);
 		FileList.AddThemeConstantOverride("v_separation", 5);
 		
+		SetupFileDialog();
+
 		FindFiles("res://MyShips");
+		Browse.Pressed += () =>
+		{
+			fileDialog.PopupCentered(new Vector2I(800, 600));
+		};
+
+	}
+	private void SetupFileDialog()
+	{
+		fileDialog = new FileDialog();
+		AddChild(fileDialog);
+		
+		// Configure the file dialog
+		fileDialog.FileMode = FileDialog.FileModeEnum.OpenFile;
+		fileDialog.Access = FileDialog.AccessEnum.Filesystem;
+		fileDialog.CurrentDir = ProjectSettings.GlobalizePath("res://MyShips");
+		
+		// Add file filters if needed (example for specific file types)
+		fileDialog.AddFilter("*.tres", "tres Files");
+		
+		// Connect the file selected signal
+		fileDialog.FileSelected += OnFileSelected;
+		fileDialog.Canceled += OnFileDialogCanceled;
+	}
+	private void OnFileSelected(string path)
+	{
+		GD.Print($"File selected: {path}");
+		SelectedFilePath = path;
+		
+		// Update SavePath if you want to show the selected file path
+		if (SavePath != null)
+		{
+			SavePath.Text = path;
+		}
+		
+		// You can add additional logic here to handle the selected file
+		// For example, load the file content or update your UI
+	}
+	private void OnFileDialogCanceled()
+	{
+		GD.Print("File selection canceled");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
