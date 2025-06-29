@@ -4,12 +4,17 @@ using System;
 public partial class AttachmentPoint : Node2D
 {
 	public Ship ship;
-	// Called when the node enters the scene tree for the first time.
-	public AttachmentPoint(Ship ship)
+	public enum ShipNodeTypes
 	{
-		this.ship = ship;
-		ship.AddChild(this);
-		ship.attachmentPoints.Add(this);
+		Weapon,
+		Shield,
+		Utility,
+		Power,
+	}
+	public ShipNodeTypes NodeType;
+	// Called when the node enters the scene tree for the first time.
+	public AttachmentPoint()
+	{
 	}
 	public override void _Ready()
 	{

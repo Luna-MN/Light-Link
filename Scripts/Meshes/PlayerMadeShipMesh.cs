@@ -8,13 +8,28 @@ public partial class PlayerMadeShipMesh :ShipMesh
 {
     private ShipSave shipSave;
     private List<Vector3> centeredVertices = null;
+    private List<AttachmentPoint> shipNodes = new();
     public PlayerMadeShipMesh(ShipSave shipSave)
     {
         this.shipSave = shipSave;
+        CreateAttachmentPoints();
     }
     public PlayerMadeShipMesh(string saveName)
     {
         shipSave = (ShipSave)ResourceLoader.Load(saveName);
+    }
+
+    public void CreateAttachmentPoints()
+    {
+        UseMean(shipSave.NodePositions.ToList());
+        foreach (var pos in centeredVertices)
+        {
+            var ap = new AttachmentPoint();
+            ap.Position = new Vector2(pos.X, pos.Y);
+            ap.Name = "AttachmentPoint_" + shipNodes.Count;
+            ap.NodeType = (AttachmentPoint.ShipNodeTypes)shipSave.NodeTypes[shipNodes.Count];
+            shipNodes.Add(ap);
+        }
     }
     public override List<Vector3> DefineVertices()
     {
@@ -59,4 +74,8 @@ public partial class PlayerMadeShipMesh :ShipMesh
         return centeredVertices;
     }
 
+    public List<AttachmentPoint> GetShipNodes()
+    {
+        return shipNodes;
+    }
 }

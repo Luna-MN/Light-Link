@@ -297,7 +297,7 @@ public partial class Ship : Node2D
     public void AddAttachmentPoint(Vector3 attachmentPoint)
     {
         // Create a new AttachmentPoint at the specified position
-        AttachmentPoint newAttachmentPoint = new AttachmentPoint(this);
+        AttachmentPoint newAttachmentPoint = new AttachmentPoint();
         newAttachmentPoint.Position = new Vector2(attachmentPoint.X, attachmentPoint.Y);
         newAttachmentPoint.Name = "AttachmentPoint_" + attachmentPoints.Count;
     }
