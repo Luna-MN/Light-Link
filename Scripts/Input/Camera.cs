@@ -377,7 +377,7 @@ public partial class Camera : Camera2D
                 ship.shipSelected = false;
             }
         }
-        foreach (Astroid astroid in mainShip.MiningAstroids)
+         foreach (Astroid astroid in mainShip.MiningAstroids)
         {
             if (astroid != null)
             {

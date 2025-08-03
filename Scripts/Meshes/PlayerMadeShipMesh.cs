@@ -29,6 +29,7 @@ public partial class PlayerMadeShipMesh :ShipMesh
             ap.Name = "AttachmentPoint_" + shipNodes.Count;
             ap.NodeType = (AttachmentPoint.ShipNodeTypes)shipSave.NodeTypes[shipNodes.Count];
             shipNodes.Add(ap);
+            AddChild(ap);
         }
     }
     public override List<Vector3> DefineVertices()

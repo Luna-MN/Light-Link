@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class PlayerCreatedShip : Ship
+public partial class PlayerCreatedShip : PlayerShips
 {
     [Export] public ShipSave shipSave;
     [Export] public string shipPath;
@@ -20,5 +20,12 @@ public partial class PlayerCreatedShip : Ship
     {
         base._Process(delta);
     }
-    
+
+    public void ShowNodes()
+    {
+        foreach (var node in shipNodes)
+        {
+            node.Visible = true;
+        }
+    }
 }
