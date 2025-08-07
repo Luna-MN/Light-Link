@@ -8,7 +8,13 @@
 [ext_resource type="Resource" path="res://MyShips/MyTestShip.tres.tres" id="7_w8s5k"]
 [ext_resource type="Script" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_jk2el")
 
 [node name="Camera2D" type="Camera2D" parent="."]

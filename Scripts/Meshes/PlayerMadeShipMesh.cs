@@ -4,7 +4,7 @@ using System.Linq;
 using Godot;
 
 
-public partial class PlayerMadeShipMesh :ShipMesh
+public partial class PlayerMadeShipMesh : ShipMesh
 {
     private ShipSave shipSave;
     private List<Vector3> centeredVertices = null;

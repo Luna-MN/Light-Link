@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class Main : Node2D
+public partial class Main : Control
 {
 	public UI ui;
 	// Called when the node enters the scene tree for the first time.

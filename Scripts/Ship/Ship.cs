@@ -7,11 +7,11 @@ public partial class Ship : Node2D
     public ShipMesh Mesh;
     public bool shipSelected = false;
     public bool isMine = false;
-    public Control selectionBrackets;
     public float speed = 100f;
     public Area2D area2D;
     public CollisionShape2D collisionShape;
-    public CircleShape2D circleShape;
+    public ConvexPolygonShape2D shipShape;
+    public SelectionBracket selectionBrackets = new SelectionBracket();
     public TrailEffect trailEffect;
     public float rotationSpeed = 5.0f;
     public List<Vector2> path = new List<Vector2>();
@@ -35,13 +35,12 @@ public partial class Ship : Node2D
         collisionShape = new CollisionShape2D();
         area2D.AddChild(collisionShape);
 
-        CreateSelectionBrackets();
-        selectionBrackets.Scale *= new Vector2(5f, 5f);
-        selectionBrackets.Visible = false;
+        //CreateSelectionBrackets();
+        //selectionBrackets.Scale *= new Vector2(5f, 5f);
+        //selectionBrackets.Visible = false;
 
-        circleShape = new CircleShape2D();
-        circleShape.Radius = 20;
-        collisionShape.Shape = circleShape;
+        shipShape = new ConvexPolygonShape2D();
+        collisionShape.Shape = shipShape;
         collisionShape.Position = new Vector2(0, 0);
 
         trailEffect = new TrailEffect();
@@ -64,7 +63,6 @@ public partial class Ship : Node2D
         {
             selectionBrackets.Visible = true;
             selectionBrackets.GlobalPosition = GlobalPosition;
-
             // Only show path when selected
             UpdatePathVisuals();
         }
@@ -210,32 +208,6 @@ public partial class Ship : Node2D
         {
             UpdatePathVisuals();
         }
-    }
-    private void CreateSelectionBrackets()
-    {
-        selectionBrackets = new Control();
-        selectionBrackets.Name = "SelectionBrackets";
-        AddChild(selectionBrackets);
-        selectionBrackets.TopLevel = true;
-        // Create smaller brackets
-        CreateBracket("TopLeftBracket", new Vector2(-1, -1), new Vector2(-0.5f, -1), new Vector2(-1, -0.5f));
-        CreateBracket("TopRightBracket", new Vector2(1, -1), new Vector2(0.5f, -1), new Vector2(1, -0.5f));
-        CreateBracket("BottomLeftBracket", new Vector2(-1, 1), new Vector2(-0.5f, 1), new Vector2(-1, 0.5f));
-        CreateBracket("BottomRightBracket", new Vector2(1, 1), new Vector2(0.5f, 1), new Vector2(1, 0.5f));
-    }
-    private void CreateBracket(string name, Vector2 corner, Vector2 horizontalEnd, Vector2 verticalEnd)
-    {
-        var bracket = new Line2D();
-        bracket.Name = name;
-        bracket.Width = 0.5f;
-        bracket.DefaultColor = Colors.White;
-        // Create smaller brackets (reduce from 40 to 10)
-        bracket.AddPoint(corner * 5);
-        bracket.AddPoint(horizontalEnd * 5);
-        bracket.AddPoint(corner * 5);
-        bracket.AddPoint(verticalEnd * 5);
-
-        selectionBrackets.AddChild(bracket);
     }
     public Vector2 FindOrbitInterceptPoint(Planet targetPlanet, float maxPredictionTime = 20.0f)
     {
