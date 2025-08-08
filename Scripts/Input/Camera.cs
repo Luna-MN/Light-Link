@@ -377,15 +377,7 @@ public partial class Camera : Camera2D
                 ship.shipSelected = false;
             }
         }
-         foreach (Astroid astroid in mainShip.MiningAstroids)
-        {
-            if (astroid != null)
-            {
-                astroid.ShowSelectionBrackets(false);
-            }
-        }
         ships.Clear();
-        mainShip.MiningAstroids.Clear();
 
         bool shipsSelected = false;
         // Check each ship
@@ -424,7 +416,6 @@ public partial class Camera : Camera2D
                 }
             }
         }
-        GD.Print("Selected astroids: " + mainShip.MiningAstroids.Count);
         GD.Print($"Selected {ships.Count} ships via drag selection");
     }
 
