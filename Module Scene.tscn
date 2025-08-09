@@ -4,11 +4,12 @@
 
 [sub_resource type="SphereMesh" id="SphereMesh_dvbml"]
 
-[node name="Panel" type="Panel" node_paths=PackedStringArray("mesh")]
+[node name="Panel" type="Panel" node_paths=PackedStringArray("mesh", "button")]
 custom_minimum_size = Vector2(0, 113.98)
 script = ExtResource("1_5tmay")
 mesh = NodePath("Control/ColorRect")
 color = Color(1, 1, 1, 1)
+button = NodePath("Button")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

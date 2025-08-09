@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Reflection;
 
 public partial class ModuleUI : Panel
@@ -10,11 +11,7 @@ public partial class ModuleUI : Panel
 	public Color color;
 	[Export]
 	public Button button;
-	[Export]
-	public PackedScene createScene;
 	
-	public Action OnButtonPressed;
-
 	public enum ModuleName
 	{
 		Gun,
@@ -27,8 +24,7 @@ public partial class ModuleUI : Panel
 	public override void _Ready()
 	{
 		mesh.Modulate = color;
-		button.Pressed += ButtonPressed;
-		button.Pressed += OnButtonPressed;
+		button.ButtonUp += ButtonPressed;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -42,13 +38,13 @@ public partial class ModuleUI : Panel
 		{
 			case ModuleName.Gun:
 				mod = new Gun();
+				GD.Print("Pressed");
 				break;
 			case ModuleName.Shield:
 				break;
 			case ModuleName.Engine:
 				break;
 		}
-		
-		GetTree().Root.AddChild(mod);
+		GetTree().Root.GetChildren().FirstOrDefault()?.AddChild(mod);
 	}
 }

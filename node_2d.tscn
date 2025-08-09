@@ -18,27 +18,28 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jk2el")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -121.0
-offset_top = -255.0
-offset_bottom = 254.0
-grow_horizontal = 0
-grow_vertical = 2
-alignment = 1
-
-[node name="Panel" parent="VBoxContainer" instance=ExtResource("2_ep5d2")]
-layout_mode = 2
-color = Color(1, 0.443137, 1, 1)
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)
 script = ExtResource("2_1u1cq")
+
+[node name="Module Container" type="VBoxContainer" parent="Camera2D"]
+offset_left = 454.0
+offset_top = -257.0
+offset_right = 575.0
+offset_bottom = 252.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Gun" parent="Camera2D/Module Container" instance=ExtResource("2_ep5d2")]
+layout_mode = 2
+color = Color(1, 0.443137, 1, 1)
+
+[node name="Shield" parent="Camera2D/Module Container" instance=ExtResource("2_ep5d2")]
+layout_mode = 2
+color = Color(0.345098, 0.6, 0.933333, 1)
+moduleName = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("3_kumu2")
