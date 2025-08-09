@@ -27,11 +27,11 @@ public partial class PlayerCreatedShip : PlayerShips
         base._Process(delta);
     }
 
-    public void ShowNodes()
+    public void ShowNodes(bool vis)
     {
         foreach (var node in shipNodes)
         {
-            node.Visible = true;
+            node.Visible = vis;
         }
     }
 

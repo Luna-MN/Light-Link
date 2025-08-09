@@ -10,6 +10,7 @@ public partial class Camera : Camera2D
     public float MaxZoom = 5.0f;
     public bool SmoothZoom = true;
     public bool SmoothFocus; // New variable to control smooth focus
+    public bool ModulePlacing = false;
     private bool isDragging;
     private Vector2 dragOrigin;
     private Vector2 targetZoom = new Vector2(1, 1);
@@ -19,7 +20,7 @@ public partial class Camera : Camera2D
     private Vector2 defaultFocusZoom = new Vector2(1f, 1f);
     private float focusTransitionSpeed = 3.0f; // Transition speed when focusing
     private float unfocusTransitionSpeed = 1.5f; // Transition speed when releasing focus
-    private List<PlayerShips> ships = new List<PlayerShips>();
+    public List<PlayerShips> ships = new List<PlayerShips>();
     private MainShip mainShip;
     private BuildingPlacementUI buildingPlacementUI;
     // New variables for drag selection
@@ -28,11 +29,23 @@ public partial class Camera : Camera2D
     private Vector2 selectionEnd;
     private Color selectionRectColor = new Color(0.2f, 0.8f, 1.0f, 0.3f); // Light blue with transparency
     public Dictionary<Properties.Type, int> resourceCounts = new Dictionary<Properties.Type, int>() { { Properties.Type.Rock, 0 }, { Properties.Type.Ice, 1 }, { Properties.Type.Iron, 2 }, { Properties.Type.Carbon, 3 } };
+    public Timer suppressMovmentTimer;
     public override void _Ready()
     {
         targetZoom = Zoom;
         mainShip = GetTree().Root.FindChild("MainShip", true, false) as MainShip;
         buildingPlacementUI = GetTree().Root.FindChild("BuildingUI", true, false) as BuildingPlacementUI;
+        suppressMovmentTimer = new Timer()
+        {
+            Autostart = false,
+            OneShot = true,
+            WaitTime = 0.5f,
+        };
+        suppressMovmentTimer.Timeout += () =>
+        {
+            ModulePlacing = false;
+        };
+        AddChild(suppressMovmentTimer);
     }
 
     public override void _Process(double delta)
@@ -137,8 +150,12 @@ public partial class Camera : Camera2D
         }
     }
 
-    public override void _Input(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
+        if (ModulePlacing)
+        {
+            return;
+        }
         // Handle mouse button events for panning
         if (@event is InputEventMouseButton mouseButton)
         {

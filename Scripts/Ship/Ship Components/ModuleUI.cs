@@ -14,7 +14,7 @@ public partial class ModuleUI : Panel
 	
 	public enum ModuleName
 	{
-		Gun,
+		Weapon,
 		Shield,
 		Engine
 	};
@@ -36,7 +36,7 @@ public partial class ModuleUI : Panel
 		Module mod = null;
 		switch (moduleName)
 		{
-			case ModuleName.Gun:
+			case ModuleName.Weapon:
 				mod = new Gun();
 				GD.Print("Pressed");
 				break;
