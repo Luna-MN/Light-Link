@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=9 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
+[ext_resource type="PackedScene" uid="uid://de2y7t6sie86b" path="res://Module Scene.tscn" id="2_ep5d2"]
 [ext_resource type="Script" path="res://Scripts/UI/UI.cs" id="3_kumu2"]
 [ext_resource type="Script" path="res://Scripts/UI/BuildingPlacementUI.cs" id="5_n26vg"]
 [ext_resource type="Script" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
@@ -16,6 +17,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jk2el")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -121.0
+offset_top = -255.0
+offset_bottom = 254.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+
+[node name="Panel" parent="VBoxContainer" instance=ExtResource("2_ep5d2")]
+layout_mode = 2
+color = Color(1, 0.443137, 1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)

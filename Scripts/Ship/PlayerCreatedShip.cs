@@ -50,7 +50,6 @@ public partial class PlayerCreatedShip : PlayerShips
 
         // Call helper to order points CCW around centroid
         var orderedPoints = OrderPointsCCW(points);
-
         shipShape.Points = orderedPoints.ToArray();
     }
     private List<Vector2> OrderPointsCCW(List<Vector2> points)

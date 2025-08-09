@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://de2y7t6sie86b"]
+
+[ext_resource type="Script" path="res://Scripts/Ship/Ship Components/ModuleUI.cs" id="1_5tmay"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_dvbml"]
+
+[node name="Panel" type="Panel" node_paths=PackedStringArray("mesh")]
+custom_minimum_size = Vector2(0, 113.98)
+script = ExtResource("1_5tmay")
+mesh = NodePath("Control/ColorRect")
+color = Color(1, 1, 1, 1)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="MeshInstance2D" parent="Control"]
+position = Vector2(20, 20.01)
+scale = Vector2(37.542, 37.5)
+mesh = SubResource("SphereMesh_dvbml")
