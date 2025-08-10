@@ -7,6 +7,7 @@ public partial class Gun : Module
     {
         var MeshScene = GD.Load<PackedScene>("res://Meshs/Modules/SimpleGunMesh.tscn");
         meshParent = MeshScene.Instantiate<Node2D>();
+        meshParent.Scale = new Vector2(0.5f, 0.5f);
         AddChild(meshParent);
         base._Ready();
     }

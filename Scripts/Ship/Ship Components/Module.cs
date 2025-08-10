@@ -69,12 +69,15 @@ public partial class Module : Node2D
 		{
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left && mouseButtonEvent.Pressed)
 			{
-				placed = true;
-				Modulate = new Color(1, 1, 1, 1);
-				Position = closestPoint.Position;
-				AttachmentLine.QueueFree();
-				cam.suppressMovmentTimer.Start();
-				ship.ShowNodes(false);
+				if (closestPoint.GlobalPosition.DistanceTo(GlobalPosition) < 100)
+				{
+					placed = true;
+					Modulate = new Color(1, 1, 1, 1);
+					Position = closestPoint.Position;
+					AttachmentLine.QueueFree();
+					cam.suppressMovmentTimer.Start();
+					ship.ShowNodes(false);
+				}
 			}
 		}
 	}
