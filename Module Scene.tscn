@@ -5,20 +5,11 @@
 [sub_resource type="SphereMesh" id="SphereMesh_dvbml"]
 
 [node name="Panel" type="Panel" node_paths=PackedStringArray("mesh", "button")]
-custom_minimum_size = Vector2(0, 113.98)
+custom_minimum_size = Vector2(0, 50)
 script = ExtResource("1_5tmay")
 mesh = NodePath("Control/ColorRect")
 color = Color(1, 1, 1, 1)
 button = NodePath("Button")
-
-[node name="Button" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-flat = true
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 1
@@ -38,3 +29,12 @@ grow_vertical = 2
 position = Vector2(20, 20.01)
 scale = Vector2(37.542, 37.5)
 mesh = SubResource("SphereMesh_dvbml")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true

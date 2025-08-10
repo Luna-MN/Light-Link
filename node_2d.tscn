@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=8 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
-[ext_resource type="PackedScene" uid="uid://de2y7t6sie86b" path="res://Module Scene.tscn" id="2_ep5d2"]
+[ext_resource type="Resource" path="res://MyShips/Test with all the nodes.tres.tres" id="4_kdubu"]
+[ext_resource type="PackedScene" uid="uid://dwp6sv48sw3ru" path="res://ModuleContainer.tscn" id="6_kdubu"]
+[ext_resource type="PackedScene" uid="uid://c0van5yfdutpp" path="res://OpenModuleSelect.tscn" id="7_d21ai"]
 [ext_resource type="Script" uid="uid://b70ocx6itd5pd" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
-[ext_resource type="Resource" uid="uid://1kv1ka5a4and" path="res://MyShips/MyTestShip.tres.tres" id="7_w8s5k"]
 [ext_resource type="Script" uid="uid://b221x55ma3yc" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
 
 [node name="Node2D" type="Control"]
@@ -24,7 +25,7 @@ script = ExtResource("7_du31x")
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(157, 142)
 script = ExtResource("8_id0ui")
-shipSave = ExtResource("7_w8s5k")
+shipSave = ExtResource("4_kdubu")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)
@@ -32,24 +33,18 @@ script = ExtResource("2_1u1cq")
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="Camera2D"]
 
-[node name="Module Container" type="VBoxContainer" parent="Camera2D/CanvasLayer2"]
-offset_left = 1031.0
-offset_top = 69.0
-offset_right = 1152.0
-offset_bottom = 578.0
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer2"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -59.0
+offset_top = -52.0
+offset_bottom = 52.0
 grow_horizontal = 0
 grow_vertical = 2
-mouse_filter = 2
-alignment = 1
-metadata/_edit_use_anchors_ = true
 
-[node name="Gun" parent="Camera2D/CanvasLayer2/Module Container" instance=ExtResource("2_ep5d2")]
+[node name="Panel" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
 layout_mode = 2
-mouse_filter = 2
-color = Color(1, 0.443137, 1, 1)
-
-[node name="Shield" parent="Camera2D/CanvasLayer2/Module Container" instance=ExtResource("2_ep5d2")]
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.345098, 0.6, 0.933333, 1)
-moduleName = 1
+moduleScene = ExtResource("6_kdubu")
