@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+[GlobalClass]
 public partial class ShipBuilder : Node2D
 {
 	[Export]

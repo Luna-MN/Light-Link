@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class ShipPreview : Control
 {
 	[Export] public TextEdit Text;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-
+[GlobalClass]
 public partial class MainShip : PlayerShips
 {
     public Line2D tractorBeam;

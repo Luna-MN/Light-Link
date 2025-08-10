@@ -1,6 +1,6 @@
 using Godot;
 using System.Collections.Generic;
-
+[GlobalClass]
 public partial class TrailEffect : Line2D
 {
     public int TrailLength = 10;

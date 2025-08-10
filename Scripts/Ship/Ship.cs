@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Godot;
-
+[GlobalClass]
 public partial class Ship : Node2D
 {
     public ShipMesh Mesh;

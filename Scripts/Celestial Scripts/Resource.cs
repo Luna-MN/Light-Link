@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class Resource : Node2D
 {
 	public Color color = Colors.White;

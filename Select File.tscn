@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cd8x33jwldoc4"]
 
-[ext_resource type="Script" path="res://Scripts/Ship Builder/SelectFile.cs" id="1_wqt7y"]
+[ext_resource type="Script" uid="uid://re3o3j56g556" path="res://Scripts/Ship Builder/SelectFile.cs" id="1_wqt7y"]
 [ext_resource type="PackedScene" uid="uid://2k7lpufka3x0" path="res://Ship Preview.tscn" id="2_hucrc"]
 
 [node name="Control" type="Control" node_paths=PackedStringArray("FileList", "Browse", "Select", "SavePath")]

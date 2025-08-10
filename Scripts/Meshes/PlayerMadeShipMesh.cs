@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-
+[GlobalClass]
 public partial class PlayerMadeShipMesh : ShipMesh
 {
     private ShipSave shipSave;

@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using System.Reflection;
-
+[GlobalClass]
 public partial class ModuleUI : Panel
 {
 	[Export]

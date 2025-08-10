@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class PlayerShips : Ship
 {
     public bool DisableMovement = false;

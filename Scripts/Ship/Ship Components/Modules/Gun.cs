@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class Gun : Module
 {
     public override void _Ready()

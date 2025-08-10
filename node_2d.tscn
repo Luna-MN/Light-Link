@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://crx8vy2afows8"]
 
-[ext_resource type="Script" path="res://Main.cs" id="1_jk2el"]
-[ext_resource type="Script" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
+[ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
+[ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="PackedScene" uid="uid://de2y7t6sie86b" path="res://Module Scene.tscn" id="2_ep5d2"]
-[ext_resource type="Script" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
-[ext_resource type="Resource" path="res://MyShips/MyTestShip.tres.tres" id="7_w8s5k"]
-[ext_resource type="Script" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
+[ext_resource type="Script" uid="uid://b70ocx6itd5pd" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
+[ext_resource type="Resource" uid="uid://1kv1ka5a4and" path="res://MyShips/MyTestShip.tres.tres" id="7_w8s5k"]
+[ext_resource type="Script" uid="uid://b221x55ma3yc" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
 
 [node name="Node2D" type="Control"]
 layout_mode = 3

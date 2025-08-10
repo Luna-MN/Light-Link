@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://2k7lpufka3x0"]
 
-[ext_resource type="Script" path="res://ShipPreview.cs" id="1_nhdx1"]
+[ext_resource type="Script" uid="uid://rnp2ctm8u3y7" path="res://ShipPreview.cs" id="1_nhdx1"]
 
 [node name="Control" type="Control" node_paths=PackedStringArray("Text", "Select")]
 layout_mode = 3

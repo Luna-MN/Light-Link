@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Godot;
-
+[GlobalClass]
 public partial class ShipTriangle : Node2D
 {
     public ShipNode point1;

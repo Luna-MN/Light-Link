@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://de2y7t6sie86b"]
 
-[ext_resource type="Script" path="res://Scripts/Ship/Ship Components/ModuleUI.cs" id="1_5tmay"]
+[ext_resource type="Script" uid="uid://cr7tu8domen16" path="res://Scripts/Ship/Ship Components/ModuleUI.cs" id="1_5tmay"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_dvbml"]
 

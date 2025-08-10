@@ -1,7 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; 
+[GlobalClass]
 public partial class Astroid : Body
 {
 	public AstroidProperties Properties;

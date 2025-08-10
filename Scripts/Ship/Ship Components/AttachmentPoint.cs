@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class AttachmentPoint : Node2D
 {
 	public Ship ship;

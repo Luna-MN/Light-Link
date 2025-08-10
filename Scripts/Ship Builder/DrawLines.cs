@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class DrawLines : Node2D
 {
     [Export] public int MaxSize = 2000;

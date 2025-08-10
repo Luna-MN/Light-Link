@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+[GlobalClass]
 public partial class Main : Control
 {
 	public UI ui;

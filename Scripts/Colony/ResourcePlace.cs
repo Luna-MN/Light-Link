@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Godot;
-
+[GlobalClass]
 public partial class ResourcePlace : Building
 {
     public List<Resource> resources = new List<Resource>();

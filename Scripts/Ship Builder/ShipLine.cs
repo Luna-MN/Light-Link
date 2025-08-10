@@ -1,5 +1,5 @@
 using Godot;
-
+[GlobalClass]
 public partial class ShipLine : Line2D
 {
     private readonly ShipBuilder shipBuilder;

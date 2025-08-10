@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class ShipBuilderCamera : Camera2D
 {
 	private bool isDragging;

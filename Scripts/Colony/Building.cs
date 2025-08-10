@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class Building : Node2D
 {
 	public MeshInstance2D Mesh;

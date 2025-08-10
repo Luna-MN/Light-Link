@@ -1,6 +1,6 @@
 ﻿using Godot;
 using System;
-
+[GlobalClass]
 public partial class SelectionBracket : Node2D
 {
     [Export] public float BracketLength = 16.0f;

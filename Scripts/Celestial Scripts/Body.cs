@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class Body : Node2D
 {
 	public LowPolyMesh Mesh;

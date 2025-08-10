@@ -1,6 +1,6 @@
 using Godot;
 using System.Collections.Generic;
-
+[GlobalClass]
 public partial class ShipMesh : MeshInstance2D
 {
     [Export] public Color CockpitColor = new Color(0.2f, 0.6f, 1.0f);

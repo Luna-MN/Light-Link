@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-
+[GlobalClass]
 public partial class Planet : Body
 {
 	private TrailEffect trail;
