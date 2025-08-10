@@ -61,20 +61,24 @@ public partial class Module : Node2D
 				AttachmentLine.AddPoint(ToLocal(closestPoint.GlobalPosition));
 			}
 		}
+		else if (PossiblePoints.Count == 0)
+		{
+			QueueFree();
+		}
 	}
 
 	public override void _Input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseButtonEvent)
 		{
-			if (mouseButtonEvent.ButtonIndex == MouseButton.Left && mouseButtonEvent.Pressed)
+			if (mouseButtonEvent.ButtonIndex == MouseButton.Left && mouseButtonEvent.Pressed && !placed)
 			{
-				if (closestPoint.GlobalPosition.DistanceTo(GlobalPosition) < 100)
+				if (closestPoint != null && closestPoint.GlobalPosition.DistanceTo(GlobalPosition) < 100)
 				{
 					placed = true;
 					Modulate = new Color(1, 1, 1, 1);
 					Position = closestPoint.Position;
-					AttachmentLine.QueueFree();
+					AttachmentLine?.QueueFree();
 					cam.suppressMovmentTimer.Start();
 					ship.ShowNodes(false);
 					ship.shipNodes.Remove(closestPoint);

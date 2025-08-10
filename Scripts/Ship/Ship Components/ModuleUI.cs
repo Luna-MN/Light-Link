@@ -88,7 +88,8 @@ public partial class ModuleUI : Panel
 		}
 		else
 		{
-			mod?.QueueFree();
+			mod.QueueFree();
+			mod = null;
 		}
 	}
 }

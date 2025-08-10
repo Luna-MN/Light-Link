@@ -5,7 +5,11 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class Gun : Module
 {
-    [Export] public string[] paths;
+    public string[] paths = new string[]
+    {
+        "res://Meshs/Modules/SimpleLaserMesh.tscn",
+        "res://Meshs/Modules/SimpleGunMesh.tscn",
+    };
     private string path = "res://Meshs/Modules/SimpleGunMesh.tscn";
     public Gun(ModuleUI.GunName gunName)
     {
