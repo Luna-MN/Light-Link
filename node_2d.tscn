@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=10 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="Resource" path="res://MyShips/Test with all the nodes.tres.tres" id="4_kdubu"]
+[ext_resource type="Script" uid="uid://hr6fxxqb3yiq" path="res://Canvas.cs" id="6_4d7sh"]
 [ext_resource type="PackedScene" uid="uid://c0van5yfdutpp" path="res://OpenModuleSelect.tscn" id="7_d21ai"]
 [ext_resource type="Script" uid="uid://b70ocx6itd5pd" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
 [ext_resource type="PackedScene" uid="uid://clpi3ms0ipus5" path="res://Meshs/Modules/GunContainer.tscn" id="7_rj586"]
@@ -33,6 +34,7 @@ position = Vector2(577, 326)
 script = ExtResource("2_1u1cq")
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="Camera2D"]
+script = ExtResource("6_4d7sh")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer2"]
 anchors_preset = 6
@@ -55,4 +57,3 @@ moduleScene = ExtResource("7_rj586")
 layout_mode = 2
 color = Color(0.284106, 0.603586, 0.832083, 1)
 moduleScene = ExtResource("8_rj586")
-moduleName = 1
