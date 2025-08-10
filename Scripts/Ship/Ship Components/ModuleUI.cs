@@ -16,10 +16,45 @@ public partial class ModuleUI : Panel
 	{
 		Weapon,
 		Shield,
-		Engine
+		Utility
 	};
 	[Export]
 	public ModuleName moduleName;
+	
+	public enum GunName
+	{
+		Laser,
+		Rocket,
+		Missile,
+		Beam,
+		Plasma,
+		Ion,
+		PlasmaCannon,
+		IonCannon,
+		PlasmaRailgun,
+		IonRailgun,
+	};
+
+	[Export] public GunName gunName;
+	
+	public enum ShieldName
+	{
+		physical,
+		light,
+		plasma,
+	};
+
+	[Export] public ShieldName shieldName;
+	
+	public enum UtilityName
+	{
+		Engine,
+		Oxygen,
+		AttachmentPoint
+	};
+	
+	[Export] public UtilityName utilityName;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -37,12 +72,12 @@ public partial class ModuleUI : Panel
 		switch (moduleName)
 		{
 			case ModuleName.Weapon:
-				mod = new Gun();
+				mod = new Gun(gunName);
 				break;
 			case ModuleName.Shield:
-				mod = new Shield();
+				mod = new Shield(shieldName);
 				break;
-			case ModuleName.Engine:
+			case ModuleName.Utility:
 				break;
 		}
 
