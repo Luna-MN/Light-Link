@@ -16,25 +16,29 @@ size = Vector2(188, 37)
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton")]
 script = ExtResource("1_6ykhb")
-Weapon = NodePath("CanvasLayer/Panel/NodeSelect/Weapon")
-Shield = NodePath("CanvasLayer/Panel/NodeSelect/Shield")
-Utility = NodePath("CanvasLayer/Panel/NodeSelect/Utility")
-Power = NodePath("CanvasLayer/Panel/NodeSelect/Power")
-SaveButton = NodePath("CanvasLayer/Save_Load/Save To File")
-LoadButton = NodePath("CanvasLayer/Save_Load/Load From File")
-uiArea = NodePath("CanvasLayer/Panel/Area2D")
+Weapon = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Weapon")
+Shield = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Shield")
+Utility = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Utility")
+Power = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Power")
+SaveButton = NodePath("Camera2D/CanvasLayer/Save_Load/Save To File")
+LoadButton = NodePath("Camera2D/CanvasLayer/Save_Load/Load From File")
+uiArea = NodePath("Camera2D/CanvasLayer/Panel/Area2D")
 FileSelectScene = ExtResource("2_3af54")
-WeaponText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Metal")
-ShieldText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Ice")
-UtilityText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Carbon")
-PowerText = NodePath("CanvasLayer/Resource Panel/BoxContainer/Gas")
-NodeButton = NodePath("CanvasLayer/HBoxContainer/Nodes")
-LineButton = NodePath("CanvasLayer/HBoxContainer/Lines")
-TriangleButton = NodePath("CanvasLayer/HBoxContainer/Triangles")
+WeaponText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Metal")
+ShieldText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Ice")
+UtilityText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Carbon")
+PowerText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Gas")
+NodeButton = NodePath("Camera2D/CanvasLayer/HBoxContainer/Nodes")
+LineButton = NodePath("Camera2D/CanvasLayer/HBoxContainer/Lines")
+TriangleButton = NodePath("Camera2D/CanvasLayer/HBoxContainer/Triangles")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 323)
+script = ExtResource("3_ncxx8")
 
-[node name="Panel" type="Panel" parent="CanvasLayer"]
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Panel" type="Panel" parent="Camera2D/CanvasLayer"]
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
@@ -46,43 +50,43 @@ offset_bottom = 71.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="NodeSelect" type="BoxContainer" parent="CanvasLayer/Panel"]
+[node name="NodeSelect" type="BoxContainer" parent="Camera2D/CanvasLayer/Panel"]
 layout_mode = 0
 offset_right = 175.0
 offset_bottom = 136.0
 vertical = true
 
-[node name="Weapon" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
+[node name="Weapon" type="Button" parent="Camera2D/CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Weapon"
 
-[node name="Shield" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
+[node name="Shield" type="Button" parent="Camera2D/CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Shield"
 
-[node name="Utility" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
+[node name="Utility" type="Button" parent="Camera2D/CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Utility"
 
-[node name="Power" type="Button" parent="CanvasLayer/Panel/NodeSelect"]
+[node name="Power" type="Button" parent="Camera2D/CanvasLayer/Panel/NodeSelect"]
 layout_mode = 2
 text = "Power"
 
-[node name="Area2D" type="Area2D" parent="CanvasLayer/Panel"]
+[node name="Area2D" type="Area2D" parent="Camera2D/CanvasLayer/Panel"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Camera2D/CanvasLayer/Panel/Area2D"]
 position = Vector2(88, 70)
 shape = SubResource("RectangleShape2D_v5t5c")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Camera2D/CanvasLayer/Panel/Area2D"]
 position = Vector2(109.5, -219)
 shape = SubResource("RectangleShape2D_37mrm")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="CanvasLayer/Panel/Area2D"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Camera2D/CanvasLayer/Panel/Area2D"]
 position = Vector2(-398, -233.5)
 shape = SubResource("RectangleShape2D_kcor4")
 
-[node name="Save_Load" type="VBoxContainer" parent="CanvasLayer"]
+[node name="Save_Load" type="VBoxContainer" parent="Camera2D/CanvasLayer"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -90,19 +94,19 @@ offset_left = -98.0
 offset_bottom = 40.0
 grow_horizontal = 0
 
-[node name="Save To File" type="Button" parent="CanvasLayer/Save_Load"]
+[node name="Save To File" type="Button" parent="Camera2D/CanvasLayer/Save_Load"]
 layout_mode = 2
 text = "Save To File"
 
-[node name="Load From File" type="Button" parent="CanvasLayer/Save_Load"]
+[node name="Load From File" type="Button" parent="Camera2D/CanvasLayer/Save_Load"]
 layout_mode = 2
 text = "Load From File"
 
-[node name="Resource Panel" type="Panel" parent="CanvasLayer"]
+[node name="Resource Panel" type="Panel" parent="Camera2D/CanvasLayer"]
 offset_right = 206.0
 offset_bottom = 155.0
 
-[node name="BoxContainer" type="BoxContainer" parent="CanvasLayer/Resource Panel"]
+[node name="BoxContainer" type="BoxContainer" parent="Camera2D/CanvasLayer/Resource Panel"]
 custom_minimum_size = Vector2(0, 8.885)
 layout_mode = 0
 offset_right = 206.0
@@ -110,7 +114,7 @@ offset_bottom = 154.0
 alignment = 1
 vertical = true
 
-[node name="Metal" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+[node name="Metal" type="TextEdit" parent="Camera2D/CanvasLayer/Resource Panel/BoxContainer"]
 layout_mode = 2
 text = "Metal:"
 editable = false
@@ -123,7 +127,7 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 scroll_fit_content_height = true
 
-[node name="Ice" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+[node name="Ice" type="TextEdit" parent="Camera2D/CanvasLayer/Resource Panel/BoxContainer"]
 layout_mode = 2
 text = "Ice:"
 editable = false
@@ -136,7 +140,7 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 scroll_fit_content_height = true
 
-[node name="Carbon" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+[node name="Carbon" type="TextEdit" parent="Camera2D/CanvasLayer/Resource Panel/BoxContainer"]
 layout_mode = 2
 text = "Carbon:"
 editable = false
@@ -149,7 +153,7 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 scroll_fit_content_height = true
 
-[node name="Gas" type="TextEdit" parent="CanvasLayer/Resource Panel/BoxContainer"]
+[node name="Gas" type="TextEdit" parent="Camera2D/CanvasLayer/Resource Panel/BoxContainer"]
 layout_mode = 2
 text = "Gas:"
 editable = false
@@ -162,7 +166,7 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 scroll_fit_content_height = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -171,21 +175,17 @@ offset_right = 20.0
 offset_bottom = 40.0
 grow_horizontal = 2
 
-[node name="Nodes" type="Button" parent="CanvasLayer/HBoxContainer"]
+[node name="Nodes" type="Button" parent="Camera2D/CanvasLayer/HBoxContainer"]
 layout_mode = 2
 text = "Nodes"
 
-[node name="Lines" type="Button" parent="CanvasLayer/HBoxContainer"]
+[node name="Lines" type="Button" parent="Camera2D/CanvasLayer/HBoxContainer"]
 layout_mode = 2
 text = "Lines"
 
-[node name="Triangles" type="Button" parent="CanvasLayer/HBoxContainer"]
+[node name="Triangles" type="Button" parent="Camera2D/CanvasLayer/HBoxContainer"]
 layout_mode = 2
 text = "Triangles"
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(576, 323)
-script = ExtResource("3_ncxx8")
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource("4_4ngq5")

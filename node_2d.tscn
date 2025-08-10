@@ -1,12 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=9 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
 [ext_resource type="Resource" path="res://MyShips/Test with all the nodes.tres.tres" id="4_kdubu"]
-[ext_resource type="PackedScene" uid="uid://dwp6sv48sw3ru" path="res://ModuleContainer.tscn" id="6_kdubu"]
 [ext_resource type="PackedScene" uid="uid://c0van5yfdutpp" path="res://OpenModuleSelect.tscn" id="7_d21ai"]
 [ext_resource type="Script" uid="uid://b70ocx6itd5pd" path="res://Scripts/Colony/ResourcePlace.cs" id="7_du31x"]
+[ext_resource type="PackedScene" uid="uid://clpi3ms0ipus5" path="res://Meshs/Modules/GunContainer.tscn" id="7_rj586"]
 [ext_resource type="Script" uid="uid://b221x55ma3yc" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
+[ext_resource type="PackedScene" uid="uid://qnd4ct05cr7r" path="res://Meshs/Modules/ShieldContainer.tscn" id="8_rj586"]
 
 [node name="Node2D" type="Control"]
 layout_mode = 3
@@ -45,6 +46,13 @@ offset_bottom = 52.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="Panel" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
+[node name="Weps" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
 layout_mode = 2
-moduleScene = ExtResource("6_kdubu")
+color = Color(0.832554, 0.0092205, 0.407105, 1)
+moduleScene = ExtResource("7_rj586")
+
+[node name="Shields" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
+layout_mode = 2
+color = Color(0.284106, 0.603586, 0.832083, 1)
+moduleScene = ExtResource("8_rj586")
+moduleName = 1
