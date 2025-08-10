@@ -7,7 +7,7 @@ public partial class PlayerCreatedShip : PlayerShips
 {
     [Export] public ShipSave shipSave;
     [Export] public string shipPath;
-    private List<AttachmentPoint> shipNodes = new();
+    public List<AttachmentPoint> shipNodes = new();
      public override void _Ready()
     {
 

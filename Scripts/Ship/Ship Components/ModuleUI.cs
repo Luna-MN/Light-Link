@@ -45,6 +45,14 @@ public partial class ModuleUI : Panel
 			case ModuleName.Engine:
 				break;
 		}
-		GetTree().Root.GetChildren().FirstOrDefault()?.AddChild(mod);
+
+		if (((Camera)GetViewport().GetCamera2D()).ships.Count == 1)
+		{
+			((Camera)GetViewport().GetCamera2D()).ships[0].AddChild(mod);
+		}
+		else
+		{
+			mod?.QueueFree();
+		}
 	}
 }

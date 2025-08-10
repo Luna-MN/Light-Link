@@ -10,6 +10,8 @@ public partial class Module : Node2D
 	private Camera cam;
 	private PlayerCreatedShip ship;
 	private List<AttachmentPoint> PossiblePoints = new List<AttachmentPoint>();
+	private AttachmentPoint closestPoint;
+	private Line2D AttachmentLine;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -21,7 +23,7 @@ public partial class Module : Node2D
 			ship = shipL;
 			ship.ShowNodes(true);
 			cam.ModulePlacing = true;
-			foreach (var ap in ship.attachmentPoints)
+			foreach (var ap in ship.shipNodes)
 			{
 				if (moduleName.ToString() == ap.NodeType.ToString())
 				{
@@ -33,6 +35,9 @@ public partial class Module : Node2D
 				}
 			}
 		}
+		AttachmentLine = new Line2D();
+		AttachmentLine.Width = 0.5f;
+		AddChild(AttachmentLine);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,7 +45,21 @@ public partial class Module : Node2D
 	{
 		if (!placed)
 		{
-			Position = GetGlobalMousePosition();
+			GlobalPosition = GetGlobalMousePosition();
+			closestPoint = PossiblePoints[0];
+			foreach (var ap in PossiblePoints)
+			{
+				if (ap.GlobalPosition.DistanceTo(GlobalPosition) < closestPoint.GlobalPosition.DistanceTo(GlobalPosition))
+				{
+					closestPoint = ap;
+				}
+			}
+			AttachmentLine.ClearPoints();
+			if (closestPoint.GlobalPosition.DistanceTo(GlobalPosition) < 100)
+			{
+				AttachmentLine.AddPoint(ToLocal(GlobalPosition));
+				AttachmentLine.AddPoint(ToLocal(closestPoint.GlobalPosition));
+			}
 		}
 	}
 
@@ -52,6 +71,8 @@ public partial class Module : Node2D
 			{
 				placed = true;
 				Modulate = new Color(1, 1, 1, 1);
+				Position = closestPoint.Position;
+				AttachmentLine.QueueFree();
 				cam.suppressMovmentTimer.Start();
 				ship.ShowNodes(false);
 			}
