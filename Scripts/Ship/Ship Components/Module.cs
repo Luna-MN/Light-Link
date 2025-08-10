@@ -43,7 +43,7 @@ public partial class Module : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (!placed)
+		if (!placed && PossiblePoints.Count > 0)
 		{
 			GlobalPosition = GetGlobalMousePosition();
 			closestPoint = PossiblePoints[0];
@@ -77,6 +77,7 @@ public partial class Module : Node2D
 					AttachmentLine.QueueFree();
 					cam.suppressMovmentTimer.Start();
 					ship.ShowNodes(false);
+					ship.shipNodes.Remove(closestPoint);
 				}
 			}
 		}

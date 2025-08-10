@@ -38,9 +38,9 @@ public partial class ModuleUI : Panel
 		{
 			case ModuleName.Weapon:
 				mod = new Gun();
-				GD.Print("Pressed");
 				break;
 			case ModuleName.Shield:
+				mod = new Shield();
 				break;
 			case ModuleName.Engine:
 				break;
@@ -48,6 +48,7 @@ public partial class ModuleUI : Panel
 
 		if (((Camera)GetViewport().GetCamera2D()).ships.Count == 1)
 		{
+			mod.moduleName = moduleName;
 			((Camera)GetViewport().GetCamera2D()).ships[0].AddChild(mod);
 		}
 		else
