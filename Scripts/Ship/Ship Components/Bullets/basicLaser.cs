@@ -16,14 +16,14 @@ public partial class basicLaser : basicBullet
     public override void _Ready()
     {
         laser = new Line2D();
-        laser.Position = Position;
+        laser.Width = 0.5f;
         AddChild(laser);
         base._Ready();
     }
     public override void OnBulletFired(double delta)
     {
         laser.ClearPoints();
-        laser.AddPoint(Position);
+        laser.AddPoint(GlobalPosition);
         laser.AddPoint(target.GlobalPosition);
     }
     public override void OnBulletTimeout()
