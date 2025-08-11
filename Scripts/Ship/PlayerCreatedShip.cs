@@ -8,6 +8,12 @@ public partial class PlayerCreatedShip : PlayerShips
     [Export] public ShipSave shipSave;
     [Export] public string shipPath;
     public List<AttachmentPoint> shipNodes = new();
+    public List<Module> modules = new();
+    public List<Gun> guns = new();
+    public List<Shield> shields = new();
+    
+    [Export]
+    public Node2D TargetNode = null;
      public override void _Ready()
     {
 
@@ -25,8 +31,19 @@ public partial class PlayerCreatedShip : PlayerShips
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if (TargetNode != null)
+        {
+            LookTowardsTarget(TargetNode.GlobalPosition);
+        }
     }
 
+    public void LookTowardsTarget(Vector2 target)
+    {
+        foreach (var gun in guns)
+        {
+            gun.LookAt(target);
+        }
+    }
     public void ShowNodes(bool vis)
     {
         foreach (var node in shipNodes)

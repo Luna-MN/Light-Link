@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=12 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://clpi3ms0ipus5" path="res://Meshs/Modules/GunContainer.tscn" id="7_rj586"]
 [ext_resource type="Script" uid="uid://b221x55ma3yc" path="res://Scripts/Ship/PlayerCreatedShip.cs" id="8_id0ui"]
 [ext_resource type="PackedScene" uid="uid://qnd4ct05cr7r" path="res://Meshs/Modules/ShieldContainer.tscn" id="8_rj586"]
+[ext_resource type="PackedScene" uid="uid://pubiddto1r0v" path="res://Meshs/Modules/UtilityContainer.tscn" id="10_ir8iy"]
+[ext_resource type="PackedScene" uid="uid://dtpyvunv46h4l" path="res://Meshs/Modules/PowerContainer.tscn" id="11_hqns4"]
 
 [node name="Node2D" type="Control"]
 layout_mode = 3
@@ -24,10 +26,11 @@ script = ExtResource("1_jk2el")
 visible = false
 script = ExtResource("7_du31x")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Node2D" type="Node2D" parent="." node_paths=PackedStringArray("TargetNode")]
 position = Vector2(157, 142)
 script = ExtResource("8_id0ui")
 shipSave = ExtResource("4_kdubu")
+TargetNode = NodePath("../Node2D2")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)
@@ -57,3 +60,15 @@ moduleScene = ExtResource("7_rj586")
 layout_mode = 2
 color = Color(0.284106, 0.603586, 0.832083, 1)
 moduleScene = ExtResource("8_rj586")
+
+[node name="Utility" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
+layout_mode = 2
+color = Color(0, 1, 0, 1)
+moduleScene = ExtResource("10_ir8iy")
+
+[node name="Power" parent="Camera2D/CanvasLayer2/VBoxContainer" instance=ExtResource("7_d21ai")]
+layout_mode = 2
+color = Color(1, 1, 0, 1)
+moduleScene = ExtResource("11_hqns4")
+
+[node name="Node2D2" type="Node2D" parent="."]

@@ -81,10 +81,16 @@ public partial class Module : Node2D
 					AttachmentLine?.QueueFree();
 					cam.suppressMovmentTimer.Start();
 					ship.ShowNodes(false);
+					Placed(ship);
 					ship.shipNodes.Remove(closestPoint);
 				}
 			}
 		}
+	}
+
+	public virtual void Placed(PlayerCreatedShip ship)
+	{
+		ship.modules.Add(this);
 	}
 }
 	
