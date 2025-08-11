@@ -1,11 +1,11 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class basicBullet : MeshInstance2D
 {
     public float speed = 50f;
     public Node2D target;
-
+    public Timer BulletTimeout;
     public basicBullet(Node2D target)
     {
         this.target = target;
@@ -18,7 +18,14 @@ public partial class basicBullet : MeshInstance2D
     public override void _Process(double delta)
     {
         OnBulletFired(delta);
-        base._Process(delta);
+        BulletTimeout = new Timer()
+        {
+            Autostart = true,
+            OneShot = false,
+            WaitTime = 2f
+        };
+        BulletTimeout.Timeout += OnBulletTimeout;
+        AddChild(BulletTimeout);
     }
 
     public virtual void OnBulletFired(double delta)
@@ -38,5 +45,10 @@ public partial class basicBullet : MeshInstance2D
     public virtual void OnBulletHit()
     {
         
+    }
+
+    public virtual void OnBulletTimeout()
+    {
+        QueueFree();
     }
 }
