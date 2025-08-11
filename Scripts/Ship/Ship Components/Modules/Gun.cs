@@ -14,6 +14,7 @@ public partial class Gun : Module
     private string path = "res://Meshs/Modules/SimpleGunMesh.tscn";
     public Timer FireTimer;
     public string BulletMeshPath = "res://Meshs/Bullets/basicBullet.tscn";
+    public Node2D target;
     public Gun(ModuleUI.GunName gunName)
     {
         if ((int)gunName < paths.Length)
@@ -56,7 +57,8 @@ public partial class Gun : Module
         {
             GD.Print("Firing!");
             var bulletScene = GD.Load<PackedScene>(BulletMeshPath);
-            var bullet = bulletScene.Instantiate<MeshInstance2D>();
+            var bullet = bulletScene.Instantiate<basicBullet>();
+            bullet.target = target;
             bullet.Scale = new Vector2(0.5f, 0.5f);
             bullet.Rotation = Rotation;
             bullet.GlobalPosition = GlobalPosition;

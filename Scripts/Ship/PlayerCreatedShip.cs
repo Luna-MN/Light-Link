@@ -42,6 +42,7 @@ public partial class PlayerCreatedShip : PlayerShips
         foreach (var gun in guns)
         {
             gun.LookAt(target);
+            gun.target = TargetNode;
         }
     }
     public void ShowNodes(bool vis)

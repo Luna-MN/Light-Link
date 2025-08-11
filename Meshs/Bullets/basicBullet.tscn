@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://byaeokan17q1n"]
+[gd_scene load_steps=3 format=3 uid="uid://byaeokan17q1n"]
+
+[ext_resource type="Script" uid="uid://pwd630mptj3c" path="res://Scripts/Ship/Ship Components/Bullets/basicBullet.cs" id="1_y3ctc"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_l0b6w"]
 
@@ -6,3 +8,4 @@
 position = Vector2(-1.90735e-06, 9.53674e-07)
 scale = Vector2(202, 60)
 mesh = SubResource("BoxMesh_l0b6w")
+script = ExtResource("1_y3ctc")
