@@ -15,9 +15,9 @@ public partial class basicBullet : MeshInstance2D
     {
         
     }
-    public override void _Process(double delta)
+
+    public override void _Ready()
     {
-        OnBulletFired(delta);
         BulletTimeout = new Timer()
         {
             Autostart = true,
@@ -26,6 +26,11 @@ public partial class basicBullet : MeshInstance2D
         };
         BulletTimeout.Timeout += OnBulletTimeout;
         AddChild(BulletTimeout);
+    }
+
+    public override void _Process(double delta)
+    {
+        OnBulletFired(delta);
     }
 
     public virtual void OnBulletFired(double delta)

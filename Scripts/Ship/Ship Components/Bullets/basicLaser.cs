@@ -4,9 +4,11 @@ using System;
 public partial class basicLaser : basicBullet
 {
     public Line2D laser;
-    public basicLaser(Node2D target) : base(target)
+    public LaserGun gun;
+    public basicLaser(Node2D target, LaserGun gun) : base(target)
     {
-        
+        this.target = target;
+        this.gun = gun;
     }
     public basicLaser()
     {
@@ -16,18 +18,18 @@ public partial class basicLaser : basicBullet
     public override void _Ready()
     {
         laser = new Line2D();
-        laser.Width = 0.5f;
+        laser.Width = 1f;
         AddChild(laser);
         base._Ready();
     }
     public override void OnBulletFired(double delta)
     {
         laser.ClearPoints();
-        laser.AddPoint(GlobalPosition);
+        laser.AddPoint(gun.GlobalPosition);
         laser.AddPoint(target.GlobalPosition);
     }
     public override void OnBulletTimeout()
     {
-        base.OnBulletTimeout();
+
     }
 }

@@ -72,7 +72,7 @@ public partial class ModuleUI : Panel
 		switch (moduleName)
 		{
 			case ModuleName.Weapon:
-				mod = new Gun(gunName);
+				mod = CreateGun(gunName);
 				break;
 			case ModuleName.Shield:
 				mod = new Shield(shieldName);
@@ -91,5 +91,20 @@ public partial class ModuleUI : Panel
 			mod.QueueFree();
 			mod = null;
 		}
+	}
+
+	public Module CreateGun(GunName gunName)
+	{
+		Module mod = null;
+		switch (gunName)
+		{
+			case GunName.Laser:
+				mod = new LaserGun();
+				break;
+			case GunName.Rocket:
+				mod = new Gun(gunName);
+				break;
+		}
+		return mod;
 	}
 }
