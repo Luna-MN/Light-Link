@@ -4,7 +4,7 @@ using System.Linq;
 
 public partial class LaserGun : Gun
 {
-    public LaserGun() : base(ModuleUI.GunName.Laser)
+    public LaserGun(ModuleUI.GunName laserName = ModuleUI.GunName.Laser) : base(laserName)
     {
     }
     

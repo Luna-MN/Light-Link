@@ -55,11 +55,9 @@ public partial class Gun : Module
     {
         if (placed)
         {
-            GD.Print("Firing!");
             var bulletScene = GD.Load<PackedScene>(BulletMeshPath);
             var bullet = bulletScene.Instantiate<basicBullet>();
             bullet.target = target;
-            bullet.Scale = new Vector2(0.5f, 0.5f);
             bullet.Rotation = Rotation;
             bullet.GlobalPosition = GlobalPosition;
             GetTree().Root.GetChildren().FirstOrDefault()?.AddChild(bullet);
