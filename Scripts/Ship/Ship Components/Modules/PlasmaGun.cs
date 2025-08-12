@@ -8,10 +8,8 @@ public partial class PlasmaGun : LaserGun
         
     }
 
-    public override void Placed(PlayerCreatedShip ship)
+    public override void laserBeam(PlayerCreatedShip ship)
     {
-        additive = true;
-        base.Placed(ship);
         var bullet = new plasmaLaser(ship.TargetNode, this);
         GetTree().CurrentScene.AddChild(bullet);
     }

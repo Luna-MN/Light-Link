@@ -4,7 +4,6 @@ using System.Linq;
 [GlobalClass]
 public partial class LaserGun : Gun
 {
-    public bool additive = false;
     public LaserGun(ModuleUI.GunName laserName = ModuleUI.GunName.Laser) : base(laserName)
     {
     }
@@ -13,12 +12,13 @@ public partial class LaserGun : Gun
     public override void Placed(PlayerCreatedShip ship)
     {
         base.Placed(ship);
-        if (!additive)
-        {
-            var bullet = new basicLaser(ship.TargetNode, this);
-            GetTree().CurrentScene.AddChild(bullet);
-        }
+        laserBeam(ship);
+    }
 
+    public virtual void laserBeam(PlayerCreatedShip ship)
+    {
+        var bullet = new basicLaser(ship.TargetNode, this);
+        GetTree().CurrentScene.AddChild(bullet);
     }
 
     public override void Fire()
