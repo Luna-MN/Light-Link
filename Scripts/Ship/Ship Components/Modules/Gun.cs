@@ -6,11 +6,13 @@ using System.Linq;
 [GlobalClass]
 public partial class Gun : Module
 {
+    public Type BulletType = typeof(basicBullet);
     public string[] paths = new string[]
     {
         "res://Meshs/Modules/SimpleLaserMesh.tscn",
         "res://Meshs/Modules/SimpleGunMesh.tscn",
         "res://Meshs/Modules/SimpleMissileMesh.tscn",
+        "res://Meshs/Modules/SimpleLaserMesh.tscn",
     };
     private string path = "res://Meshs/Modules/SimpleGunMesh.tscn";
     public Timer FireTimer;

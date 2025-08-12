@@ -26,8 +26,8 @@ public partial class ModuleUI : Panel
 		Laser,
 		Rocket,
 		Missile,
-		Beam,
 		Plasma,
+		Beam,
 		Ion,
 		PlasmaCannon,
 		IonCannon,
@@ -109,6 +109,7 @@ public partial class ModuleUI : Panel
 				break;
 			case GunName.Plasma:
 				mod = new PlasmaGun();
+				GD.Print("plasma");
 				break;
 		}
 		return mod;
