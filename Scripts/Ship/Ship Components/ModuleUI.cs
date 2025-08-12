@@ -107,6 +107,9 @@ public partial class ModuleUI : Panel
 			case GunName.Missile:
 				mod = new MissileGun();
 				break;
+			case GunName.Plasma:
+				mod = new PlasmaGun();
+				break;
 		}
 		return mod;
 	}

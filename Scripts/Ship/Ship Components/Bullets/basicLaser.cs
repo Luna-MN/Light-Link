@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class basicLaser : basicBullet
 {
     public Line2D laser;
