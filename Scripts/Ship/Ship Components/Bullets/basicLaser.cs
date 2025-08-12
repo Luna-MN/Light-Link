@@ -22,7 +22,7 @@ public partial class basicLaser : basicBullet
         AddChild(laser);
         base._Ready();
     }
-    public override void OnBulletFired(double delta)
+    public override void MoveBullet(float time)
     {
         laser.ClearPoints();
         laser.AddPoint(gun.GlobalPosition);

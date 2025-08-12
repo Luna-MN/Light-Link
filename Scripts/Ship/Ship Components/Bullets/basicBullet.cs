@@ -6,6 +6,7 @@ public partial class basicBullet : MeshInstance2D
     public float speed = 50f;
     public Node2D target;
     public Timer BulletTimeout;
+    public bool move = false;
     public basicBullet(Node2D target)
     {
         this.target = target;
@@ -26,16 +27,17 @@ public partial class basicBullet : MeshInstance2D
         };
         BulletTimeout.Timeout += OnBulletTimeout;
         AddChild(BulletTimeout);
+        OnBulletFired();
     }
 
     public override void _Process(double delta)
     {
-        OnBulletFired(delta);
+        MoveBullet((float)delta);
     }
 
-    public virtual void OnBulletFired(double delta)
+    public virtual void OnBulletFired()
     {
-        MoveBullet((float)delta);
+        move = true;
     }
 
     public virtual void MoveBullet(float time)
