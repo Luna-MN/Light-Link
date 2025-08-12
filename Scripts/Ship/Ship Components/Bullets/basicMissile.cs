@@ -3,6 +3,7 @@ using System;
 
 public partial class basicMissile : basicBullet
 {
+    public float missileRamp = 1f;
     public override void _Ready()
     {
         speed = 10f;
@@ -12,7 +13,7 @@ public partial class basicMissile : basicBullet
 
     public override void MoveBullet(float time)
     {
-        speed += 1f;
+        speed += missileRamp;
         base.MoveBullet(time);
     }
 }
