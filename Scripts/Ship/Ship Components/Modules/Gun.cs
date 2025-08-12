@@ -10,6 +10,7 @@ public partial class Gun : Module
     {
         "res://Meshs/Modules/SimpleLaserMesh.tscn",
         "res://Meshs/Modules/SimpleGunMesh.tscn",
+        "res://Meshs/Modules/SimpleMissileMesh.tscn",
     };
     private string path = "res://Meshs/Modules/SimpleGunMesh.tscn";
     public Timer FireTimer;
@@ -57,6 +58,7 @@ public partial class Gun : Module
         {
             var bulletScene = GD.Load<PackedScene>(BulletMeshPath);
             var bullet = bulletScene.Instantiate<basicBullet>();
+            bullet.Scale = new Vector2(1f, 1f);
             bullet.target = target;
             bullet.Rotation = Rotation;
             bullet.GlobalPosition = GlobalPosition;

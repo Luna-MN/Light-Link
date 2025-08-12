@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://pubiddto1r0v"]
+
+[ext_resource type="PackedScene" uid="uid://dwp6sv48sw3ru" path="res://ModuleContainer.tscn" id="1_qeh2a"]
+
+[node name="Module Container" instance=ExtResource("1_qeh2a")]

@@ -10,7 +10,7 @@ public partial class MissileGun : Gun
 
     public override void _Ready()
     {
-        BulletMeshPath = "res://Meshes/Bullets/basicMissile.tscn";
+        BulletMeshPath = "res://Meshs/Bullets/basicMissile.tscn";
         base._Ready();
         FireTimer.WaitTime = 1f;
     }

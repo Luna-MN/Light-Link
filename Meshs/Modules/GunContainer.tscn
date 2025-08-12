@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://clpi3ms0ipus5"]
+
+[ext_resource type="PackedScene" uid="uid://dwp6sv48sw3ru" path="res://ModuleContainer.tscn" id="1_ri3hi"]
+[ext_resource type="PackedScene" uid="uid://de2y7t6sie86b" path="res://Module Scene.tscn" id="2_v03cc"]
+
+[node name="Module Container" instance=ExtResource("1_ri3hi")]
+
+[node name="BasicGun" parent="." index="0" instance=ExtResource("2_v03cc")]
+layout_mode = 2
+color = Color(1, 0, 0, 1)
+gunName = 1
+
+[node name="Laser" parent="." index="1" instance=ExtResource("2_v03cc")]
+layout_mode = 2
+color = Color(0.352941, 1, 1, 1)
+
+[node name="Missile" parent="." index="2" instance=ExtResource("2_v03cc")]
+layout_mode = 2
+color = Color(1, 0.376471, 0.12549, 1)
+gunName = 2

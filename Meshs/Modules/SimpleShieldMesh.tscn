@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpw0epikod3cy"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_2wevx"]
+radius = 10.0
+height = 20.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_klfwp"]
+
+[node name="Node2D" type="Node2D"]
+modulate = Color(0.521569, 0.768627, 0.980392, 1)
+
+[node name="Body" type="MeshInstance2D" parent="."]
+mesh = SubResource("SphereMesh_2wevx")
+
+[node name="Bot Right" type="Node2D" parent="."]
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="Bot Right"]
+position = Vector2(6.75, 8.75)
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="Bot Right"]
+position = Vector2(8.75, 6.75)
+rotation = 1.5708
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="Bot Left" type="Node2D" parent="."]
+
+[node name="MeshInstance2D4" type="MeshInstance2D" parent="Bot Left"]
+position = Vector2(-6.75, 8.75)
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="MeshInstance2D5" type="MeshInstance2D" parent="Bot Left"]
+position = Vector2(-8.75, 6.75)
+rotation = 1.5708
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="Top Left" type="Node2D" parent="."]
+
+[node name="MeshInstance2D4" type="MeshInstance2D" parent="Top Left"]
+position = Vector2(-6.75, -8.75)
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="MeshInstance2D5" type="MeshInstance2D" parent="Top Left"]
+position = Vector2(-8.75, -6.75)
+rotation = 1.5708
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="Top Right" type="Node2D" parent="."]
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="Top Right"]
+position = Vector2(6.75, -8.75)
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")
+
+[node name="MeshInstance2D3" type="MeshInstance2D" parent="Top Right"]
+position = Vector2(8.75, -6.75)
+rotation = 1.5708
+scale = Vector2(7.5, 3.5)
+mesh = SubResource("BoxMesh_klfwp")

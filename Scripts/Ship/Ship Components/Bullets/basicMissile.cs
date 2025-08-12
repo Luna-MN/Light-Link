@@ -12,7 +12,7 @@ public partial class basicMissile : basicBullet
 
     public override void MoveBullet(float time)
     {
-        speed += 0.001f;
+        speed += 1f;
         base.MoveBullet(time);
     }
 }

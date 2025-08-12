@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://611a1aaodj1d"]
+
+[ext_resource type="PackedScene" uid="uid://b88vnw7jojh5f" path="res://Meshs/Modules/SimpleGunMesh.tscn" id="1_g0g4o"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_70bke"]
+
+[node name="Meshs" instance=ExtResource("1_g0g4o")]
+
+[node name="Barrel" parent="." index="1"]
+position = Vector2(10.125, 0)
+scale = Vector2(5.75, 6)
+
+[node name="Barrel" type="MeshInstance2D" parent="Barrel" index="0"]
+position = Vector2(1.02174, 1.86265e-08)
+rotation = -1.5708
+scale = Vector2(0.998739, 1.04611)
+mesh = SubResource("PrismMesh_70bke")
