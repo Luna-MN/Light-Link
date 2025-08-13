@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://de2y7t6sie86b"]
 
-[ext_resource type="Script" uid="uid://cr7tu8domen16" path="res://Scripts/Ship/Ship Components/ModuleUI.cs" id="1_5tmay"]
+[ext_resource type="Script" uid="uid://cr7tu8domen16" path="res://Scripts/Ship/Ship Components/ModuleUI.cs" id="1_tcfqg"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_dvbml"]
 
 [node name="Panel" type="Panel" node_paths=PackedStringArray("mesh", "button")]
 custom_minimum_size = Vector2(0, 50)
-script = ExtResource("1_5tmay")
+script = ExtResource("1_tcfqg")
 mesh = NodePath("Control/ColorRect")
 color = Color(1, 1, 1, 1)
 button = NodePath("Button")
