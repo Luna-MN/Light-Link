@@ -25,7 +25,7 @@ public partial class basicLaser : basicBullet
     public override void MoveBullet(float time)
     {
         laser.ClearPoints();
-        laser.AddPoint(gun.GlobalPosition);
+        laser.AddPoint(gun.bulletPlace.GlobalPosition);
         laser.AddPoint(target.GlobalPosition);
     }
     public override void OnBulletTimeout()

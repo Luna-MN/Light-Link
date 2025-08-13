@@ -16,3 +16,6 @@ mesh = SubResource("SphereMesh_niwb4")
 position = Vector2(13, 0)
 scale = Vector2(11.5, 6)
 mesh = SubResource("BoxMesh_j3as5")
+
+[node name="BulletPlace" type="Node2D" parent="."]
+position = Vector2(18.725, 0)

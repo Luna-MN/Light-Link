@@ -19,6 +19,7 @@ public partial class Gun : Module
     public Timer FireTimer;
     public string BulletMeshPath = "res://Meshs/Bullets/basicBullet.tscn";
     public Node2D target;
+    public Node2D bulletPlace;
     public Gun(ModuleUI.GunName gunName)
     {
         if ((int)gunName < paths.Length)
@@ -41,6 +42,7 @@ public partial class Gun : Module
         };
         AddChild(FireTimer);
         FireTimer.Timeout += Fire;
+        bulletPlace = meshParent.GetNode<Node2D>("BulletPlace");
     }
     public override void _Process(double delta)
     {
@@ -64,7 +66,7 @@ public partial class Gun : Module
             bullet.Scale = new Vector2(1f, 1f);
             bullet.target = target;
             bullet.Rotation = Rotation;
-            bullet.GlobalPosition = GlobalPosition;
+            bullet.GlobalPosition = bulletPlace.GlobalPosition;
             GetTree().Root.GetChildren().FirstOrDefault()?.AddChild(bullet);
         }
     }
