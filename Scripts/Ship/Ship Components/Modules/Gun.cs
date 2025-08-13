@@ -63,6 +63,7 @@ public partial class Gun : Module
         {
             var bulletScene = GD.Load<PackedScene>(BulletMeshPath);
             var bullet = bulletScene.Instantiate<basicBullet>();
+            bullet.gun = this;
             bullet.Scale = new Vector2(1f, 1f);
             bullet.target = target;
             bullet.Rotation = Rotation;

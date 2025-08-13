@@ -7,16 +7,17 @@ public partial class basicBullet : MeshInstance2D
     public Node2D target;
     public Timer BulletTimeout;
     public bool move = false;
+    public Gun gun;
     public basicBullet(Node2D target)
     {
         this.target = target;
     }
 
-    public basicBullet()
+    protected basicBullet()
     {
         
     }
-
+    
     public override void _Ready()
     {
         BulletTimeout = new Timer()
