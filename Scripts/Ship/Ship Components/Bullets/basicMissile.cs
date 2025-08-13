@@ -9,6 +9,7 @@ public partial class basicMissile : basicBullet
         speed = 10f;
         base._Ready();
         BulletTimeout.WaitTime = 4f;
+        BulletTimeout.Start();
     }
 
     public override void MoveBullet(float time)

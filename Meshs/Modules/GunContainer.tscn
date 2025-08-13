@@ -21,8 +21,10 @@ gunName = 2
 
 [node name="PlasmaLaser" parent="." index="3" instance=ExtResource("2_v03cc")]
 layout_mode = 2
+color = Color(0.2, 0.458824, 1, 1)
 gunName = 3
 
 [node name="Ion" parent="." index="4" instance=ExtResource("2_v03cc")]
 layout_mode = 2
+color = Color(0, 1, 1, 1)
 gunName = 4
