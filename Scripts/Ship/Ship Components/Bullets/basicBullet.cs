@@ -62,7 +62,7 @@ public partial class basicBullet : MeshInstance2D
     
     public virtual void OnBulletHit(Node2D Body)
     {
-        if (Body != gun.ship)
+        if (Body.GetParent() != gun.ship)
         {
             EmitSignal("BulletHit", Body.GetParent<Node2D>(), this, damage);
             QueueFree();

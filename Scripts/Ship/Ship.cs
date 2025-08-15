@@ -9,6 +9,8 @@ public partial class Ship : Node2D
     public bool shipSelected = false;
     [Export]
     public bool isMine = false;
+
+    [Export] public int health;
     public float speed = 100f;
     public Area2D area2D;   
     public CollisionShape2D collisionShape;

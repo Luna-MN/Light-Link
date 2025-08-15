@@ -38,6 +38,16 @@ public partial class HitDetector : Node2D
         {
             // remove Health
             GD.Print("Bullet Hit");
+            if (Body is Ship ship)
+            {
+                ship.health -= damage;
+                GD.Print(ship.health);
+                if (ship.health <= 0)
+                {
+                    ship.QueueFree();
+                    GD.Print("ship dead");
+                }
+            }
         }
         DropBullet(Bullet);
     }
