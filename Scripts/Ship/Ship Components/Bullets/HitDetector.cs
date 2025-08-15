@@ -36,8 +36,6 @@ public partial class HitDetector : Node2D
     {
         if (Ships.Contains(Body) && bullets.Contains(Bullet))
         {
-            // remove Health
-            GD.Print("Bullet Hit");
             if (Body is Ship ship)
             {
                 ship.health -= damage;
@@ -45,7 +43,6 @@ public partial class HitDetector : Node2D
                 if (ship.health <= 0)
                 {
                     ship.QueueFree();
-                    GD.Print("ship dead");
                 }
             }
         }

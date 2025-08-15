@@ -32,7 +32,15 @@ public partial class PlayerCreatedShip : PlayerShips
         base._Process(delta);
         if (TargetNode != null)
         {
-            LookTowardsTarget(TargetNode.GlobalPosition);
+            try
+            {
+                LookTowardsTarget(TargetNode.GlobalPosition);
+            }
+            catch (Exception e)
+            {
+                TargetNode = null;
+            }
+
         }
     }
 
