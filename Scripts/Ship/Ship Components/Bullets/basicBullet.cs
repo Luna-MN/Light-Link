@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Linq;
+
 [GlobalClass]
 public partial class basicBullet : MeshInstance2D
 {
@@ -8,6 +10,11 @@ public partial class basicBullet : MeshInstance2D
     public Timer BulletTimeout;
     public bool move = false;
     public Gun gun;
+    public int damage = 1;
+    
+    [Signal]
+    public delegate void BulletHitEventHandler(Node2D body, basicBullet bullet, int damage);
+    
     [Export] public Area2D hitArea;
     public basicBullet(Node2D target)
     {
@@ -30,7 +37,8 @@ public partial class basicBullet : MeshInstance2D
         BulletTimeout.Timeout += OnBulletTimeout;
         AddChild(BulletTimeout);
         OnBulletFired();
-        hitArea.BodyEntered += OnBulletHit;
+        GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterBullet(this);
+        hitArea.AreaEntered += OnBulletHit;
     }
 
     public override void _Process(double delta)
@@ -54,7 +62,11 @@ public partial class basicBullet : MeshInstance2D
     
     public virtual void OnBulletHit(Node2D Body)
     {
-        
+        if (Body != gun.ship)
+        {
+            EmitSignal("BulletHit", Body, this, damage);
+            QueueFree();
+        }
     }
 
     public virtual void OnBulletTimeout()

@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://crx8vy2afows8"]
+[gd_scene load_steps=14 format=3 uid="uid://crx8vy2afows8"]
 
 [ext_resource type="Script" uid="uid://cwbg1k4mexpp8" path="res://Main.cs" id="1_jk2el"]
 [ext_resource type="Script" uid="uid://kiddsguwtjea" path="res://Scripts/Input/Camera.cs" id="2_1u1cq"]
+[ext_resource type="Script" uid="uid://d4m4gtu1ryep6" path="res://Scripts/Ship/Ship Components/Bullets/HitDetector.cs" id="2_x0ka3"]
 [ext_resource type="Resource" path="res://MyShips/Test with all the nodes.tres.tres" id="4_kdubu"]
 [ext_resource type="Script" uid="uid://hr6fxxqb3yiq" path="res://Canvas.cs" id="6_4d7sh"]
 [ext_resource type="PackedScene" uid="uid://c0van5yfdutpp" path="res://OpenModuleSelect.tscn" id="7_d21ai"]
@@ -11,6 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://qnd4ct05cr7r" path="res://Meshs/Modules/ShieldContainer.tscn" id="8_rj586"]
 [ext_resource type="PackedScene" uid="uid://pubiddto1r0v" path="res://Meshs/Modules/UtilityContainer.tscn" id="10_ir8iy"]
 [ext_resource type="PackedScene" uid="uid://dtpyvunv46h4l" path="res://Meshs/Modules/PowerContainer.tscn" id="11_hqns4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x0ka3"]
+radius = 21.095
 
 [node name="Node2D" type="Control"]
 layout_mode = 3
@@ -22,15 +26,23 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_jk2el")
 
+[node name="HitDetector" type="Node2D" parent="."]
+script = ExtResource("2_x0ka3")
+
 [node name="Rplace" type="Node2D" parent="."]
 visible = false
 script = ExtResource("7_du31x")
 
 [node name="Node2D" type="Node2D" parent="." node_paths=PackedStringArray("TargetNode")]
-position = Vector2(157, 142)
+position = Vector2(313.545, 217.37)
 script = ExtResource("8_id0ui")
 shipSave = ExtResource("4_kdubu")
 TargetNode = NodePath("../Node2D2")
+
+[node name="Area2D" type="Area2D" parent="Node2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Area2D"]
+shape = SubResource("CircleShape2D_x0ka3")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)

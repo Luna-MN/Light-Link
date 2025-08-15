@@ -7,11 +7,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y3ctc"]
 size = Vector2(0.975246, 0.933333)
 
-[node name="Bullet" type="MeshInstance2D"]
+[node name="Bullet" type="MeshInstance2D" node_paths=PackedStringArray("hitArea")]
 position = Vector2(-1.90735e-06, 9.53674e-07)
 scale = Vector2(202, 60)
 mesh = SubResource("BoxMesh_l0b6w")
 script = ExtResource("1_y3ctc")
+hitArea = NodePath("Area2D")
 
 [node name="Area2D" type="Area2D" parent="."]
 

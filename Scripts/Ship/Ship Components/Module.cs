@@ -8,7 +8,7 @@ public partial class Module : Node2D
 	public Node2D meshParent;
 	public ModuleUI.ModuleName moduleName;
 	private Camera cam;
-	private PlayerCreatedShip ship;
+	public PlayerCreatedShip ship;
 	private List<AttachmentPoint> PossiblePoints = new List<AttachmentPoint>();
 	private AttachmentPoint closestPoint;
 	private Line2D AttachmentLine;
