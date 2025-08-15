@@ -1,14 +1,16 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 [GlobalClass]
 public partial class Ship : Node2D
 {
     public ShipMesh Mesh;
     public bool shipSelected = false;
+    [Export]
     public bool isMine = false;
     public float speed = 100f;
-    public Area2D area2D;
+    public Area2D area2D;   
     public CollisionShape2D collisionShape;
     public ConvexPolygonShape2D shipShape;
     public SelectionBracket selectionBrackets = new SelectionBracket();
@@ -51,6 +53,7 @@ public partial class Ship : Node2D
 
         // Create path visualization elements
         CreatePathVisuals();
+        GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterShip(this);
     }
 
     public override void _Process(double delta)

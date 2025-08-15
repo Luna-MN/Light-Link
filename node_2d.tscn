@@ -12,9 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://qnd4ct05cr7r" path="res://Meshs/Modules/ShieldContainer.tscn" id="8_rj586"]
 [ext_resource type="PackedScene" uid="uid://pubiddto1r0v" path="res://Meshs/Modules/UtilityContainer.tscn" id="10_ir8iy"]
 [ext_resource type="PackedScene" uid="uid://dtpyvunv46h4l" path="res://Meshs/Modules/PowerContainer.tscn" id="11_hqns4"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_x0ka3"]
-radius = 21.095
+[ext_resource type="Resource" path="res://MyShips/Triangle.tres.tres" id="13_0h7mo"]
 
 [node name="Node2D" type="Control"]
 layout_mode = 3
@@ -38,11 +36,7 @@ position = Vector2(313.545, 217.37)
 script = ExtResource("8_id0ui")
 shipSave = ExtResource("4_kdubu")
 TargetNode = NodePath("../Node2D2")
-
-[node name="Area2D" type="Area2D" parent="Node2D"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Area2D"]
-shape = SubResource("CircleShape2D_x0ka3")
+isMine = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(577, 326)
@@ -84,3 +78,6 @@ color = Color(1, 1, 0, 1)
 moduleScene = ExtResource("11_hqns4")
 
 [node name="Node2D2" type="Node2D" parent="."]
+position = Vector2(148.105, 86.07)
+script = ExtResource("8_id0ui")
+shipSave = ExtResource("13_0h7mo")

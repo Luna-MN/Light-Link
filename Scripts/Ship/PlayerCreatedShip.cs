@@ -26,7 +26,6 @@ public partial class PlayerCreatedShip : PlayerShips
         selectionBrackets = new SelectionBracket();
         AddChild(selectionBrackets);
         UpdateSelectionBracket();
-        isMine = true;
     }
     public override void _Process(double delta)
     {
