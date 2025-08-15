@@ -8,6 +8,7 @@ public partial class basicBullet : MeshInstance2D
     public Timer BulletTimeout;
     public bool move = false;
     public Gun gun;
+    [Export] public Area2D hitArea;
     public basicBullet(Node2D target)
     {
         this.target = target;
@@ -29,6 +30,7 @@ public partial class basicBullet : MeshInstance2D
         BulletTimeout.Timeout += OnBulletTimeout;
         AddChild(BulletTimeout);
         OnBulletFired();
+        hitArea.BodyEntered += OnBulletHit;
     }
 
     public override void _Process(double delta)
@@ -50,7 +52,7 @@ public partial class basicBullet : MeshInstance2D
         Position += direction * speed * time;
     }
     
-    public virtual void OnBulletHit()
+    public virtual void OnBulletHit(Node2D Body)
     {
         
     }
