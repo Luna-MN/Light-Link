@@ -65,7 +65,7 @@ public partial class ModuleUI : Panel
 	public override void _Process(double delta)
 	{
 	}
-	public void ButtonPressed()
+	private void ButtonPressed()
 	{
 		Module mod = null;
 		switch (moduleName)
@@ -92,7 +92,7 @@ public partial class ModuleUI : Panel
 		}
 	}
 
-	public Module CreateGun(GunName gunName)
+	private Module CreateGun(GunName gunName)
 	{
 		Module mod = null;
 		switch (gunName)
