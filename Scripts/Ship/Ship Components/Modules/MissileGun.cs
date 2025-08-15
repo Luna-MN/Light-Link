@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+[GlobalClass]
 public partial class MissileGun : Gun
 {
     public MissileGun(ModuleUI.GunName missileName = ModuleUI.GunName.Missile) : base(missileName)

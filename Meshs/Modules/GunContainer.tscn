@@ -28,3 +28,7 @@ gunName = 3
 layout_mode = 2
 color = Color(0, 1, 1, 1)
 gunName = 4
+
+[node name="IonCannon" parent="." index="5" instance=ExtResource("2_v03cc")]
+layout_mode = 2
+gunName = 6
