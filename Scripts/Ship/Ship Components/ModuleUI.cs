@@ -28,8 +28,8 @@ public partial class ModuleUI : Panel
 		Missile,
 		Plasma,
 		Ion,
-		PlasmaCannon,
 		IonCannon,
+		PlasmaCannon,
 		PlasmaRailgun,
 		IonRailgun,
 	};
@@ -112,6 +112,9 @@ public partial class ModuleUI : Panel
 				break;
 			case GunName.Ion:
 				mod = new IonGun();
+				break;
+			case GunName.IonCannon:
+				mod = new IonMissile();
 				break;
 		}
 		return mod;

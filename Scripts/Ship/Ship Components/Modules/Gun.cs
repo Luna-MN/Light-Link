@@ -14,6 +14,7 @@ public partial class Gun : Module
         "res://Meshs/Modules/SimpleMissileMesh.tscn",
         "res://Meshs/Modules/SimpleLaserMesh.tscn",
         "res://Meshs/Modules/SimpleIonMesh.tscn",
+        "res://Meshs/Modules/SimpleMissileMesh.tscn",
     };
     private string path = "res://Meshs/Modules/SimpleGunMesh.tscn";
     public Timer FireTimer;

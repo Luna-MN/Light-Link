@@ -31,4 +31,4 @@ gunName = 4
 
 [node name="IonCannon" parent="." index="5" instance=ExtResource("2_v03cc")]
 layout_mode = 2
-gunName = 6
+gunName = 5
