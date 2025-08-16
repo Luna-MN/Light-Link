@@ -40,6 +40,26 @@ public partial class HitDetector : Node2D
             {
                 ship.health -= damage;
                 GD.Print(ship.health);
+                // deal damage to the closest ship Node
+                if (ship is PlayerCreatedShip PCShip)
+                {
+                    var closestNode = PCShip.shipNodes[0];
+                    foreach (var node in PCShip.shipNodes)
+                    {
+                        if (node.GlobalPosition.DistanceTo(GlobalPosition) <
+                            closestNode.GlobalPosition.DistanceTo(GlobalPosition))
+                        {
+                            closestNode = node;
+                        }
+                    }
+
+                    closestNode.Health -= damage;
+                    if (closestNode.Health <= 0)
+                    {
+                        closestNode.QueueFree();
+                    }
+                }
+                // if the ship is dead, destroy it
                 if (ship.health <= 0)
                 {
                     ship.QueueFree();

@@ -13,6 +13,7 @@ public partial class AttachmentPoint : Node2D
 		Power,
 	}
 	public ShipNodeTypes NodeType;
+	public float Health = 10f;
 	// Called when the node enters the scene tree for the first time.
 	public AttachmentPoint()
 	{
