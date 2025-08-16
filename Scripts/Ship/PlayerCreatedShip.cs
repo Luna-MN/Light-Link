@@ -19,7 +19,7 @@ public partial class PlayerCreatedShip : PlayerShips
 
         Mesh = new PlayerMadeShipMesh(shipSave);
         shipNodes = ((PlayerMadeShipMesh)Mesh).GetShipNodes();
-        shipNodes.ForEach(s => s.Visible = false);
+        health = shipNodes.Count * 10;
         Scale = new Vector2(.25f, .25f);
         AddChild(Mesh);
         base._Ready();
@@ -27,6 +27,7 @@ public partial class PlayerCreatedShip : PlayerShips
         selectionBrackets = new SelectionBracket();
         AddChild(selectionBrackets);
         UpdateSelectionBracket();
+        ShowNodes(true);
     }
     public override void _Process(double delta)
     {

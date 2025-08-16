@@ -46,8 +46,7 @@ public partial class HitDetector : Node2D
                     var closestNode = PCShip.shipNodes[0];
                     foreach (var node in PCShip.shipNodes)
                     {
-                        if (node.GlobalPosition.DistanceTo(GlobalPosition) <
-                            closestNode.GlobalPosition.DistanceTo(GlobalPosition))
+                        if (node.GlobalPosition.DistanceTo(bullet.GlobalPosition) < closestNode.GlobalPosition.DistanceTo(bullet.GlobalPosition))
                         {
                             closestNode = node;
                         }
@@ -56,6 +55,7 @@ public partial class HitDetector : Node2D
                     closestNode.Health -= damage;
                     if (closestNode.Health <= 0)
                     {
+                        PCShip.shipNodes.Remove(closestNode);
                         closestNode.QueueFree();
                     }
                 }
