@@ -8,7 +8,6 @@ public partial class LaserGun : Gun
     {
     }
     
-
     public override void Placed(PlayerCreatedShip ship)
     {
         base.Placed(ship);

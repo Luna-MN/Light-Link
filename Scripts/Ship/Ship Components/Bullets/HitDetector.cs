@@ -32,9 +32,9 @@ public partial class HitDetector : Node2D
         }
     }
 
-    public void BulletHit(Node2D Body, basicBullet Bullet, float damage)
+    public void BulletHit(Node2D Body, basicBullet bullet, float damage)
     {
-        if (Ships.Contains(Body) && bullets.Contains(Bullet))
+        if (Ships.Contains(Body) && bullets.Contains(bullet))
         {
             if (Body is Ship ship)
             {
@@ -46,6 +46,11 @@ public partial class HitDetector : Node2D
                 }
             }
         }
-        DropBullet(Bullet);
+
+        if (bullet is not basicLaser)
+        {
+            DropBullet(bullet);
+        }
+
     }
 }

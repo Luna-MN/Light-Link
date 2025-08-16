@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Linq;
+
 [GlobalClass]
 public partial class basicLaser : basicBullet
 {
@@ -22,9 +24,21 @@ public partial class basicLaser : basicBullet
         laser = new Line2D();
         laser.Width = 1f;
         AddChild(laser);
-        base._Ready();
+        
+        BulletTimeout = new Timer()
+        {
+            Autostart = true,
+            OneShot = false,
+            WaitTime = 2f
+        };
+        BulletTimeout.Timeout += OnBulletTimeout;
+        AddChild(BulletTimeout);
+        OnBulletFired();
+        GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterBullet(this);
+        
         damage = 0.1f;
         BulletTimeout.WaitTime = 0.3f;
+        BulletTimeout.Start();
     }
     public override void MoveBullet(float time)
     {

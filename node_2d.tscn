@@ -76,4 +76,4 @@ moduleScene = ExtResource("11_hqns4")
 position = Vector2(148.105, 86.07)
 script = ExtResource("8_id0ui")
 shipSave = ExtResource("13_0h7mo")
-health = 10
+health = 10.0
