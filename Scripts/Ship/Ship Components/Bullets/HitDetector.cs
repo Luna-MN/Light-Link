@@ -32,7 +32,7 @@ public partial class HitDetector : Node2D
         }
     }
 
-    public void BulletHit(Node2D Body, basicBullet Bullet, int damage)
+    public void BulletHit(Node2D Body, basicBullet Bullet, float damage)
     {
         if (Ships.Contains(Body) && bullets.Contains(Bullet))
         {

@@ -21,6 +21,8 @@ public partial class basicLaser : basicBullet
         laser.Width = 1f;
         AddChild(laser);
         base._Ready();
+        damage = 0.1f;
+        BulletTimeout.WaitTime = 0.3f;
     }
     public override void MoveBullet(float time)
     {
@@ -30,6 +32,6 @@ public partial class basicLaser : basicBullet
     }
     public override void OnBulletTimeout()
     {
-
+        EmitSignal("BulletHit", target, this, damage);
     }
 }

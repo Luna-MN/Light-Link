@@ -10,10 +10,10 @@ public partial class basicBullet : MeshInstance2D
     public Timer BulletTimeout;
     public bool move = false;
     public Gun gun;
-    public int damage = 1;
+    public float damage = 1;
     
     [Signal]
-    public delegate void BulletHitEventHandler(Node2D body, basicBullet bullet, int damage);
+    public delegate void BulletHitEventHandler(Node2D body, basicBullet bullet, float damage);
     
     [Export] public Area2D hitArea;
     public basicBullet(Node2D target)
