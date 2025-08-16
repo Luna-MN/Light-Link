@@ -51,17 +51,26 @@ public partial class Gun : Module
         base._Process(delta);
         if (placed)
         {
-            AttachmentPoint closestNode = ((PlayerCreatedShip)target).shipNodes[0];
-            foreach (var node in ((PlayerCreatedShip)target).shipNodes)
+            try
             {
-                if (node.GlobalPosition.DistanceTo(GlobalPosition) <
-                    closestNode.GlobalPosition.DistanceTo(GlobalPosition))
+                AttachmentPoint closestNode = ((PlayerCreatedShip)target).shipNodes[0];
+                foreach (var node in ((PlayerCreatedShip)target).shipNodes)
                 {
-                    closestNode = node;
+                    if (node.GlobalPosition.DistanceTo(GlobalPosition) <
+                        closestNode.GlobalPosition.DistanceTo(GlobalPosition))
+                    {
+                        closestNode = node;
+                    }
                 }
+
+                targetPoint = closestNode;
+                LookAt(targetPoint.GlobalPosition);
             }
-            targetPoint = closestNode;
-            LookAt(targetPoint.GlobalPosition);
+            catch (Exception e)
+            {
+                target = null;
+                return;
+            }
         }
     }
 

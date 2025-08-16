@@ -9,7 +9,8 @@ public partial class basicLaser : basicBullet
     public LaserGun gun;
     public int Distance = 300;
     private bool inRange = false;
-    public basicLaser(Node2D target, LaserGun gun) : base(target)
+    private Node2D targetShip;
+    public basicLaser(Node2D target, LaserGun gun, Node2D targetShip) : base(target)
     {
         this.target = target;
         this.gun = gun;
@@ -59,7 +60,7 @@ public partial class basicLaser : basicBullet
     {
         if (inRange)
         {
-            EmitSignal("BulletHit", target, this, damage);
+            EmitSignal("BulletHit", targetShip, this, damage);
         }
     }
 }

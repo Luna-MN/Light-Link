@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class plasmaLaser(Node2D target, LaserGun laser) : basicLaser(target, laser)
+public partial class plasmaLaser(Node2D target, LaserGun laser, Node2D targetShip) : basicLaser(target, laser, targetShip)
 {
     public override void _Ready()
     {

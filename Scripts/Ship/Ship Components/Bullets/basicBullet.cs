@@ -11,7 +11,7 @@ public partial class basicBullet : MeshInstance2D
     public bool move = false;
     public Gun gun;
     public float damage = 1;
-    
+    public Vector2 direction;
     [Signal]
     public delegate void BulletHitEventHandler(Node2D body, basicBullet bullet, float damage);
     
@@ -39,6 +39,7 @@ public partial class basicBullet : MeshInstance2D
         OnBulletFired();
         GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterBullet(this);
         hitArea.AreaEntered += OnBulletHit;
+        direction = (target.GlobalPosition - Position).Normalized();
     }
 
     public override void _Process(double delta)
@@ -53,11 +54,10 @@ public partial class basicBullet : MeshInstance2D
 
     public virtual void MoveBullet(float time)
     {
-        // Calculate direction towards the target
-        Vector2 direction = (target.GlobalPosition - Position).Normalized();
-  
+        
         // Move in that direction by (speed * time)
         Position += direction * speed * time;
+
     }
     
     public virtual void OnBulletHit(Node2D Body)
