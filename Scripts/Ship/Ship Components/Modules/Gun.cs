@@ -20,6 +20,7 @@ public partial class Gun : Module
     public Timer FireTimer;
     public string BulletMeshPath = "res://Meshs/Bullets/basicBullet.tscn";
     public Node2D target;
+    public AttachmentPoint targetPoint;
     public Node2D bulletPlace;
     public Gun(ModuleUI.GunName gunName)
     {
@@ -48,6 +49,20 @@ public partial class Gun : Module
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if (placed)
+        {
+            AttachmentPoint closestNode = ((PlayerCreatedShip)target).shipNodes[0];
+            foreach (var node in ((PlayerCreatedShip)target).shipNodes)
+            {
+                if (node.GlobalPosition.DistanceTo(GlobalPosition) <
+                    closestNode.GlobalPosition.DistanceTo(GlobalPosition))
+                {
+                    closestNode = node;
+                }
+            }
+            targetPoint = closestNode;
+            LookAt(targetPoint.GlobalPosition);
+        }
     }
 
     public override void Placed(PlayerCreatedShip ship)
@@ -66,7 +81,7 @@ public partial class Gun : Module
             var bullet = bulletScene.Instantiate<basicBullet>();
             bullet.gun = this;
             bullet.Scale = new Vector2(1f, 1f);
-            bullet.target = target;
+            bullet.target = targetPoint;
             bullet.Rotation = Rotation;
             bullet.GlobalPosition = bulletPlace.GlobalPosition;
             GetTree().Root.GetChildren().FirstOrDefault()?.AddChild(bullet);
