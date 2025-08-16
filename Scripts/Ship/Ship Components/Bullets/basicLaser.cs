@@ -5,6 +5,8 @@ public partial class basicLaser : basicBullet
 {
     public Line2D laser;
     public LaserGun gun;
+    public int Distance = 300;
+    private bool inRange = false;
     public basicLaser(Node2D target, LaserGun gun) : base(target)
     {
         this.target = target;
@@ -26,12 +28,24 @@ public partial class basicLaser : basicBullet
     }
     public override void MoveBullet(float time)
     {
-        laser.ClearPoints();
-        laser.AddPoint(gun.bulletPlace.GlobalPosition);
-        laser.AddPoint(target.GlobalPosition);
+        if (gun.bulletPlace.GlobalPosition.DistanceTo(target.GlobalPosition) <= Distance)
+        { 
+            laser.ClearPoints();
+            laser.AddPoint(gun.bulletPlace.GlobalPosition);
+            laser.AddPoint(target.GlobalPosition);
+            inRange = true;
+        }
+        else
+        {
+            laser.ClearPoints();
+            inRange = false;
+        }
     }
     public override void OnBulletTimeout()
     {
-        EmitSignal("BulletHit", target, this, damage);
+        if (inRange)
+        {
+            EmitSignal("BulletHit", target, this, damage);
+        }
     }
 }
