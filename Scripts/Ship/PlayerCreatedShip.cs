@@ -19,7 +19,8 @@ public partial class PlayerCreatedShip : PlayerShips
 
         Mesh = new PlayerMadeShipMesh(shipSave);
         shipNodes = ((PlayerMadeShipMesh)Mesh).GetShipNodes();
-        shipNodes.ForEach(s => s.Visible = false); 
+        shipNodes.ForEach(s => s.Visible = false);
+        Scale = new Vector2(.25f, .25f);
         AddChild(Mesh);
         base._Ready();
         ShipShape();

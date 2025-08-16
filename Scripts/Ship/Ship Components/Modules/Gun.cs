@@ -60,7 +60,7 @@ public partial class Gun : Module
     }
     public virtual void Fire()
     {
-        if (placed)
+        if (placed && target != null)
         {
             var bulletScene = GD.Load<PackedScene>(BulletMeshPath);
             var bullet = bulletScene.Instantiate<basicBullet>();
