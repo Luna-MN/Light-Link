@@ -37,11 +37,15 @@ public partial class basicBullet : MeshInstance2D
         BulletTimeout.Timeout += OnBulletTimeout;
         AddChild(BulletTimeout);
         OnBulletFired();
-        GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterBullet(this);
+        BulletRegistration();
         hitArea.AreaEntered += OnBulletHit;
         direction = (target.GlobalPosition - Position).Normalized();
     }
 
+    public virtual void BulletRegistration()
+    {
+        GetTree().Root.GetChildren().FirstOrDefault()?.GetNode<HitDetector>("HitDetector").RegisterBullet(this);
+    }
     public override void _Process(double delta)
     {
         MoveBullet((float)delta);

@@ -6,6 +6,7 @@ public partial class HitDetector : Node2D
 {
     private List<Node2D> Ships = new();
     private List<basicBullet> bullets = new();
+    private List<Nanite> nanites = new();
 
     public void RegisterShip(Node2D Body)
     {
@@ -32,6 +33,15 @@ public partial class HitDetector : Node2D
         }
     }
 
+    public void RegisterNanite(Nanite nanite)
+    {
+        nanites.Add(nanite);
+        nanite.NaniteHit += NaniteHit;
+    }
+    public void DropNanite(Nanite nanite)
+    {
+        nanites.Remove(nanite);
+    }
     public void BulletHit(Node2D Body, basicBullet bullet, float damage)
     {
         if (Ships.Contains(Body) && bullets.Contains(bullet))
@@ -72,5 +82,21 @@ public partial class HitDetector : Node2D
             DropBullet(bullet);
         }
 
+    }
+
+    public void NaniteHit(Node2D Ship, Nanite nanite, float Damage)
+    {
+        if (nanites.Contains(nanite))
+        {
+            if (nanite.attached)
+            {
+                return;
+            }
+            nanite.GetParent().RemoveChild(nanite);
+            nanite.Position = Ship.ToLocal(nanite.GlobalPosition);
+            Ship.CallDeferred("AddChild", nanite);
+            nanite.attached = true;
+            nanites.Remove(nanite);
+        }
     }
 }

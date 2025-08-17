@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bopq4ma0i5rrf"]
+
+[ext_resource type="PackedScene" uid="uid://byaeokan17q1n" path="res://Meshs/Bullets/basicBullet.tscn" id="1_a23rl"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_vvf44"]
+
+[node name="Bullet" instance=ExtResource("1_a23rl")]
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." index="0"]
+modulate = Color(0.864675, 0.864675, 0.864675, 1)
+position = Vector2(0.645472, -2.06333e-11)
+rotation = -1.5708
+scale = Vector2(1, 0.294599)
+mesh = SubResource("PrismMesh_vvf44")
