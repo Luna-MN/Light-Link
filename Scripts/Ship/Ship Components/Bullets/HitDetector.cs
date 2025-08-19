@@ -88,6 +88,7 @@ public partial class HitDetector : Node2D
     {
         if (nanites.Contains(nanite))
         {
+            nanite.attached = true;
             if (nanite.attached)
             {
                 return;
@@ -95,7 +96,6 @@ public partial class HitDetector : Node2D
             nanite.GetParent().RemoveChild(nanite);
             nanite.Position = Ship.ToLocal(nanite.GlobalPosition);
             Ship.CallDeferred("AddChild", nanite);
-            nanite.attached = true;
             nanites.Remove(nanite);
         }
     }
