@@ -10,6 +10,11 @@ public partial class Nanite : basicBullet
     public Ship Ship;
     public bool attached = false;
     private Timer NaniteDestroyTimer;
+    private float MaxSize;
+    [Export]
+    public MeshInstance2D NaniteGreenMesh;
+    private float elapsed;
+    private bool isScaling;
     public override void _Ready()
     {
         base._Ready();
@@ -20,8 +25,9 @@ public partial class Nanite : basicBullet
             OneShot = true,
             WaitTime = 1f
         };
-        NaniteDestroyTimer.Timeout += NaniteDestroy; 
+        NaniteDestroyTimer.Timeout += NaniteDestroy;
         AddChild(NaniteDestroyTimer);
+        MaxSize = NaniteGreenMesh.Scale.X;
     }
 
     public override void BulletRegistration()
@@ -31,6 +37,18 @@ public partial class Nanite : basicBullet
 
     public override void _Process(double delta)
     {
+        if (isScaling)
+        {
+            elapsed += (float)delta;
+            float duration = (float)NaniteDestroyTimer.WaitTime;
+            float t = Mathf.Clamp(elapsed / duration, 0f, 1f);
+            float scale = Mathf.Lerp(MaxSize, 0f, t);
+            NaniteGreenMesh.Scale = new Vector2(scale, scale);
+
+            if (t >= 1f)
+                isScaling = false;
+        }
+
         if (!attached)
         {
             base._Process(delta);
@@ -44,6 +62,7 @@ public partial class Nanite : basicBullet
                 if (targetPoint.Nanited == false)
                 {
                     targetPoint.Nanited = true;
+                    isScaling = true;
                     NaniteDestroyTimer.Start();
                 }
             }
@@ -59,5 +78,10 @@ public partial class Nanite : basicBullet
     public override void OnBulletHit(Node2D Body)
     {
         EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
+    }
+
+    private void timer_Process(double delta)
+    {
+        
     }
 }
