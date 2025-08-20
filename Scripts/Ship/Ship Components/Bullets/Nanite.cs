@@ -9,10 +9,19 @@ public partial class Nanite : basicBullet
     public delegate void NaniteHitEventHandler(Node2D Ship, Nanite Bullet, float Damage);
     public Ship Ship;
     public bool attached = false;
+    private Timer NaniteDestroyTimer;
     public override void _Ready()
     {
         base._Ready();
         damage = 0.5f;
+        NaniteDestroyTimer = new Timer()
+        {
+            Autostart = false,
+            OneShot = true,
+            WaitTime = 1f
+        };
+        NaniteDestroyTimer.Timeout += NaniteDestroy; 
+        AddChild(NaniteDestroyTimer);
     }
 
     public override void BulletRegistration()
@@ -32,28 +41,19 @@ public partial class Nanite : basicBullet
             if (target != null)
             {
                 var targetPoint = ((AttachmentPoint)target);
-
-                targetPoint.Health -= damage;
-                if (targetPoint.Health <= 0)
+                if (targetPoint.Nanited == false)
                 {
-                    targetPoint.QueueFree();
-                    targetPoint = null;
-                    attached = false;
-                }
-            }
-
-            Ship = ((AttachmentPoint)target).ship;
-            if (Ship != null)
-            {
-                Ship.health -= damage;
-                GD.Print(Ship.health);
-                if (Ship.health <= 0)
-                {
-                    Ship.QueueFree();
-                    Ship = null;
+                    targetPoint.Nanited = true;
+                    NaniteDestroyTimer.Start();
                 }
             }
         }
+    }
+    private void NaniteDestroy()
+    {
+        var targetPoint = ((AttachmentPoint)target);
+        targetPoint.Nanited = false;
+        QueueFree();
     }
 
     public override void OnBulletHit(Node2D Body)

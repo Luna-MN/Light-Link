@@ -14,6 +14,7 @@ public partial class AttachmentPoint : Node2D
 	}
 	public ShipNodeTypes NodeType;
 	public float Health = 10f;
+	public bool Nanited = false;
 	// Called when the node enters the scene tree for the first time.
 	public AttachmentPoint()
 	{
