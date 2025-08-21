@@ -7,5 +7,7 @@ public partial class NaniteGun() : Gun (ModuleUI.GunName.Nanite)
     {
         base._Ready();
         BulletMeshPath = "res://Meshs/Bullets/Nanite.tscn";
+        FireTimer.WaitTime = 6f;
+        FireTimer.Start();
     }
 }

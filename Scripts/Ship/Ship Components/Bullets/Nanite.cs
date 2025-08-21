@@ -42,13 +42,19 @@ public partial class Nanite : basicBullet
         {
             elapsed += (float)delta;
             float duration = (float)NaniteDestroyTimer.WaitTime;
-            float t = Mathf.Clamp(elapsed / duration, 0f, 1f);
+            float t = duration > 0f ? Mathf.Clamp(elapsed / duration, 0f, 1f) : 1f;
+
             float scale = Mathf.Lerp(MaxSize, 0f, t);
             NaniteGreenMesh.Scale = new Vector2(scale, scale);
-
+            GD.Print(t);
             if (t >= 1f)
+            {
+                // Ensure it finishes at exactly zero
+                NaniteGreenMesh.Scale = Vector2.Zero;
                 isScaling = false;
+            }
         }
+
 
         if (!attached)
         {
@@ -65,6 +71,10 @@ public partial class Nanite : basicBullet
                     targetPoint.Nanited = true;
                     isScaling = true;
                     NaniteDestroyTimer.Start();
+                }
+                else
+                {
+                    QueueFree();
                 }
             }
         }
