@@ -23,7 +23,7 @@ public partial class Nanite : basicBullet
         {
             Autostart = false,
             OneShot = true,
-            WaitTime = 1f
+            WaitTime = 3f
         };
         NaniteDestroyTimer.Timeout += NaniteDestroy;
         AddChild(NaniteDestroyTimer);
@@ -37,6 +37,7 @@ public partial class Nanite : basicBullet
 
     public override void _Process(double delta)
     {
+        LookAt(target.GlobalPosition);
         if (isScaling)
         {
             elapsed += (float)delta;
@@ -77,7 +78,10 @@ public partial class Nanite : basicBullet
 
     public override void OnBulletHit(Node2D Body)
     {
-        EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
+        if (Body.GetParent() != gun.ship && Body.GetParent() is not basicBullet)
+        {
+            EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
+        }
     }
 
     private void timer_Process(double delta)

@@ -7,8 +7,10 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_vvf44"]
 
-[node name="Bullet" instance=ExtResource("1_a23rl")]
+[node name="Bullet" node_paths=PackedStringArray("NaniteGreenMesh") instance=ExtResource("1_a23rl")]
+scale = Vector2(200, 60)
 script = ExtResource("2_vvf44")
+NaniteGreenMesh = NodePath("MeshInstance2D2")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="." index="0"]
 modulate = Color(0.864675, 0.864675, 0.864675, 1)
