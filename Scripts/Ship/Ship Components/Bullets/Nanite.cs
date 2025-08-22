@@ -78,9 +78,4 @@ public partial class Nanite : basicBullet
             }
         }
     }
-    
-    private void timer_Process(double delta)
-    {
-        
-    }
 }
