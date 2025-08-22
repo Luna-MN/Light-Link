@@ -1,22 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://clpi3ms0ipus5"]
+[gd_scene load_steps=6 format=3 uid="uid://clpi3ms0ipus5"]
 
 [ext_resource type="PackedScene" uid="uid://dwp6sv48sw3ru" path="res://ModuleContainer.tscn" id="1_ri3hi"]
 [ext_resource type="PackedScene" uid="uid://de2y7t6sie86b" path="res://Module Scene.tscn" id="2_v03cc"]
+[ext_resource type="PackedScene" uid="uid://b88vnw7jojh5f" path="res://Meshs/Modules/SimpleGunMesh.tscn" id="3_v03cc"]
+[ext_resource type="PackedScene" uid="uid://611a1aaodj1d" path="res://Meshs/Modules/SimpleLaserMesh.tscn" id="4_bxta6"]
+[ext_resource type="PackedScene" uid="uid://bqw163bwp7h47" path="res://Meshs/Modules/simpleMissileMesh.tscn" id="5_l6eoy"]
 
 [node name="Module Container" instance=ExtResource("1_ri3hi")]
 
 [node name="BasicGun" parent="." index="0" instance=ExtResource("2_v03cc")]
 layout_mode = 2
 color = Color(1, 0, 0, 1)
+BulletLook = ExtResource("3_v03cc")
 gunName = 1
 
 [node name="Laser" parent="." index="1" instance=ExtResource("2_v03cc")]
 layout_mode = 2
 color = Color(0.352941, 1, 1, 1)
+BulletLook = ExtResource("4_bxta6")
 
 [node name="Missile" parent="." index="2" instance=ExtResource("2_v03cc")]
 layout_mode = 2
 color = Color(1, 0.376471, 0.12549, 1)
+BulletLook = ExtResource("5_l6eoy")
 gunName = 2
 
 [node name="PlasmaLaser" parent="." index="3" instance=ExtResource("2_v03cc")]

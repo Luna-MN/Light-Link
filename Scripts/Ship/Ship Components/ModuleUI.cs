@@ -11,7 +11,8 @@ public partial class ModuleUI : Panel
 	public Color color;
 	[Export]
 	public Button button;
-	
+	[Export]
+	public PackedScene BulletLook;
 	public enum ModuleName
 	{
 		Weapon,
@@ -60,6 +61,13 @@ public partial class ModuleUI : Panel
 	{
 		mesh.Modulate = color;
 		button.ButtonUp += ButtonPressed;
+		if (BulletLook != null)
+		{
+			GetNode("Control/ColorRect").QueueFree();
+			var newNode = BulletLook.Instantiate<Node2D>();
+			GetNode("Control").AddChild(newNode);
+			newNode.Position = new Vector2(20, 20);
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

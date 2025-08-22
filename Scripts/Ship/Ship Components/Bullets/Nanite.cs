@@ -18,7 +18,6 @@ public partial class Nanite : basicBullet
     public override void _Ready()
     {
         base._Ready();
-        BulletTimeout.Stop();
         damage = 0.5f;
         NaniteDestroyTimer = new Timer()
         {
@@ -61,6 +60,7 @@ public partial class Nanite : basicBullet
     {
         if (Body.GetParent() != gun.ship && Body.GetParent() is not basicBullet)
         {
+            BulletTimeout.Stop();
             EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
             if (target != null)
             {
