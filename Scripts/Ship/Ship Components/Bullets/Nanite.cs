@@ -18,6 +18,7 @@ public partial class Nanite : basicBullet
     public override void _Ready()
     {
         base._Ready();
+        BulletTimeout.Stop();
         damage = 0.5f;
         NaniteDestroyTimer = new Timer()
         {
@@ -40,29 +41,27 @@ public partial class Nanite : basicBullet
         LookAt(target.GlobalPosition);
         if (isScaling)
         {
-            elapsed += (float)delta;
-            float duration = (float)NaniteDestroyTimer.WaitTime;
-            float t = duration > 0f ? Mathf.Clamp(elapsed / duration, 0f, 1f) : 1f;
-
-            float scale = Mathf.Lerp(MaxSize, 0f, t);
-            NaniteGreenMesh.Scale = new Vector2(scale, scale);
-            GD.Print(t);
-            if (t >= 1f)
-            {
-                // Ensure it finishes at exactly zero
-                NaniteGreenMesh.Scale = Vector2.Zero;
-                isScaling = false;
-            }
+            float waitTime = (float)NaniteDestroyTimer.TimeLeft;
+            float scale = (waitTime / 3f) * MaxSize;
+            NaniteGreenMesh.Scale = new Vector2(scale, NaniteGreenMesh.Scale.Y);
         }
-
-
         if (!attached)
         {
             base._Process(delta);
         }
-        else 
-        {
+    }
+    private void NaniteDestroy()
+    {
+        var targetPoint = ((AttachmentPoint)target);
+        targetPoint.Nanited = false;
+        QueueFree();
+    }
 
+    public override void OnBulletHit(Node2D Body)
+    {
+        if (Body.GetParent() != gun.ship && Body.GetParent() is not basicBullet)
+        {
+            EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
             if (target != null)
             {
                 var targetPoint = ((AttachmentPoint)target);
@@ -79,21 +78,7 @@ public partial class Nanite : basicBullet
             }
         }
     }
-    private void NaniteDestroy()
-    {
-        var targetPoint = ((AttachmentPoint)target);
-        targetPoint.Nanited = false;
-        QueueFree();
-    }
-
-    public override void OnBulletHit(Node2D Body)
-    {
-        if (Body.GetParent() != gun.ship && Body.GetParent() is not basicBullet)
-        {
-            EmitSignal("NaniteHit", Body.GetParent<Node2D>(), this, damage);
-        }
-    }
-
+    
     private void timer_Process(double delta)
     {
         

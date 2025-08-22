@@ -7,7 +7,7 @@ public partial class HitDetector : Node2D
     private List<Node2D> Ships = new();
     private List<basicBullet> bullets = new();
     private List<Nanite> nanites = new();
-
+    
     public void RegisterShip(Node2D Body)
     {
         Ships.Add(Body);
@@ -93,9 +93,6 @@ public partial class HitDetector : Node2D
             {
                 return;
             }
-            nanite.GetParent().RemoveChild(nanite);
-            nanite.Position = Ship.ToLocal(nanite.GlobalPosition);
-            Ship.CallDeferred("AddChild", nanite);
             nanites.Remove(nanite);
         }
     }
