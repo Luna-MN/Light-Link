@@ -127,14 +127,18 @@ public partial class ShipBuilder : Node2D
 		{
 			mouseDownTime += (float)delta;
 
-			if (mouseDownTime > 0.5f)
+			if (mouseDownTime > 0.5f && !dragging)
 			{
 				isPressed = true;
 				if (isPressed)
 				{
 					Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-					draggingNode = (ShipNode)clickedObject;
-					dragging = true; // Start dragging if the node is clicked
+					if (clickedObject is ShipNode node)
+					{
+						draggingNode = node;
+						dragging = true; // Start dragging if the node is clicked
+					}
+
 				}
 
 			}
@@ -450,7 +454,16 @@ public partial class ShipBuilder : Node2D
 				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
 				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
 			); // Snap to grid of 10 pixels
-			draggingNode.GlobalPosition = newPosition;
+			try
+			{
+				draggingNode.GlobalPosition = newPosition;
+			}
+			catch (Exception e)
+			{
+				draggingNode = null;
+				return;
+			}
+
 			GD.Print("Dragging ShipNode: " + draggingNode.Name + " to position: " + newPosition);
 
 			lines.ForEach(line =>
