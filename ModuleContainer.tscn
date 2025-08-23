@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dwp6sv48sw3ru"]
+
+[node name="Module Container" type="VBoxContainer"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -254.0
+offset_right = -65.0
+offset_bottom = 255.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
