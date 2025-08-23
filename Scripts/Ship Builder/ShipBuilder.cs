@@ -10,8 +10,6 @@ public partial class ShipBuilder : Node2D
 	public Button Weapon, Shield, Utility, Power;
 	[Export]
 	public Button SaveButton, LoadButton;
-	[Export]
-	private Area2D uiArea;
 	[Export] 
 	public PackedScene FileSelectScene;
 	[Export] 
@@ -295,11 +293,14 @@ public partial class ShipBuilder : Node2D
 				ShipLine shipLine = lines.Find(line => line == clickedObject);
 				ShipLine newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.StartNode);
-				lines.Add(newLine);//
+				lines.Add(newLine);
+				AddChild(newLine);
 
 				newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.EndNode);
 				lines.Add(newLine);
+				AddChild(newLine);
+				
 				TriangleCheck(newLine); // Check for triangles
 
 				draggingNode = shipNode; // Set the newly created node as the dragging node

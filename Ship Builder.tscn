@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cvs10xo4xd8qq" path="res://Scripts/Ship Builder/ShipBuilderCamera.cs" id="3_ncxx8"]
 [ext_resource type="Script" uid="uid://b8wktex272b2r" path="res://Scripts/Ship Builder/DrawLines.cs" id="4_4ngq5"]
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "uiArea", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Shield")
@@ -13,7 +13,6 @@ Utility = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Utility")
 Power = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Power")
 SaveButton = NodePath("Camera2D/CanvasLayer/Save_Load/Save To File")
 LoadButton = NodePath("Camera2D/CanvasLayer/Save_Load/Load From File")
-uiArea = NodePath("")
 FileSelectScene = ExtResource("2_3af54")
 WeaponText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Metal")
 ShieldText = NodePath("Camera2D/CanvasLayer/Resource Panel/BoxContainer/Ice")
