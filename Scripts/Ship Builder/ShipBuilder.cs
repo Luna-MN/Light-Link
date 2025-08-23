@@ -63,17 +63,7 @@ public partial class ShipBuilder : Node2D
 		shadowNode.AddChild(shadowMesh);
 		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
 		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
-
-		uiArea.MouseEntered += () =>
-		{
-			isMouseOverUi = true; // Set flag when mouse enters UI area
-			GD.Print("Mouse entered UI area, hiding shadow node." + isMouseOverUi);
-		};
-		uiArea.MouseExited += () =>
-		{
-			isMouseOverUi = false; // Reset flag when mouse exits UI area
-			GD.Print("Mouse exited UI area, showing shadow node." + isMouseOverUi);
-		};
+		
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
 		VisibilityButtons();
@@ -196,7 +186,8 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	public override void _Input(InputEvent @event)
+
+	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (uiElement) return;
 		if (@event is InputEventMouseButton mouseButtonEvent)
