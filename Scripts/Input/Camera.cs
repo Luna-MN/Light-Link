@@ -6,8 +6,8 @@ public partial class Camera : Camera2D
 {
     public float PanSpeed = 1.0f;
     public float ZoomSpeed = 0.1f;
-    public float MinZoom = 0.1f;
-    public float MaxZoom = 5.0f;
+    public float MinZoom = 0.05f;
+    public float MaxZoom = 8.0f;
     public bool SmoothZoom = true;
     public bool SmoothFocus; // New variable to control smooth focus
     public bool ModulePlacing = false;
