@@ -18,6 +18,8 @@ public partial class ShipBuilder : Node2D
 	public Button NodeButton, LineButton, TriangleButton;
 	[Export]
 	public Node2D NodesParent, LinesParent, TrianglesParent;
+	[Export]
+	public CanvasLayer canvasLayer;
 	private bool nodeVis = true, lineVis = true, triangleVis = true;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
@@ -650,13 +652,14 @@ public partial class ShipBuilder : Node2D
 					HexVisible = false,
 					PresetsVisible = false,
 				};
-				colorPicker.Position = new Vector2(0, GetViewportRect().Size.Y - 300);
+				
+				canvasLayer.AddChild(colorPicker);
 				colorPicker.CustomMinimumSize = new Vector2(300, 300);
-				colorPicker.AnchorBottom = 1;
-				colorPicker.AnchorLeft = 0;
+				colorPicker.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomLeft);
+
+
 				
 				selectedTriangle = clickedObject;
-				AddChild(colorPicker);
 				// Implement color picking logic here
 			}
 		}
