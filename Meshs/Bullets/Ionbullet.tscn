@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cypabrwfv4sws"]
+
+[ext_resource type="PackedScene" uid="uid://eni6pyksc0bn" path="res://Meshs/Bullets/basicMissile.tscn" id="1_xmcxe"]
+[ext_resource type="Script" uid="uid://dx6korhbjdlqy" path="res://Scripts/Ship/Ship Components/Bullets/IonCannon.cs" id="2_mtgco"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mtgco"]
+
+[node name="Bullet" instance=ExtResource("1_xmcxe")]
+script = ExtResource("2_mtgco")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="." index="1"]
+modulate = Color(0, 1, 1, 1)
+z_index = -1
+position = Vector2(0.501025, 0)
+scale = Vector2(0.652153, 1)
+mesh = SubResource("SphereMesh_mtgco")
+
+[node name="Area2D" parent="." index="2"]
+scale = Vector2(1, 1)

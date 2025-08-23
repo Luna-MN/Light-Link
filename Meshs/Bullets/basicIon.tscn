@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3 uid="uid://cino618dsunya"]
+
+[ext_resource type="PackedScene" uid="uid://byaeokan17q1n" path="res://Meshs/Bullets/basicBullet.tscn" id="1_5usx4"]
+[ext_resource type="Script" uid="uid://51j3wwbq5bo8" path="res://Scripts/Ship/Ship Components/Bullets/basicIon.cs" id="2_hahbt"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_hahbt"]
+
+[node name="Bullet" instance=ExtResource("1_5usx4")]
+scale = Vector2(20, 20)
+mesh = SubResource("SphereMesh_hahbt")
+script = ExtResource("2_hahbt")
