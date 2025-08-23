@@ -44,7 +44,7 @@ public partial class ShipLine : Line2D
 
         // Create a capsule shape
         var capsuleShape = new CapsuleShape2D();
-        capsuleShape.Radius = 10; // 10 pixels wide total (5 radius on each side)
+        capsuleShape.Radius = 15; // 10 pixels wide total (5 radius on each side)
         capsuleShape.Height = length;
 
         // Position and rotate the collision shape
@@ -83,7 +83,7 @@ public partial class ShipLine : Line2D
     public void LineFollowMouse()
     {
         Width = 2;
-        shipBuilder.AddChild(this);
+        shipBuilder.GetNode("Lines").AddChild(this);
         DefaultColor = Colors.White;
         Points = new Vector2[] { StartNode.GlobalPosition, shipBuilder.GetGlobalMousePosition() };
     }

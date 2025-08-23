@@ -16,6 +16,8 @@ public partial class ShipBuilder : Node2D
 	public TextEdit WeaponText, ShieldText, UtilityText, PowerText;
 	[Export]
 	public Button NodeButton, LineButton, TriangleButton;
+	[Export]
+	public Node2D NodesParent, LinesParent, TrianglesParent;
 	private bool nodeVis = true, lineVis = true, triangleVis = true;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
@@ -286,7 +288,7 @@ public partial class ShipBuilder : Node2D
 			); // Snap to grid of 10 pixels
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
-			AddChild(shipNode);
+			NodesParent.AddChild(shipNode);
 			createdLast = true;
 			if (clickedObject is ShipLine)
 			{
@@ -294,12 +296,12 @@ public partial class ShipBuilder : Node2D
 				ShipLine newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.StartNode);
 				lines.Add(newLine);
-				AddChild(newLine);
+				LinesParent.AddChild(newLine);
 
 				newLine = new ShipLine(shipNode, this);
 				newLine.SetEndNode(shipLine.EndNode);
 				lines.Add(newLine);
-				AddChild(newLine);
+				LinesParent.AddChild(newLine);
 				
 				TriangleCheck(newLine); // Check for triangles
 
@@ -562,12 +564,20 @@ public partial class ShipBuilder : Node2D
 
 			if (collider is Node2D hitObject)
 			{
-				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is ShipNode)
+				if (hitObject.GetParent() is ShipTriangle)
+				{
+					if (shapeResults.Count > 1)
+					{
+						GD.Print("Hit Triangle but also hit other object, ignoring Triangle2D: " + hitObject.Name);
+						continue;
+					}
+				}
+				if (buttonIndex == 1 && hitObject.GetParent() is ShipNode)
 				{
 					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				if (buttonIndex == 1 && mode == Modes.Nodes && hitObject.GetParent() is ShipLine)
+				if (buttonIndex == 1 && hitObject.GetParent() is ShipLine)
 				{
 					if (shapeResults.Any(s => ((Node2D)s["collider"]).GetParent() is ShipNode))
 					{
@@ -626,7 +636,7 @@ public partial class ShipBuilder : Node2D
 	private void PickColor()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is not ShipNode)
+		if (clickedObject is not ShipNode && clickedObject is not ShipLine)
 		{
 			if (clickedObject != selectedTriangle || colorPicker == null)
 			{
@@ -939,7 +949,7 @@ public partial class ShipBuilder : Node2D
 			var node = new ShipNode((ShipNodeTypes)shipSave.NodeTypes[i]);
 			node.GlobalPosition = new Vector2(shipSave.NodePositions[i].X, shipSave.NodePositions[i].Y);
 			node.Name = "ShipNode_" + i;
-			AddChild(node);
+			NodesParent.AddChild(node);
 			shipNodes.Add(node);
 			GD.Print("Loaded ShipNode: " + node.Name + " at position: " + node.GlobalPosition);
 		}

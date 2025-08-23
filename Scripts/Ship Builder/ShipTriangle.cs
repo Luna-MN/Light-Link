@@ -17,7 +17,7 @@ public partial class ShipTriangle : Node2D
         this.lines = lines;
         
         Name = "ShipTriangle";
-        shipBuilder.AddChild(this);
+        shipBuilder.GetNode("Triangles").AddChild(this);
 
         point1 = p1;
         point2 = p2;
