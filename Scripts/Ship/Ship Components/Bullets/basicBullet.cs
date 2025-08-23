@@ -48,6 +48,7 @@ public partial class basicBullet : MeshInstance2D
     }
     public override void _Process(double delta)
     {
+        LookAt(target.GlobalPosition);
         MoveBullet((float)delta);
     }
 

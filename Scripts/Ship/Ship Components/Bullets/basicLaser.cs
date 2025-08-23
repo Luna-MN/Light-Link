@@ -46,8 +46,8 @@ public partial class basicLaser : basicBullet
         if (gun.bulletPlace.GlobalPosition.DistanceTo(target.GlobalPosition) <= Distance)
         { 
             laser.ClearPoints();
-            laser.AddPoint(gun.bulletPlace.GlobalPosition);
-            laser.AddPoint(target.GlobalPosition);
+            laser.AddPoint(ToLocal(gun.bulletPlace.GlobalPosition));
+            laser.AddPoint(ToLocal(target.GlobalPosition));
             inRange = true;
         }
         else
