@@ -572,6 +572,7 @@ public partial class ShipBuilder : Node2D
 		shapeQuery.CollideWithBodies = true;
 
 		var shapeResults = spaceState.IntersectShape(shapeQuery);
+		Node2D ReturnObject = null;
 		foreach (var result in shapeResults)
 		{
 
@@ -579,47 +580,24 @@ public partial class ShipBuilder : Node2D
 
 			if (collider is Node2D hitObject)
 			{
-				if (hitObject.GetParent() is ShipTriangle)
+				var obj = (Node2D)hitObject.GetParent();
+				if (obj is ShipNode)
 				{
-					if (shapeResults.Count > 1)
-					{
-						GD.Print("Hit Triangle but also hit other object, ignoring Triangle2D: " + hitObject.Name);
-						continue;
-					}
-				}
-				if (buttonIndex == 1 && hitObject.GetParent() is ShipNode)
-				{
-					GD.Print("Hit Node: " + hitObject.Name);
 					return hitObject;
 				}
-				if (buttonIndex == 1 && hitObject.GetParent() is ShipLine)
+
+				if (obj is ShipLine)
 				{
-					if (shapeResults.Any(s => ((Node2D)s["collider"]).GetParent() is ShipNode))
-					{
-						GD.Print("Hit Line but also hit ShipNode, ignoring Line2D: " + hitObject.Name);
-						continue;
-					}
-					GD.Print("Hit Line: " + hitObject.Name);
-					return hitObject;
+					ReturnObject = obj;
 				}
-				if (buttonIndex == 1 && mode == Modes.Lines && hitObject.GetParent() is ShipNode)
+
+				if (obj is ShipTriangle && ReturnObject is not ShipLine)
 				{
-					GD.Print("Hit Node: " + hitObject.Name);
-					return hitObject;
-				}
-				if (mode != Modes.Lines || buttonIndex == 2)
-				{
-					GD.Print("Hit object: " + hitObject.Name);
-					return hitObject;
-				}
-				if (buttonIndex == 2 && !hitObject.GetParent().Name.ToString().Contains("ShipTriangle"))
-				{
-					GD.Print("Didn't hit ShipTriangle: " + hitObject.Name);
-					return hitObject;
+					ReturnObject = obj;
 				}
 			}
 		}
-		return null;
+		return ReturnObject;
 	}
 	private void TriangleCheck(ShipLine line)
 	{
@@ -752,7 +730,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void MoveShadowNode()
 	{
-		if (mode != Modes.Nodes || uiElement || !placing)
+		if (mode != Modes.Nodes || uiElement || !placing || !nodeVis)
 		{
 			shadowNode.Visible = false; // Hide shadow node if not in Nodes mode
 		}
