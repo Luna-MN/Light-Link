@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://du0fobb40ewap"]
+
+[ext_resource type="Script" uid="uid://51c0yf8r3e7e" path="res://Scripts/Ship Builder/ShipStartNode.cs" id="1_us3uf"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_us3uf")
+metadata/_custom_type_script = "uid://51c0yf8r3e7e"
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 30)
+width = 2.0
+
+[node name="ShipStartNode" type="Node2D" parent="."]
+position = Vector2(0, 30)
+script = ExtResource("1_us3uf")
+metadata/_custom_type_script = "uid://51c0yf8r3e7e"

@@ -38,6 +38,7 @@ public partial class ShipBuilder : Node2D
 		Shield,
 		Utility,
 		Power,
+		Start
 	}
 	private ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
 	private Modes mode = Modes.Nodes;
@@ -65,7 +66,7 @@ public partial class ShipBuilder : Node2D
 		shadowNode.AddChild(shadowMesh);
 		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
 		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
-		
+		//TODO: Add the ship start node
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
 		VisibilityButtons();
