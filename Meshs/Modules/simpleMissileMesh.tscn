@@ -6,7 +6,7 @@
 
 [node name="Meshs" instance=ExtResource("1_4y4vd")]
 
-[node name="Barrel" parent="." index="1"]
+[node name="Barrel" parent="." index="2"]
 position = Vector2(12, 3.55271e-14)
 rotation = 1.5708
 scale = Vector2(11.5, 13.5584)

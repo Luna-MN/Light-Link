@@ -24,7 +24,7 @@ public partial class ShipBuilder : Node2D
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
 	private bool isMouseDown, isPressed, createdLast;
-	private float mouseDownTime, dragStartDelay = 0.3f;
+	private float mouseDownTime, dragStartDelay = 0.2f;
 	private bool placing = true; 
 	public enum Modes
 	{
