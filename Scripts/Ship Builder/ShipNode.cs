@@ -32,7 +32,7 @@ public partial class ShipNode : Node2D
 		}
 		else
 		{
-			NodeColor = Colors.White; // Default color for other types
+			NodeColor = Colors.Purple; // Default color for other types
 		}
 	}
 	// Called when the node enters the scene tree for the first time.
