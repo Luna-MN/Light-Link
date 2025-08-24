@@ -207,6 +207,11 @@ public partial class Camera : Camera2D
                     // FIRST, detect if we clicked on an object
                     Node2D hitObject = DetectClickedObject();
 
+                    if (hitObject?.GetParent() is Module)
+                    {
+                        // start dragging the module
+                    }
+
                     // If we didn't click on an object, start drag selection
                     if (hitObject == null)
                     {
