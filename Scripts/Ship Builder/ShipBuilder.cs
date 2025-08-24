@@ -885,7 +885,7 @@ public partial class ShipBuilder : Node2D
 		{
 			path = $"MyShips\\{path}.tres";
 		}
-		ResourceSaver.Save(shipSave, $"{path}.tres");
+		ResourceSaver.Save(shipSave, $"{path}");
 	}
 	private void LoadShip(string path)
 	{
