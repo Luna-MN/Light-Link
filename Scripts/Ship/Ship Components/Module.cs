@@ -59,6 +59,7 @@ public partial class Module : Node2D
 			{
 				AttachmentLine.AddPoint(ToLocal(GlobalPosition));
 				AttachmentLine.AddPoint(ToLocal(closestPoint.GlobalPosition));
+				AttachmentLine.Width = 2 - (closestPoint.GlobalPosition.DistanceTo(GlobalPosition) / 100f);
 			}
 		}
 		else if (PossiblePoints.Count == 0)
