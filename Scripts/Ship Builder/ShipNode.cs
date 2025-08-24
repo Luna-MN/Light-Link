@@ -4,9 +4,9 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class ShipNode : Node2D
 {
-	private MeshInstance2D shipMesh;
+	protected MeshInstance2D shipMesh;
 	private Area2D area;
-	private CollisionShape2D collisionShape;
+	protected CollisionShape2D collisionShape;
 	public readonly List<ShipNode> ConnectedNodes = new List<ShipNode>();
 	public ShipBuilder.ShipNodeTypes NodeType;
 	public Color NodeColor; // Default color for the node

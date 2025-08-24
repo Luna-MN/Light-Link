@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 [GlobalClass]
 public partial class ShipLine : Line2D
@@ -15,8 +16,19 @@ public partial class ShipLine : Line2D
         StartNode.Modulate = new Color(0, 1, 0); // Change color to green to indicate selection
         EndNode = null; // Initially, the end node is not set
         this.shipBuilder = shipBuilder;
+    }
+    public ShipLine()
+    {
+    }
 
-
+    public override void _Ready()
+    {
+        if (StartNode == null)
+        {
+            StartNode = GetParent().GetChildren().FirstOrDefault(x => x.Name == "ShipStartNode") as ShipStartNode;
+            SetEndNode(GetParent().GetChildren().FirstOrDefault(x => x.Name == "ShipStartNode2") as ShipStartNode);
+            UpdateCollisionShape();        
+        }
     }
     public void SetEndNode(ShipNode end)
     {

@@ -50,7 +50,12 @@ public partial class ShipBuilder : Node2D
 	private Node2D shadowNode;
 	private bool isMouseOverUi, fileSelectMenu, uiElement;
 	private ShipNode draggingNode = null;
-	public int[] ResourceCount; // Resources for Weapon, Shield, Utility, Power nodes
+	private Node2D shipStartNode;
+	public int[] ResourceCount; // Resources for Weapon, Shield, Utility, Power 
+	private bool PlaceStart = true;
+
+	private Timer BlockInput;
+	private bool blocked;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -65,7 +70,30 @@ public partial class ShipBuilder : Node2D
 		shadowNode.AddChild(shadowMesh);
 		shadowNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
 		shadowNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
-		//TODO: Add the ship start node
+		shadowNode.Visible = false;
+		placing = false;
+		
+		var ShipStartScene = GD.Load<PackedScene>("res://Scripts/Ship Builder/ShipStartNode.tscn");
+		shipStartNode = ShipStartScene.Instantiate<Node2D>();
+		AddChild(shipStartNode);
+		shipStartNode.Name = "ShipStartNode";
+		shipStartNode.Position = GetGlobalMousePosition();
+		shipNodes.Add(shipStartNode.GetChildren().FirstOrDefault(x => x.Name == "ShipStartNode") as ShipStartNode);
+		shipNodes.Add(shipStartNode.GetChildren().FirstOrDefault(x => x.Name == "ShipStartNode2") as ShipStartNode);
+		lines.Add(shipStartNode.GetChildren().FirstOrDefault(x => x.Name == "Line2D") as ShipLine);
+
+		BlockInput = new Timer()
+		{
+			Autostart = false,
+			OneShot = true,
+			WaitTime = 0.5f
+		};
+		BlockInput.Timeout += () =>
+		{
+			blocked = false;
+		};
+		AddChild(BlockInput);
+		
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
 		VisibilityButtons();
@@ -74,6 +102,13 @@ public partial class ShipBuilder : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (PlaceStart)
+		{
+			shipStartNode.GlobalPosition = new Vector2(
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
+				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
+			);
+		}
 		if (isMouseOverUi || fileSelectMenu)
 		{
 			uiElement = true;
@@ -195,11 +230,23 @@ public partial class ShipBuilder : Node2D
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (uiElement) return;
+		if(blocked) return;
 		if (@event is InputEventMouseButton mouseButtonEvent)
 		{
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
 			{
-				PlaceNode(mouseButtonEvent.IsPressed());
+				if (PlaceStart)
+				{
+					PlaceStart = false;
+					placing = true;
+					blocked = true;
+					BlockInput.Start();
+				}
+				else
+				{
+					PlaceNode(mouseButtonEvent.IsPressed());
+				}
+
 			}
 
 		}
@@ -593,8 +640,6 @@ public partial class ShipBuilder : Node2D
 				};
 				ShipTriangle triangle = new ShipTriangle(line.StartNode, line.EndNode, node, this, triangleLines);
 				triangles.Add(triangle);
-				return;
-
 			}
 		}
 	}
