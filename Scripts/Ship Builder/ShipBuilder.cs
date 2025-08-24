@@ -251,7 +251,6 @@ public partial class ShipBuilder : Node2D
 		// if (clickedObject is Line2D) return;
 		if (clickedObject is ShipNode || dragging )
 		{
-			GD.Print("Clicked on existing ShipNode: " + clickedObject.Name);
 			if (pressed)
 			{
 				isMouseDown = true;
@@ -267,7 +266,6 @@ public partial class ShipBuilder : Node2D
 			{
 				if (draggingNode != null)
 				{
-					GD.Print("Released ShipNode: " + draggingNode.Name);
 					CheckNodeLocation(draggingNode);
 					draggingNode = null; // Stop dragging if the mouse button is released
 				}
@@ -284,7 +282,6 @@ public partial class ShipBuilder : Node2D
 			bool nodeExists = shipNodes.Any(node => node.GlobalPosition == GetGlobalMousePosition());
 			if (nodeExists)
 			{
-				GD.Print("Node already exists at this position, not placing a new one.");
 				return; // Don't place a new node if one already exists at the position
 			}
 			ShipNode shipNode = new ShipNode(currentNodeType);
@@ -335,7 +332,6 @@ public partial class ShipBuilder : Node2D
 
 		if (overlappingNode != null)
 		{
-			GD.Print($"Node {node.Name} overlaps with {overlappingNode.Name}. Merging nodes...");
 
 			// Update all lines that connect to the node being removed
 			foreach (var line in lines.Where(l => l.StartNode == node || l.EndNode == node).ToList())
@@ -443,7 +439,6 @@ public partial class ShipBuilder : Node2D
 			// Remove the node from the scene and from the list
 			shipNodes.Remove(node);
 			node.QueueFree();
-			GD.Print($"Node {node.Name} has been merged into {overlappingNode.Name}");
 		}
 	}
 	private void DragNode()
@@ -463,8 +458,7 @@ public partial class ShipBuilder : Node2D
 				draggingNode = null;
 				return;
 			}
-
-			GD.Print("Dragging ShipNode: " + draggingNode.Name + " to position: " + newPosition);
+			
 
 			lines.ForEach(line =>
 			{
@@ -492,7 +486,6 @@ public partial class ShipBuilder : Node2D
 	private void MakeLines()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		GD.Print("Current Line: " + currentLine?.StartNode?.Name);
 		if (clickedObject is ShipNode clickedShipNode)
 		{
 			if (currentLine == null)
@@ -509,7 +502,6 @@ public partial class ShipBuilder : Node2D
 						line.EndNode == clickedShipNode && line.StartNode == currentLine.StartNode)
 					{
 						// If a line already exists between the clicked node and the current line's start node
-						GD.Print("Line already exists with this node, resetting current line.");
 						currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 						currentLine = null; // Reset current line
 						return;
@@ -517,7 +509,6 @@ public partial class ShipBuilder : Node2D
 				});
 				if (clickedShipNode == currentLine.StartNode)
 				{
-					GD.Print("Clicked on the start node, resetting current line.");
 					currentLine.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
 					currentLine = null; // Reset current line
 					return;
@@ -533,7 +524,6 @@ public partial class ShipBuilder : Node2D
 				}
 			}
 		}
-		GD.Print("Lines count: " + lines.Count);
 	}
 	private void UiStop()
 	{
@@ -606,7 +596,6 @@ public partial class ShipBuilder : Node2D
 			if (line.EndNode.ConnectedNodes.Contains(node))
 			{
 				// We have a triangle, so we need to remove the line
-				GD.Print("Triangle detected");
 				List<ShipLine> triangleLines = new List<ShipLine>
 				{
 					line,
@@ -633,7 +622,6 @@ public partial class ShipBuilder : Node2D
 		{
 			if (clickedObject != selectedTriangle || colorPicker == null)
 			{
-				GD.Print("Picked color for ShipNode: " + clickedObject.Name);
 				colorPicker?.QueueFree(); // Remove the previous color picker if it exists
 				colorPicker = new ColorPicker()
 				{
@@ -664,7 +652,6 @@ public partial class ShipBuilder : Node2D
 			if (clickedObject is ShipNode shipNode)
 			{
 				shipNodes.Remove(shipNode);
-				GD.Print("Removed ShipNode: " + shipNode.Name);
 
 				// Remove all lines connected to this node
 				var linesToRemove = lines.Where(line => line.StartNode == shipNode || line.EndNode == shipNode).ToList();
@@ -692,9 +679,7 @@ public partial class ShipBuilder : Node2D
 			// Handle right-click on lines
 			else if (clickedObject is ShipLine clickedLine)
 			{
-				GD.Print("Clicked on Line2D: " + clickedLine.Name);
 				ShipLine shipLine = lines.Find(l => l == clickedLine);
-				GD.Print("Found ShipLine: " + shipLine?.StartNode?.Name + " to " + shipLine?.EndNode?.Name);
 				if (shipLine != null)
 				{
 					lines.Remove(shipLine);
@@ -756,22 +741,18 @@ public partial class ShipBuilder : Node2D
 		Weapon.ButtonDown += () =>
 		{
 			currentNodeType = ShipNodeTypes.Weapon;
-			GD.Print("Selected Weapon node type");
 		};
 		Shield.ButtonDown += () =>
 		{
 			currentNodeType = ShipNodeTypes.Shield;
-			GD.Print("Selected Shield node type");
 		};
 		Utility.ButtonDown += () =>
 		{
 			currentNodeType = ShipNodeTypes.Utility;
-			GD.Print("Selected Utility node type");
 		};
 		Power.ButtonDown += () =>
 		{
 			currentNodeType = ShipNodeTypes.Power;
-			GD.Print("Selected Power node type");
 		};
 	}
 
@@ -814,7 +795,6 @@ public partial class ShipBuilder : Node2D
 	{
 		SaveButton.ButtonDown += () =>
 		{
-			GD.Print("Save button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
 			GetChildren()
@@ -842,7 +822,6 @@ public partial class ShipBuilder : Node2D
 		};
 		LoadButton.ButtonDown += () =>
 		{
-			GD.Print("Load button pressed");
 			SelectFile sf = FileSelectScene.Instantiate<SelectFile>();
 			sf.Position = Vector2.Zero;
 			GetChildren()
@@ -907,14 +886,12 @@ public partial class ShipBuilder : Node2D
 			path = $"MyShips\\{path}.tres";
 		}
 		ResourceSaver.Save(shipSave, $"{path}.tres");
-		GD.Print("Ship saved successfully.");
 	}
 	private void LoadShip(string path)
 	{
 		ShipSave shipSave = (ShipSave)ResourceLoader.Load($"{path}");
 		if (shipSave == null)
 		{
-			GD.Print("Failed to load ship save.");
 			return;
 		}
 
@@ -945,7 +922,6 @@ public partial class ShipBuilder : Node2D
 			node.Name = "ShipNode_" + i;
 			NodesParent.AddChild(node);
 			shipNodes.Add(node);
-			GD.Print("Loaded ShipNode: " + node.Name + " at position: " + node.GlobalPosition);
 		}
 
 		// Load lines
