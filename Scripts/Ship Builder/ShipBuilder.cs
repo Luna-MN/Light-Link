@@ -588,12 +588,12 @@ public partial class ShipBuilder : Node2D
 
 				if (obj is ShipLine)
 				{
-					ReturnObject = obj;
+					ReturnObject = hitObject;
 				}
 
-				if (obj is ShipTriangle && ReturnObject is not ShipLine)
+				if (obj is ShipTriangle && ReturnObject is not ShipLine && buttonIndex == 1)
 				{
-					ReturnObject = obj;
+					ReturnObject = hitObject;
 				}
 			}
 		}
@@ -629,7 +629,7 @@ public partial class ShipBuilder : Node2D
 	private void PickColor()
 	{
 		Node2D clickedObject = (Node2D)DetectClickedObject()?.GetParent();
-		if (clickedObject is not ShipNode && clickedObject is not ShipLine)
+		if (clickedObject is ShipTriangle)
 		{
 			if (clickedObject != selectedTriangle || colorPicker == null)
 			{
