@@ -41,7 +41,6 @@ public partial class ShipBuilder : Node2D
 		Start
 	}
 	private ShipNodeTypes currentNodeType = ShipNodeTypes.Weapon; // Default node type
-	private Modes mode = Modes.Nodes;
 	private ShipLine currentLine;
 	private List<ShipLine> lines = new List<ShipLine>(); // export this to json to save ship nodes
 	private List<ShipTriangle> triangles = new List<ShipTriangle>(); // export this to json to save ship nodes
@@ -111,7 +110,6 @@ public partial class ShipBuilder : Node2D
 		{
 			dragging = false;
 		}
-		UiStop(); // Check if mouse is over UI and update shadow node visibility
 		MoveShadowNode(); // Update shadow node position
 		CheckForOverlappingNodes();
 		SetResourceCount();
@@ -201,12 +199,7 @@ public partial class ShipBuilder : Node2D
 		{
 			if (mouseButtonEvent.ButtonIndex == MouseButton.Left)
 			{
-				// Handle left mouse button click for ship building
-				if (mode == Modes.Nodes)
-				{
-					PlaceNode(mouseButtonEvent.IsPressed());
-				}
-				// Add your ship building logic here
+				PlaceNode(mouseButtonEvent.IsPressed());
 			}
 
 		}
@@ -526,17 +519,6 @@ public partial class ShipBuilder : Node2D
 			}
 		}
 	}
-	private void UiStop()
-	{
-		if (uiElement)
-		{
-			shadowNode.Visible = false; // Hide shadow node if mouse is over UI
-		}
-		else if (mode == Modes.Nodes)
-		{
-			shadowNode.Visible = true; // Show shadow node if in Nodes mode
-		}
-	}
 	private Node2D DetectClickedObject(int buttonIndex = 1)
 	{
 		// Convert to global position
@@ -716,7 +698,7 @@ public partial class ShipBuilder : Node2D
 	}
 	private void MoveShadowNode()
 	{
-		if (mode != Modes.Nodes || uiElement || !placing || !nodeVis)
+		if (uiElement || !placing || !nodeVis)
 		{
 			shadowNode.Visible = false; // Hide shadow node if not in Nodes mode
 		}
