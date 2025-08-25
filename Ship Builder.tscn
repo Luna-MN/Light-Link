@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cvs10xo4xd8qq" path="res://Scripts/Ship Builder/ShipBuilderCamera.cs" id="3_ncxx8"]
 [ext_resource type="Script" uid="uid://b8wktex272b2r" path="res://Scripts/Ship Builder/DrawLines.cs" id="4_4ngq5"]
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton", "NodesParent", "LinesParent", "TrianglesParent", "canvasLayer")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton", "NodesParent", "LinesParent", "TrianglesParent", "canvasLayer", "MirrorX", "MirrorY")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Shield")
@@ -25,6 +25,8 @@ NodesParent = NodePath("Nodes")
 LinesParent = NodePath("Lines")
 TrianglesParent = NodePath("Triangles")
 canvasLayer = NodePath("Camera2D/CanvasLayer")
+MirrorX = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror X")
+MirrorY = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror Y")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 323)
@@ -172,6 +174,24 @@ text = "Lines"
 [node name="Triangles" type="Button" parent="Camera2D/CanvasLayer/HBoxContainer"]
 layout_mode = 2
 text = "Triangles"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 20.0
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Mirror Y" type="Button" parent="Camera2D/CanvasLayer/VBoxContainer"]
+layout_mode = 2
+text = "Mirror Y"
+
+[node name="Mirror X" type="Button" parent="Camera2D/CanvasLayer/VBoxContainer"]
+layout_mode = 2
+text = "Mirror X"
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource("4_4ngq5")

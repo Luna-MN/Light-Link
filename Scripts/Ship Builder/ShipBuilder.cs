@@ -20,6 +20,9 @@ public partial class ShipBuilder : Node2D
 	public Node2D NodesParent, LinesParent, TrianglesParent;
 	[Export]
 	public CanvasLayer canvasLayer;
+	[Export] 
+	public Button MirrorXB, MirrorYB;
+	public bool MirrorX, MirrorY;
 	private bool nodeVis = true, lineVis = true, triangleVis = true;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
@@ -47,7 +50,7 @@ public partial class ShipBuilder : Node2D
 	private ColorPicker colorPicker;
 	private Node2D selectedTriangle;
 	private bool isRightMouseHeld, dragging;
-	private Node2D shadowNode;
+	private Node2D shadowNode, mirrorNode;
 	private bool isMouseOverUi, fileSelectMenu, uiElement;
 	private ShipNode draggingNode = null;
 	private Node2D shipStartNode;
@@ -73,6 +76,20 @@ public partial class ShipBuilder : Node2D
 		shadowNode.Visible = false;
 		placing = false;
 		
+		mirrorNode = new Node2D();
+		mirrorNode.Name = "MirrorNode";
+		mirrorNode.GlobalPosition = GetGlobalMousePosition();
+		AddChild(shadowNode);
+		
+		MeshInstance2D mirrorMesh = new MeshInstance2D();
+		mirrorMesh.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
+		mirrorMesh.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
+		mirrorNode.AddChild(mirrorMesh);
+		mirrorNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
+		mirrorNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
+		mirrorNode.Visible = false;
+		placing = false;
+		
 		var ShipStartScene = GD.Load<PackedScene>("res://Scripts/Ship Builder/ShipStartNode.tscn");
 		shipStartNode = ShipStartScene.Instantiate<Node2D>();
 		AddChild(shipStartNode);
@@ -93,7 +110,16 @@ public partial class ShipBuilder : Node2D
 			blocked = false;
 		};
 		AddChild(BlockInput);
-		
+		MirrorYB.ButtonDown += () =>
+		{
+			MirrorY = !MirrorY;
+			MirrorYB.Modulate = MirrorYB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
+		};
+		MirrorXB.ButtonDown += () =>
+		{
+			MirrorX = !MirrorX;
+			MirrorXB.Modulate = MirrorXB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
+		};
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
 		VisibilityButtons();
@@ -182,6 +208,13 @@ public partial class ShipBuilder : Node2D
 		triangles.ForEach(t => t.Visible = triangleVis);
 	}
 
+	private void MoveMirrorNode()
+	{
+		if (MirrorY)
+		{
+
+		}
+	}
 	private void SetResourceCount()
 	{		
 		ResourceCount = new[]
