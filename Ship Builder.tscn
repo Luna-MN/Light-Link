@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cvs10xo4xd8qq" path="res://Scripts/Ship Builder/ShipBuilderCamera.cs" id="3_ncxx8"]
 [ext_resource type="Script" uid="uid://b8wktex272b2r" path="res://Scripts/Ship Builder/DrawLines.cs" id="4_4ngq5"]
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton", "NodesParent", "LinesParent", "TrianglesParent", "canvasLayer", "MirrorX", "MirrorY")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("Weapon", "Shield", "Utility", "Power", "SaveButton", "LoadButton", "WeaponText", "ShieldText", "UtilityText", "PowerText", "NodeButton", "LineButton", "TriangleButton", "NodesParent", "LinesParent", "TrianglesParent", "canvasLayer", "MirrorXB", "MirrorYB")]
 script = ExtResource("1_6ykhb")
 Weapon = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Weapon")
 Shield = NodePath("Camera2D/CanvasLayer/Panel/NodeSelect/Shield")
@@ -25,8 +25,8 @@ NodesParent = NodePath("Nodes")
 LinesParent = NodePath("Lines")
 TrianglesParent = NodePath("Triangles")
 canvasLayer = NodePath("Camera2D/CanvasLayer")
-MirrorX = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror X")
-MirrorY = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror Y")
+MirrorXB = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror X")
+MirrorYB = NodePath("Camera2D/CanvasLayer/VBoxContainer/Mirror Y")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 323)

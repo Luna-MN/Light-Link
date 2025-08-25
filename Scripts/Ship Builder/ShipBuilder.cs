@@ -22,7 +22,7 @@ public partial class ShipBuilder : Node2D
 	public CanvasLayer canvasLayer;
 	[Export] 
 	public Button MirrorXB, MirrorYB;
-	public bool MirrorX, MirrorY;
+	private bool MirrorX = false, MirrorY = false;
 	private bool nodeVis = true, lineVis = true, triangleVis = true;
 	public int GridSize = 20;
 	private List<ShipNode> shipNodes = new List<ShipNode>(); // export this to json to save ship nodes
@@ -79,7 +79,7 @@ public partial class ShipBuilder : Node2D
 		mirrorNode = new Node2D();
 		mirrorNode.Name = "MirrorNode";
 		mirrorNode.GlobalPosition = GetGlobalMousePosition();
-		AddChild(shadowNode);
+		AddChild(mirrorNode);
 		
 		MeshInstance2D mirrorMesh = new MeshInstance2D();
 		mirrorMesh.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
@@ -172,6 +172,7 @@ public partial class ShipBuilder : Node2D
 			dragging = false;
 		}
 		MoveShadowNode(); // Update shadow node position
+		MoveMirrorNode();
 		CheckForOverlappingNodes();
 		SetResourceCount();
 		if (currentLine != null && currentLine.Points.Length != 2)
@@ -212,7 +213,31 @@ public partial class ShipBuilder : Node2D
 	{
 		if (MirrorY)
 		{
+			mirrorNode.Visible = true;
 
+			var startY = shipStartNode.GlobalPosition.Y;
+			var shadow = shadowNode.GlobalPosition;
+
+			mirrorNode.GlobalPosition = new Vector2(
+				shadow.X,
+				2 * startY - shadow.Y
+			);
+		}
+		if (MirrorX)
+		{
+			mirrorNode.Visible = true;
+			
+			var startX = shipStartNode.GlobalPosition.X;
+			var shadow = shadowNode.GlobalPosition;
+			
+			mirrorNode.GlobalPosition = new Vector2(
+				2 * startX - shadow.X,
+				shadow.Y
+			);
+		}
+		else
+		{
+			mirrorNode.Visible = false;
 		}
 	}
 	private void SetResourceCount()
