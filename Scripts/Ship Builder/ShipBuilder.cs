@@ -50,7 +50,7 @@ public partial class ShipBuilder : Node2D
 	private ColorPicker colorPicker;
 	private Node2D selectedTriangle;
 	private bool isRightMouseHeld, dragging;
-	private Node2D shadowNode, mirrorNode;
+	private Node2D shadowNode, mirrorNodeX, mirrorNodeY, mirrorNodeXY;
 	private bool isMouseOverUi, fileSelectMenu, uiElement;
 	private ShipNode draggingNode = null;
 	private Node2D shipStartNode;
@@ -76,19 +76,44 @@ public partial class ShipBuilder : Node2D
 		shadowNode.Visible = false;
 		placing = false;
 		
-		mirrorNode = new Node2D();
-		mirrorNode.Name = "MirrorNode";
-		mirrorNode.GlobalPosition = GetGlobalMousePosition();
-		AddChild(mirrorNode);
+		mirrorNodeX = new Node2D();
+		mirrorNodeX.Name = "MirrorNodeX";
+		mirrorNodeX.GlobalPosition = GetGlobalMousePosition();
+		AddChild(mirrorNodeX);
 		
-		MeshInstance2D mirrorMesh = new MeshInstance2D();
-		mirrorMesh.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
-		mirrorMesh.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
-		mirrorNode.AddChild(mirrorMesh);
-		mirrorNode.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
-		mirrorNode.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
-		mirrorNode.Visible = false;
-		placing = false;
+		MeshInstance2D mirrorMeshX = new MeshInstance2D();
+		mirrorMeshX.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
+		mirrorMeshX.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
+		mirrorNodeX.AddChild(mirrorMeshX);
+		mirrorNodeX.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
+		mirrorNodeX.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
+		mirrorNodeX.Visible = false;
+		
+		mirrorNodeY = new Node2D();
+		mirrorNodeY.Name = "MirrorNodeY";
+		mirrorNodeY.GlobalPosition = GetGlobalMousePosition();
+		AddChild(mirrorNodeY);
+		
+		MeshInstance2D mirrorMeshY = new MeshInstance2D();
+		mirrorMeshY.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
+		mirrorMeshY.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
+		mirrorNodeY.AddChild(mirrorMeshY);
+		mirrorNodeY.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
+		mirrorNodeY.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
+		mirrorNodeY.Visible = false;
+		
+		mirrorNodeXY = new Node2D();
+		mirrorNodeXY.Name = "MirrorNodeXY";
+		mirrorNodeXY.GlobalPosition = GetGlobalMousePosition();
+		AddChild(mirrorNodeXY);
+		
+		MeshInstance2D mirrorMeshXY = new MeshInstance2D();
+		mirrorMeshXY.Mesh = new SphereMesh(); // Example mesh, replace with your shadow mesh
+		mirrorMeshXY.Scale = new Vector2(10f, 10f); // Scale the mesh to a reasonable size
+		mirrorNodeXY.AddChild(mirrorMeshXY);
+		mirrorNodeXY.ZIndex = 1000; // Ensure the shadow node is drawn above other nodes
+		mirrorNodeXY.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Semi-transparent shadow color
+		mirrorNodeXY.Visible = false;
 		
 		var ShipStartScene = GD.Load<PackedScene>("res://Scripts/Ship Builder/ShipStartNode.tscn");
 		shipStartNode = ShipStartScene.Instantiate<Node2D>();
@@ -113,16 +138,12 @@ public partial class ShipBuilder : Node2D
 		MirrorYB.ButtonDown += () =>
 		{
 			MirrorY = !MirrorY;
-			MirrorX = false;
 			MirrorYB.Modulate = MirrorYB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
-			MirrorXB.Modulate = Colors.White;
 		};
 		MirrorXB.ButtonDown += () =>
 		{
 			MirrorX = !MirrorX;
-			MirrorY = false;
 			MirrorXB.Modulate = MirrorXB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
-			MirrorYB.Modulate = Colors.White;
 		};
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
@@ -217,31 +238,62 @@ public partial class ShipBuilder : Node2D
 	{
 		if (MirrorY)
 		{
-			mirrorNode.Visible = true;
+			mirrorNodeY.Visible = true;
 
 			var startY = shipStartNode.GlobalPosition.Y;
 			var shadow = shadowNode.GlobalPosition;
 
-			mirrorNode.GlobalPosition = new Vector2(
+			mirrorNodeY.GlobalPosition = new Vector2(
 				shadow.X,
 				2 * startY - shadow.Y
 			);
 		}
-		else if (MirrorX)
+		else
 		{
-			mirrorNode.Visible = true;
+			mirrorNodeY.Visible = false;
+		}
+		if (MirrorX)
+		{
+			mirrorNodeX.Visible = true;
 			
 			var startX = shipStartNode.GlobalPosition.X;
 			var shadow = shadowNode.GlobalPosition;
 			
-			mirrorNode.GlobalPosition = new Vector2(
+			mirrorNodeX.GlobalPosition = new Vector2(
 				2 * startX - shadow.X,
 				shadow.Y
 			);
 		}
 		else
 		{
-			mirrorNode.Visible = false;
+			mirrorNodeX.Visible = false;
+		}
+
+		if (MirrorY && MirrorX)
+		{
+			var startY = shipStartNode.GlobalPosition.Y;
+			var shadow = shadowNode.GlobalPosition;
+
+			mirrorNodeY.GlobalPosition = new Vector2(
+				shadow.X,
+				2 * startY - shadow.Y
+			);
+			
+			mirrorNodeX.Visible = true;
+			
+			var startX = shipStartNode.GlobalPosition.X;
+			shadow = shadowNode.GlobalPosition;
+			
+			mirrorNodeX.GlobalPosition = new Vector2(
+				2 * startX - shadow.X,
+				shadow.Y
+			);
+			mirrorNodeXY.Visible = true;
+			mirrorNodeXY.GlobalPosition = new Vector2(2 * startX - shadow.X, 2 * startY - shadow.Y);
+		}
+		else
+		{
+			mirrorNodeXY.Visible = false;
 		}
 	}
 	private void SetResourceCount()
@@ -392,18 +444,46 @@ public partial class ShipBuilder : Node2D
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
 			NodesParent.AddChild(shipNode);
-			if (MirrorY || MirrorX)
+			
+			
+			if (MirrorY)
 			{
-				nodeExists = shipNodes.Any(node => node.GlobalPosition == mirrorNode.GlobalPosition);
+				nodeExists = shipNodes.Any(node => node.GlobalPosition == mirrorNodeY.GlobalPosition);
 				if (!nodeExists)
 				{
 					ShipNode mirroredNode = new ShipNode(currentNodeType);
-					mirroredNode.GlobalPosition = mirrorNode.GlobalPosition;
+					mirroredNode.GlobalPosition = mirrorNodeY.GlobalPosition;
 					mirroredNode.Name = "ShipNode_" + shipNodes.Count;
 					shipNodes.Add(mirroredNode);
 					NodesParent.AddChild(mirroredNode);
 				}
 			}
+			if (MirrorX)
+			{
+				nodeExists = shipNodes.Any(node => node.GlobalPosition == mirrorNodeX.GlobalPosition);
+				if (!nodeExists)
+				{
+					ShipNode mirroredNode = new ShipNode(currentNodeType);
+					mirroredNode.GlobalPosition = mirrorNodeX.GlobalPosition;
+					mirroredNode.Name = "ShipNode_" + shipNodes.Count;
+					shipNodes.Add(mirroredNode);
+					NodesParent.AddChild(mirroredNode);
+				}
+			}
+
+			if (MirrorX && MirrorY)
+			{
+				nodeExists = shipNodes.Any(node => node.GlobalPosition == mirrorNodeXY.GlobalPosition);
+				if (!nodeExists)
+				{
+					ShipNode mirroredNode = new ShipNode(currentNodeType);
+					mirroredNode.GlobalPosition = mirrorNodeXY.GlobalPosition;
+					mirroredNode.Name = "ShipNode_" + shipNodes.Count;
+					shipNodes.Add(mirroredNode);
+					NodesParent.AddChild(mirroredNode);
+				}
+			}
+			
 			createdLast = true;
 			// this is drag triangle creation
 			if (clickedObject is ShipLine)
