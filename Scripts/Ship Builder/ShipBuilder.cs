@@ -247,6 +247,15 @@ public partial class ShipBuilder : Node2D
 				shadow.X,
 				2 * startY - shadow.Y
 			);
+			
+			mirrorNodeY.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
 		}
 		else
 		{
@@ -263,6 +272,15 @@ public partial class ShipBuilder : Node2D
 				2 * startX - shadow.X,
 				shadow.Y
 			);
+			
+			mirrorNodeX.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
 		}
 		else
 		{
@@ -279,6 +297,16 @@ public partial class ShipBuilder : Node2D
 				2 * startY - shadow.Y
 			);
 			
+			mirrorNodeY.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
+			
+			
 			mirrorNodeX.Visible = true;
 			
 			var startX = shipStartNode.GlobalPosition.X;
@@ -288,8 +316,28 @@ public partial class ShipBuilder : Node2D
 				2 * startX - shadow.X,
 				shadow.Y
 			);
+			
+			mirrorNodeX.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
+			
+			
 			mirrorNodeXY.Visible = true;
 			mirrorNodeXY.GlobalPosition = new Vector2(2 * startX - shadow.X, 2 * startY - shadow.Y);
+			
+			mirrorNodeXY.Modulate = currentNodeType switch
+			{
+				ShipNodeTypes.Weapon => new Color(1, 0.5f, 0.5f, 0.5f), // Light Red for weapon nodes
+				ShipNodeTypes.Utility => new Color(0.5f, 1, 0.5f, 0.5f), // Light Green for utility nodes
+				ShipNodeTypes.Shield => new Color(0.5f, 0.5f, 1, 0.5f), // Light Blue for shield nodes
+				ShipNodeTypes.Power => new Color(1, 1, 0, 0.5f), // Light Yellow for power nodes
+				_ => new Color(1, 1, 1, 0.5f) // Default color for other types
+			};
 		}
 		else
 		{
@@ -298,13 +346,13 @@ public partial class ShipBuilder : Node2D
 	}
 	private void SetResourceCount()
 	{		
-		ResourceCount = new[]
-		{
+		ResourceCount =
+		[
 			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Weapon),
 			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Shield),
 			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Utility),
-			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Power),
-		};
+			shipNodes.Count(n => n.NodeType == ShipNodeTypes.Power)
+		];
 		WeaponText.Text = "Metal: " + ResourceCount[0] * 10;
 		ShieldText.Text = "Ice: " + ResourceCount[1] * 10;
 		UtilityText.Text = "Carbon: " + ResourceCount[2] * 10;
