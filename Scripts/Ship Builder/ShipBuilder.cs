@@ -113,12 +113,16 @@ public partial class ShipBuilder : Node2D
 		MirrorYB.ButtonDown += () =>
 		{
 			MirrorY = !MirrorY;
+			MirrorX = false;
 			MirrorYB.Modulate = MirrorYB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
+			MirrorXB.Modulate = Colors.White;
 		};
 		MirrorXB.ButtonDown += () =>
 		{
 			MirrorX = !MirrorX;
+			MirrorY = false;
 			MirrorXB.Modulate = MirrorXB.Modulate == Colors.White ? Colors.LightBlue : Colors.White;
+			MirrorYB.Modulate = Colors.White;
 		};
 		Buttons(); // Initialize button actions
 		LoadButtons(); // Load button actions
