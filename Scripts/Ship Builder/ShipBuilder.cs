@@ -223,7 +223,7 @@ public partial class ShipBuilder : Node2D
 				2 * startY - shadow.Y
 			);
 		}
-		if (MirrorX)
+		else if (MirrorX)
 		{
 			mirrorNode.Visible = true;
 			
@@ -378,20 +378,30 @@ public partial class ShipBuilder : Node2D
 		}
 		else if (pressed && placing)
 		{
-			bool nodeExists = shipNodes.Any(node => node.GlobalPosition == GetGlobalMousePosition());
+			bool nodeExists = shipNodes.Any(node => node.GlobalPosition == shadowNode.GlobalPosition);
 			if (nodeExists)
 			{
 				return; // Don't place a new node if one already exists at the position
 			}
 			ShipNode shipNode = new ShipNode(currentNodeType);
-			shipNode.GlobalPosition = new Vector2(
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().X / GridSize) * GridSize, 0, 2000),
-				Math.Clamp(Mathf.Round(GetGlobalMousePosition().Y / GridSize) * GridSize, 0, 2000)
-			); // Snap to grid of 10 pixels
+			shipNode.GlobalPosition = shadowNode.GlobalPosition; // Snap to grid of 10 pixels
 			shipNode.Name = "ShipNode_" + shipNodes.Count;
 			shipNodes.Add(shipNode);
 			NodesParent.AddChild(shipNode);
+			if (MirrorY || MirrorX)
+			{
+				nodeExists = shipNodes.Any(node => node.GlobalPosition == mirrorNode.GlobalPosition);
+				if (!nodeExists)
+				{
+					ShipNode mirroredNode = new ShipNode(currentNodeType);
+					mirroredNode.GlobalPosition = mirrorNode.GlobalPosition;
+					mirroredNode.Name = "ShipNode_" + shipNodes.Count;
+					shipNodes.Add(mirroredNode);
+					NodesParent.AddChild(mirroredNode);
+				}
+			}
 			createdLast = true;
+			// this is drag triangle creation
 			if (clickedObject is ShipLine)
 			{
 				ShipLine shipLine = lines.Find(line => line == clickedObject);
