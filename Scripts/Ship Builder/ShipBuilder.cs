@@ -764,6 +764,12 @@ public partial class ShipBuilder : Node2D
 					lines.Add(currentLine);
 				}
 			}
+
+			if (MirrorY)
+			{
+				bool mirrrorYLine = shipNodes.Any(x => x.GlobalPosition == mirrorNodeY.GlobalPosition);
+				
+			}
 		}
 	}
 	private Node2D DetectClickedObject(int buttonIndex = 1)
