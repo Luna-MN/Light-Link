@@ -59,6 +59,9 @@ public partial class ShipBuilder : Node2D
 
 	private Timer BlockInput;
 	private bool blocked;
+	
+	private bool mirrorYLine = false, mirrorXLine = false, mirrorXYLine = false;
+	private ShipLine mirrorYLineNode, mirrorXLineNode, mirrorXYLineNode;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -767,8 +770,19 @@ public partial class ShipBuilder : Node2D
 
 			if (MirrorY)
 			{
-				bool mirrrorYLine = shipNodes.Any(x => x.GlobalPosition == mirrorNodeY.GlobalPosition);
-				
+				mirrorYLine = shipNodes.Any(x => x.GlobalPosition == mirrorNodeY.GlobalPosition);
+				if (mirrorYLine)
+				{
+					if (mirrorYLineNode == null)
+					{
+						mirrorYLineNode = new ShipLine(shipNodes.FirstOrDefault(x => x.GlobalPosition == mirrorNodeY.GlobalPosition), this);
+						lines.Add(mirrorYLineNode);
+					}
+					else
+					{
+						
+					}
+				}
 			}
 		}
 	}
