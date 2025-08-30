@@ -780,7 +780,33 @@ public partial class ShipBuilder : Node2D
 					}
 					else
 					{
-						
+						var YNode = shipNodes.FirstOrDefault(x => x.GlobalPosition == mirrorNodeY.GlobalPosition)
+						lines.ForEach(line =>
+						{
+							if (line.StartNode == YNode  && line.EndNode == currentLine.StartNode ||
+							    line.EndNode == YNode && line.StartNode == currentLine.StartNode)
+							{
+								// If a line already exists between the clicked node and the current line's start node
+								mirrorYLineNode.StartNode.Modulate = currentLine.StartNode.NodeColor; // Reset color of the start node
+								mirrorYLineNode = null; // Reset current line
+								return;
+							}
+						});
+						if (YNode == mirrorYLineNode.StartNode)
+						{
+							mirrorYLineNode.StartNode.Modulate = mirrorYLineNode.StartNode.NodeColor; // Reset color of the start node
+							mirrorYLineNode = null; // Reset current line
+							return;
+						}
+						// Update the end point of the current line
+						mirrorYLineNode.SetEndNode(YNode);
+						TriangleCheck(mirrorYLineNode); // Check for triangles
+						mirrorYLineNode = null;
+						if (Input.IsKeyPressed(Key.Ctrl))
+						{
+							mirrorYLineNode = new ShipLine(YNode, this); // Reset for the next line
+							lines.Add(mirrorYLineNode);
+						}
 					}
 				}
 			}
